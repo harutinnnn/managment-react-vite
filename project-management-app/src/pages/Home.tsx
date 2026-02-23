@@ -1,4 +1,3 @@
-import {ArrowUpIcon} from "lucide-react";
 
 const Home = () => {
     return (<>

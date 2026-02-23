@@ -17,13 +17,109 @@ body {
 }
 
 #wrapper {
+
     display: grid;
     grid-template-columns: 250px 1fr;
+    transition: grid-template-columns 0.3s ease;
     height: 100vh;
+}
+
+#wrapper.minimised-sidebar {
+    grid-template-columns: 50px 1fr;
 }
 
 .sidebar {
     background-color: var(--white);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+}
+
+
+.sidebar .sidebar-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    height: 60px;
+    width: 100%;
+    padding-left: 10px;
+}
+
+.sidebar .sidebar-header img {
+    height: 30px;
+}
+
+.minimised-sidebar .sidebar {
+    width: 50px;
+}
+
+.minimised-sidebar .sidebar .sidebar-header {
+    padding-left: unset;
+    width: 100%;
+    display: flex;
+    gap: 0;
+    justify-content: center;
+}
+
+.minimised-sidebar .sidebar .sidebar-header span {
+    display: none;
+}
+
+.sidebar .sidebar-header span {
+    font-size: 24px;
+}
+
+.sidebar .sidebar-nav ul {
+
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .sidebar-nav ul li {
+    padding: 5px 10px;
+}
+
+.sidebar .sidebar-nav ul li a {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    text-decoration: none;
+    color: var(--gray);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.sidebar .sidebar-nav ul li a svg {
+    color: var(--primacy-color);
+}
+
+.sidebar .sidebar-nav ul li a.active,
+.sidebar .sidebar-nav ul li a:hover {
+    background-color: var(--lightes-blue);
+    color: var(--primacy-color);
+}
+
+
+.minimised-sidebar .sidebar .sidebar-nav ul li {
+    padding: 5px;
+    position: relative;
+}
+
+.minimised-sidebar .sidebar .sidebar-nav ul li a {
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.minimised-sidebar .sidebar .sidebar-nav ul li a span {
+    display: none;
 }
 
 .main-content {
@@ -66,5 +162,15 @@ body {
     /*background-color: var(--black);*/
     border: solid 1px var(--black);
     border-radius: 2px;
+}
+
+.main-header .header-notifications {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    margin-left: auto;
+    cursor: pointer;
 }
 

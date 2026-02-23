@@ -1,5 +1,56 @@
-:root{
+:root {
     --white: #fff;
     --black: #000;
+    --gray: lab(60.5129% -1.49679 -7.27124);
     --lightes-blue: lab(93.02% -2.12058 -7.10671);
+    --primacy-color: lab(63.3112% -5.86495 -53.8932);
+    --blue: lab(37.8366% 7.03645 -56.5753);
+    --green: lab(59.0978% -58.6621 41.2579);
+}
+
+.status-active {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 1px 10px;
+    color: var(--green);
+    border: solid 1px var(--green);
+
+    border-radius: 10px;
+}
+
+
+.btn {
+    height: 35px;
+    display: flex;
+    background-color: var(--white);
+    border: none;
+
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.9);
+    -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.9);
+    -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.9);
+
+    padding: 0 15px;
+    color: var(--black);
+    font-size: 16px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 3px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: var(--primacy-color);
+    color: var(--white);
+}
+
+.btn.primary {
+    background-color: var(--primacy-color);
+    color: var(--white);
+}
+
+.btn.primary:hover {
+    background-color: var(--primacy-color);
+    opacity: 0.8;
 }
