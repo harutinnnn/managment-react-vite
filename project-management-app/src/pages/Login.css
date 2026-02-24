@@ -1,10 +1,10 @@
-.login-container {
+.auth-container {
     position: relative;
     min-width: 100vw;
     min-height: 100vh;
 }
 
-.login-container .login-form {
+.auth-container .auth-form {
     position: absolute;
     padding: 20px;
     background: var(--white);

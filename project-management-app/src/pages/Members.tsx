@@ -1,7 +1,12 @@
 import './Members.css'
 import avatar from '../assets/avatar.png'
-import {MessageCircle, UserRoundPen} from "lucide-react";
+import {MessageCircle, UserRound, UserRoundPen} from "lucide-react";
+import {useState} from "react";
+import Modal from "react-modal";
 
+
+// Bind modal to your appElement (for accessibility)
+Modal.setAppElement("#root");
 
 
 
@@ -9,13 +14,50 @@ const Members = () => {
 
     const members: number[] = new Array(10).fill(0)
 
+    const [modalIsOpen, setIsOpen] = useState(false);
+
+    const openModal = () => {
+        setIsOpen(true);
+    }
+
+    const afterOpenModal = () => {
+        // references are now sync'd and can be accessed.
+
+    }
+
+
+    const closeModal = () => {
+        setIsOpen(false);
+
+    }
+
+    const customStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+        },
+    };
+
     return (<>
-            <h1>Members Page</h1>
+
+            <div className={"page-header mb-20"}>
+                <h1 className={"page-title "}>Members({members.length})</h1>
+                <button className={"btn ml-auto"} onClick={() => {
+                    openModal()
+                }}>
+                    <span>Add new</span>
+                    <UserRound size={16}/>
+                </button>
+            </div>
 
             <div className="members">
 
-                {members.map(ele =>
-                    <div className="member-item">
+                {members.map((ele, i) =>
+                    <div className="member-item" key={i}>
                         <div className="member-header">
                             <img src={avatar} alt="Avatar" className="member-avarar"/>
                             <div className={"member-header-info"}>
@@ -64,6 +106,19 @@ const Members = () => {
                     </div>
                 )}
             </div>
+
+            <Modal
+                isOpen={modalIsOpen}
+                onAfterOpen={afterOpenModal}
+                onRequestClose={closeModal}
+                style={customStyles}
+                contentLabel="Example Modal"
+            >
+                <h2>Hello</h2>
+                <button onClick={closeModal}>close</button>
+
+
+            </Modal>
 
         </>
     );

@@ -34,42 +34,43 @@ export const Login = () => {
 
 
     return (
-        <div className={"login-container"}>
-            <div className="login-form">
 
-                <h1 className={"mb-20"}>Sign In</h1>
+        <div>
 
-                <form action="" onSubmit={handleSubmit}>
-                    <div className={"input-row"}>
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            placeholder="Email" value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
 
-                    <div className={"input-row"}>
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
+            <h1 className={"mb-20"}>Sign In</h1>
 
-                    <div className={"input-row"}>
-                        <button className={'btn  '}>Sign in</button>
-                    </div>
-                </form>
+            <form action="" onSubmit={handleSubmit}>
+                <div className={"input-row"}>
+                    <label htmlFor="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Email" value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
 
-            </div>
+                <div className={"input-row"}>
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div className={"input-row"}>
+                    <button className={'btn primary'}>Sign in</button>
+                </div>
+            </form>
+
         </div>
+
     )
 
 }

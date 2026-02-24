@@ -11,10 +11,17 @@ const Auth = () => {
 
     return (
         <div className="auth-container">
-            {loginPage ? <Login/> : <Register/>}
+            <div className={"auth-container"}>
+                <div className="auth-form">
 
-            <div>
-                <div onClick={() => setLoginPage(false)}>Login</div>
+                    {loginPage ? <Login/> : <Register/>}
+
+                    <div>
+                        <div className="btn" onClick={() => setLoginPage(prevState => !prevState)}>
+                            {loginPage ? "Register new company" : "Login"}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
