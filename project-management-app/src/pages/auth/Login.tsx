@@ -35,12 +35,18 @@ export const Login = () => {
         try {
             const data = await loginRequest({email, password});
 
-            localStorage.setItem("accessToken", data.token);
-            localStorage.setItem("refreshToken", data.refreshToken);
+            if (data?.error) {
+                setError(data.error)
+            } else {
 
-            login(data.token, data.user);
 
-            navigate("/");
+                localStorage.setItem("accessToken", data.token);
+                localStorage.setItem("refreshToken", data.refreshToken);
+
+                login(data.token, data.user);
+
+                navigate("/");
+            }
 
         } catch (err: any) {
 

@@ -24,6 +24,11 @@ export type LoginResponse = {
     user: User;
 };
 
+
+export type ErrorResponse = {
+    error: string;
+}
+
 export async function registerRequest(
     data: RegisterPayload
 ): Promise<LoginResponse> {
