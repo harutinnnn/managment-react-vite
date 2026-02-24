@@ -1,11 +1,9 @@
-import "./Login.css";
-import {useAuth} from "@/context/AuthContext";
-import {useNavigate} from "react-router-dom";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "@/context/AuthContext";
 import {loginRequest} from "@/api/auth.api";
 
-const Login = () => {
-
+export const Login = () => {
     const {login} = useAuth();
     const navigate = useNavigate();
 
@@ -18,7 +16,7 @@ const Login = () => {
         setError("");
 
         try {
-            const data = await loginRequest({ email, password });
+            const data = await loginRequest({email, password});
             console.log(data);
 
             localStorage.setItem("accessToken", data.token);
@@ -33,6 +31,7 @@ const Login = () => {
             setError(err.response?.data?.message || "Login failed");
         }
     };
+
 
     return (
         <div className={"login-container"}>
@@ -71,7 +70,6 @@ const Login = () => {
 
             </div>
         </div>
-    );
-};
+    )
 
-export default Login;
+}
