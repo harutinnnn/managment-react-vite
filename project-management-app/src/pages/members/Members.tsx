@@ -1,18 +1,20 @@
 import './Members.css'
-import avatar from '../assets/avatar.png'
-import {MessageCircle, UserRound, UserRoundPen} from "lucide-react";
-import {useState} from "react";
+import avatar from '../../assets/avatar.png'
+import {MessageCircle, UserRound, UserRoundPen, X} from "lucide-react";
+import {useEffect, useState} from "react";
 import Modal from "react-modal";
+import {MemberForm} from "@/pages/members/MemberForm";
+import {getMembers} from "@/api/members.api";
 
 
 // Bind modal to your appElement (for accessibility)
 Modal.setAppElement("#root");
 
 
-
 const Members = () => {
 
-    const members: number[] = new Array(10).fill(0)
+    // const members: number[] = new Array(10).fill(0)
+    const [members, setMembers] = useState([]);
 
     const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -42,6 +44,24 @@ const Members = () => {
         },
     };
 
+    useEffect(() => {
+        getMembersHandle()
+    }, [])
+
+
+    const getMembersHandle = async () => {
+
+        try {
+
+            const members: any = await getMembers()
+            setMembers(members)
+
+        } catch (e) {
+        }
+
+
+    }
+
     return (<>
 
             <div className={"page-header mb-20"}>
@@ -56,13 +76,13 @@ const Members = () => {
 
             <div className="members">
 
-                {members.map((ele, i) =>
+                {members.map((member, i) =>
                     <div className="member-item" key={i}>
                         <div className="member-header">
                             <img src={avatar} alt="Avatar" className="member-avarar"/>
                             <div className={"member-header-info"}>
 
-                                <h3>Alex Johnson</h3>
+                                <h3>{member.name}</h3>
                                 <div className={"member-prof-status"}>
                                     <div className={"member-profession"}>Developer</div>
                                     <div className={"member-status status-active"}>Active</div>
@@ -114,9 +134,11 @@ const Members = () => {
                 style={customStyles}
                 contentLabel="Example Modal"
             >
-                <h2>Hello</h2>
-                <button onClick={closeModal}>close</button>
 
+
+                <X onClick={closeModal} className="close-modal"/>
+
+                <MemberForm closeModal={() => closeModal()} getMembers={() => getMembersHandle()}/>
 
             </Modal>
 

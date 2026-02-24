@@ -38,7 +38,7 @@ export async function registerRequest(
 
 export async function loginRequest(
     data: LoginPayload
-): Promise<LoginResponse> {
+): Promise<LoginResponse | ErrorResponse> {
     const response = await api.post<LoginResponse>("/auth/login", data);
     return response.data;
 }

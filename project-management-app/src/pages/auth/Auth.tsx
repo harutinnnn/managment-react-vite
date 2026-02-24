@@ -1,4 +1,4 @@
-import "../Login.css";
+import "./Login.css";
 import {Login} from "@/pages/auth/Login";
 import {useState} from "react";
 import {Register} from "@/pages/auth/Register";

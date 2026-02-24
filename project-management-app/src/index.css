@@ -243,3 +243,12 @@ body {
     margin-top: 5px;
 
 }
+
+.ReactModal__Content{
+
+}
+.ReactModal__Content .close-modal{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}

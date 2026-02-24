@@ -23,28 +23,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         async function restoreSession() {
             try {
-                // First try with current access token
+                const token = localStorage.getItem("accessToken");
+                if (!token) {
+                    setLoading(false);
+                    return;
+                }
+
                 let userFromApi = await getMeRequest();
                 setUser(userFromApi);
             } catch (err: any) {
-                if (err.response?.status === 401) {
-                    // Access token expired → try refresh
-                    try {
-                        const refreshResponse = await api.post("/auth/refresh", {}, { withCredentials: true });
-                        const newAccessToken = refreshResponse.data.accessToken;
-
-                        localStorage.setItem("accessToken", newAccessToken);
-
-                        // Retry /auth/me with new access token
-                        const userFromApi = await getMeRequest();
-                        setUser(userFromApi);
-                    } catch {
-                        // Refresh failed → logout
-                        logout();
-                    }
-                } else {
-                    logout();
-                }
+                logout();
             } finally {
                 setLoading(false);
             }

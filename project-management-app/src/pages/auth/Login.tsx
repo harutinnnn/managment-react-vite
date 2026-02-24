@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/context/AuthContext";
-import {loginRequest} from "@/api/auth.api";
+import {ErrorResponse, loginRequest} from "@/api/auth.api";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup"
 
@@ -35,18 +35,18 @@ export const Login = () => {
         try {
             const data = await loginRequest({email, password});
 
-            if (data?.error) {
+            if ("error" in data) {
                 setError(data.error)
             } else {
-
-
-                localStorage.setItem("accessToken", data.token);
                 localStorage.setItem("refreshToken", data.refreshToken);
 
                 login(data.token, data.user);
 
                 navigate("/");
+                localStorage.setItem("accessToken", data.token);
+
             }
+
 
         } catch (err: any) {
 
