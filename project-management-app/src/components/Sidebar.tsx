@@ -1,8 +1,12 @@
 import logo from "../assets/checklist.png";
-import {Link} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import {CalendarCheck, FolderOpenDot, Gauge, LogOut, Mail, Settings, UsersRound} from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 function Sidebar() {
+
+
+    const { logout } = useAuth();
     return (
         <>
             <div className={"sidebar"}>
@@ -17,46 +21,46 @@ function Sidebar() {
                 <div className="sidebar-nav">
                     <ul>
                         <li>
-                            <Link to={'/'} className={"active"}>
-                                <Gauge size={22} />
+                            <NavLink to={'/'} className={({isActive}) => (isActive ? "active" : "")}>
+                                <Gauge size={22}/>
                                 <span>Dashboard</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li>
-                            <Link to={'/projects'}>
-                                <FolderOpenDot size={22} />
+                            <NavLink to={'/projects'} className={({isActive}) => (isActive ? "active" : "")}>
+                                <FolderOpenDot size={22}/>
                                 <span>Projects</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li>
-                            <Link to={'/tasks'}>
-                                <CalendarCheck size={22} />
+                            <NavLink to={'/tasks'} className={({isActive}) => (isActive ? "active" : "")}>
+                                <CalendarCheck size={22}/>
                                 <span>Tasks</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li>
-                            <Link to={'/messages'}>
-                                <Mail size={22} />
+                            <NavLink to={'/messages'} className={({isActive}) => (isActive ? "active" : "")}>
+                                <Mail size={22}/>
                                 <span>Messages</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li>
-                            <Link to={'/members'}>
-                                <UsersRound size={22} />
+                            <NavLink to={'/members'} className={({isActive}) => (isActive ? "active" : "")}>
+                                <UsersRound size={22}/>
                                 <span>Members</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li>
-                            <Link to={'/settings'}>
-                                <Settings size={22} />
+                            <NavLink to={'/settings'} className={({isActive}) => (isActive ? "active" : "")}>
+                                <Settings size={22}/>
                                 <span>Settings</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li>
-                            <Link to={'/logout'}>
-                                <LogOut size={22} />
+                            <a href="javascript:void(0)" onClick={() => logout()}>
+                                <LogOut size={22}/>
                                 <span>Logout</span>
-                            </Link>
+                            </a>
                         </li>
                     </ul>
                 </div>

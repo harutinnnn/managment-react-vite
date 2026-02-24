@@ -1,45 +1,42 @@
-import {Routes, Route} from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Sidebar from "@/components/Sidebar";
-import {MainHeader} from "@/components/MainHeader";
-import {useState} from "react";
+import { Routes, Route } from "react-router-dom";
+import ProtectedLayout from "@/layouts/ProtectedLayout";
+import AuthLayout from "@/layouts/AuthLayout";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
+import Login from "@/pages/Login";
+import Home from "@/pages/Home";
 import Projects from "@/pages/Projects";
 import Tasks from "@/pages/Tasks";
 import Members from "@/pages/Members";
-
+import Messages from "@/pages/Messages";
+import Settings from "@/pages/Settings";
 
 function App() {
-
-    const [minMaxSidebar, setMinMaxSidebar] = useState<boolean>(false);
+    const isAuthenticated = !!localStorage.getItem("token");
 
     return (
-        <div id={"wrapper"} className={(minMaxSidebar ? "minimised-sidebar" : "")}>
+        <Routes>
+            {/* Public layout */}
+            <Route element={<AuthLayout />}>
+                <Route path="/login" element={<Login />} />
+            </Route>
 
-            <Sidebar/>
-            <div></div>
-
-            <div className={"main-content"}>
-
-                <MainHeader minMaxSidebar={() => {
-
-                    setMinMaxSidebar(prev => !prev);
-                }}/>
-
-                <div className="content-inner">
-
-                    <Routes>
-                        <Route path="/" element={<Home/>}/>
-                        <Route path="/projects" element={<Projects/>}/>
-                        <Route path="/tasks" element={<Tasks/>}/>
-                        <Route path="/members" element={<Members/>}/>
-                        <Route path="/about" element={<About/>}/>
-                    </Routes>
-
-                </div>
-
-            </div>
-        </div>
+            {/* Protected layout */}
+            <Route
+                element={
+                    <ProtectedRoute>
+                        <ProtectedLayout />
+                    </ProtectedRoute>
+                }
+            >
+                <Route path="/" element={<Home />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/tasks" element={<Tasks />} />
+                <Route path="/members" element={<Members />} />
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/settings" element={<Settings />} />
+            </Route>
+        </Routes>
     );
 }
 

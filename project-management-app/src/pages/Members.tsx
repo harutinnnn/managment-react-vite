@@ -2,10 +2,13 @@ import './Members.css'
 import avatar from '../assets/avatar.png'
 import {MessageCircle, UserRoundPen} from "lucide-react";
 
-const members: [] = new Array(10).fill(0)
-console.log(members)
+
+
 
 const Members = () => {
+
+    const members: number[] = new Array(10).fill(0)
+
     return (<>
             <h1>Members Page</h1>
 
