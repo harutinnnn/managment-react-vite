@@ -1,13 +1,13 @@
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useAuth} from "@/context/AuthContext";
-import {registerRequest} from "@/api/auth.api";
-import {Formik, Form, Field, ErrorMessage} from "formik";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { registerRequest } from "@/api/auth.api";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup"
-import {AxiosError} from "axios";
+import { AxiosError } from "axios";
 
 export const Register = () => {
-    const {login} = useAuth();
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     const [error, setError] = useState("");
@@ -48,7 +48,7 @@ export const Register = () => {
 
 
         try {
-            const data = await registerRequest({companyName, name, email, phone, password, address});
+            const data = await registerRequest({ companyName, name, email, phone, password, address });
 
             localStorage.setItem("accessToken", data.token);
             localStorage.setItem("refreshToken", data.refreshToken);
@@ -96,7 +96,7 @@ export const Register = () => {
                             name="companyName"
                             placeholder="Some company"
                         />
-                        <ErrorMessage name="companyName" component="div" className="error-msg"/>
+                        <ErrorMessage name="companyName" component="div" className="error-msg" />
                     </div>
 
 
@@ -108,7 +108,7 @@ export const Register = () => {
                             name="name"
                             placeholder="John..."
                         />
-                        <ErrorMessage name="name" component="div" className="error-msg"/>
+                        <ErrorMessage name="name" component="div" className="error-msg" />
                     </div>
 
 
@@ -120,7 +120,7 @@ export const Register = () => {
                             name="email"
                             placeholder="Email"
                         />
-                        <ErrorMessage name="email" component="div" className="error-msg"/>
+                        <ErrorMessage name="email" component="div" className="error-msg" />
                     </div>
 
                     <div className={"input-row"}>
@@ -131,7 +131,7 @@ export const Register = () => {
                             name="phone"
                             placeholder="+ 9 ..."
                         />
-                        <ErrorMessage name="phone" component="div" className="error-msg"/>
+                        <ErrorMessage name="phone" component="div" className="error-msg" />
                     </div>
 
                     <div className={"input-row"}>
@@ -142,7 +142,7 @@ export const Register = () => {
                             name="password"
                             placeholder="Password"
                         />
-                        <ErrorMessage name="password" component="div" className="error-msg"/>
+                        <ErrorMessage name="password" component="div" className="error-msg" />
                     </div>
 
                     <div className={"input-row"}>
@@ -153,7 +153,7 @@ export const Register = () => {
                             name="confirmPassword"
                             placeholder="Password confirmation"
                         />
-                        <ErrorMessage name="confirmPassword" component="div" className="error-msg"/>
+                        <ErrorMessage name="confirmPassword" component="div" className="error-msg" />
                     </div>
 
                     <div className={"input-row"}>
@@ -164,7 +164,7 @@ export const Register = () => {
                             name="address"
                             placeholder="Address"
                         />
-                        <ErrorMessage name="address" component="div" className="error-msg"/>
+                        <ErrorMessage name="address" component="div" className="error-msg" />
                     </div>
 
 
