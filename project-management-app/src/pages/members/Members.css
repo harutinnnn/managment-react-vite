@@ -5,14 +5,24 @@
 }
 
 .members .member-item {
-
+    cursor: pointer;
     background: var(--white);
     padding: 20px;
     border-radius: 8px;
 
-    box-shadow: 0px 0px 1px 0px rgba(143, 143, 143, 0.75);
-    -webkit-box-shadow: 0px 0px 1px 0px rgba(143, 143, 143, 0.75);
-    -moz-box-shadow: 0px 0px 1px 0px rgba(143, 143, 143, 0.75);
+    box-shadow: 0px 0px 1px 0px rgba(213, 213, 213, 0.75);
+    -webkit-box-shadow: 0px 0px 1px 0px rgba(213, 213, 213, 0.75);
+    -moz-box-shadow: 0px 0px 1px 0px rgba(213, 213, 213, 0.75);
+
+    transition: box-shadow 0.3s ease-in-out;
+
+
+}
+
+.members .member-item:hover {
+    box-shadow: 0px 0px 10px 0px rgba(213, 213, 213, 0.75);
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(213, 213, 213, 0.75);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(213, 213, 213, 0.75);
 }
 
 .members .member-item .member-header {
@@ -30,7 +40,7 @@
     margin-bottom: 10px;
 }
 
-.members .member-item .member-header .member-prof-status .member-profession{
+.members .member-item .member-header .member-prof-status .member-profession {
     color: var(--gray);
 }
 
@@ -57,6 +67,7 @@
 .members .member-item .member-info > div span:nth-child(1) {
     color: var(--gray);
 }
+
 .members .member-item .member-info > div span:nth-child(2) {
     margin-left: auto;
 }
@@ -83,7 +94,8 @@
     align-items: center;
     justify-content: center;
 }
-.members .member-actions .btn{
+
+.members .member-actions .btn {
     width: 100%;
 }
 
@@ -92,6 +104,7 @@
         grid-template-columns: 1fr 1fr;
     }
 }
+
 @media (max-width: 600px) {
     .members {
         grid-template-columns: 1fr;

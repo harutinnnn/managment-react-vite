@@ -5,6 +5,8 @@ import {useEffect, useState} from "react";
 import Modal from "react-modal";
 import {MemberForm} from "@/pages/members/MemberForm";
 import {getMembers} from "@/api/members.api";
+import {MemberType} from "@/types/MemberType";
+import {useAuth} from "@/context/AuthContext";
 
 
 // Bind modal to your appElement (for accessibility)
@@ -13,8 +15,11 @@ Modal.setAppElement("#root");
 
 const Members = () => {
 
+
+    const {user} = useAuth();
+
     // const members: number[] = new Array(10).fill(0)
-    const [members, setMembers] = useState([]);
+    const [members, setMembers] = useState<MemberType[] | []>([]);
 
     const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -44,28 +49,37 @@ const Members = () => {
         },
     };
 
-    useEffect(() => {
-        getMembersHandle()
-    }, [])
-
-
     const getMembersHandle = async () => {
 
         try {
-
-            const members: any = await getMembers()
+            const members: MemberType[] = await getMembers()
             setMembers(members)
-
         } catch (e) {
+            if (e instanceof Error) {
+                console.error(e.message) // safe access
+            } else {
+                console.error(e) // fallback for non-Error thrown values
+            }
         }
-
-
     }
+
+    useEffect(() => {
+        const fetchMembers = async () => {
+            try {
+                const members = await getMembers()
+                setMembers(members)
+            } catch (e) {
+                if (e instanceof Error) console.error(e.message)
+            }
+        }
+        fetchMembers()
+    }, [])
+
 
     return (<>
 
             <div className={"page-header mb-20"}>
-                <h1 className={"page-title "}>Members({members.length})</h1>
+                <h1 className={"page-title "}>Members({members.length ? members.length - 1 : 0})</h1>
                 <button className={"btn ml-auto"} onClick={() => {
                     openModal()
                 }}>
@@ -76,7 +90,7 @@ const Members = () => {
 
             <div className="members">
 
-                {members.map((member, i) =>
+                {members.filter(member => Number(member.id) !== user?.id).map((member: MemberType, i) =>
                     <div className="member-item" key={i}>
                         <div className="member-header">
                             <img src={avatar} alt="Avatar" className="member-avarar"/>
@@ -93,11 +107,15 @@ const Members = () => {
                         <div className="member-info">
                             <div>
                                 <span>Email</span>
-                                <span>emai@example.com</span>
+                                <span>{member.email}</span>
+                            </div>
+                            <div>
+                                <span>Phone</span>
+                                <span>{member.phone}</span>
                             </div>
                             <div>
                                 <span>Role</span>
-                                <span>Admin</span>
+                                <span>{member.role}</span>
                             </div>
 
                         </div>

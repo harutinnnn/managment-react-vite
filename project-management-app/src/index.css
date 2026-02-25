@@ -83,6 +83,7 @@ body {
     padding: 5px 10px;
 }
 
+.sidebar .sidebar-nav ul li div.nav-link,
 .sidebar .sidebar-nav ul li a {
     display: flex;
     height: 40px;
@@ -96,11 +97,14 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
+.sidebar .sidebar-nav ul li div.nav-link svg,
 .sidebar .sidebar-nav ul li a svg {
     color: var(--primacy-color);
 }
 
+.sidebar .sidebar-nav ul li div.nav-link.active,
 .sidebar .sidebar-nav ul li a.active,
+.sidebar .sidebar-nav ul li div.nav-link:hover,
 .sidebar .sidebar-nav ul li a:hover {
     background-color: var(--lightes-blue);
     color: var(--primacy-color);
@@ -112,14 +116,39 @@ body {
     position: relative;
 }
 
+.minimised-sidebar .sidebar .sidebar-nav ul li div.nav-link,
 .minimised-sidebar .sidebar .sidebar-nav ul li a {
     padding: 0;
     align-items: center;
     justify-content: center;
 }
 
-.minimised-sidebar .sidebar .sidebar-nav ul li a span {
-    display: none;
+.minimised-sidebar .sidebar .sidebar-nav ul li a span,
+.minimised-sidebar .sidebar .sidebar-nav ul li div.nav-link span {
+    /*display: none;*/
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    left: 55px;
+}
+
+.sidebar .sidebar-nav ul li a span,
+.sidebar .sidebar-nav ul li div.nav-link span {
+    transition: all 0.2s ease;
+}
+
+
+.minimised-sidebar .sidebar .sidebar-nav ul li:hover a span,
+.minimised-sidebar .sidebar .sidebar-nav ul li:hover div.nav-link span {
+    display: block;
+
+    color: var(--white);
+    background-color: var(--primacy-color);
+    padding: 8px 10px;
+    border-radius: 5px;
+    visibility: visible;
+    opacity: 1;
+
 }
 
 .main-content {
@@ -237,17 +266,18 @@ body {
     height: 100%;
 }
 
-.error-msg{
+.error-msg {
     color: #e65454;
     font-size: 14px;
     margin-top: 5px;
 
 }
 
-.ReactModal__Content{
+.ReactModal__Content {
 
 }
-.ReactModal__Content .close-modal{
+
+.ReactModal__Content .close-modal {
     position: absolute;
     top: 5px;
     right: 5px;

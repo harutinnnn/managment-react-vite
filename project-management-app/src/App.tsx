@@ -10,6 +10,7 @@ import Tasks from "@/pages/Tasks";
 import Members from "@/pages/members/Members";
 import Messages from "@/pages/Messages";
 import Settings from "@/pages/Settings";
+import Profile from "@/pages/profile/Profile";
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/members" element={<Members/>}/>
                 <Route path="/messages" element={<Messages/>}/>
                 <Route path="/settings" element={<Settings/>}/>
+                <Route path="/profile" element={<Profile/>}/>
             </Route>
         </Routes>
     );

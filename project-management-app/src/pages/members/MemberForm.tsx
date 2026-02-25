@@ -2,6 +2,7 @@ import {useState} from "react";
 import * as Yup from "yup";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {addMember} from "@/api/members.api";
+import {AxiosError} from "axios";
 
 export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, getMembers: () => void }) => {
 
@@ -10,11 +11,13 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
 
     const memberSchema = Yup.object({
         email: Yup.string().email("Invalid email").required("Email is required"),
+        phone: Yup.string().required("Phone is required"),
         name: Yup.string().required("Name is required"),
     });
 
     type MemberFormValues = {
         email: string;
+        phone: string;
         name: string;
     };
 
@@ -24,11 +27,12 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
 
 
         const email = values.email;
+        const phone = values.phone;
         const name = values.name;
 
         try {
 
-            const data = await addMember({email, name});
+            const data = await addMember({email, phone, name});
 
 
             if ("error" in data) {
@@ -39,19 +43,23 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
                 getMembers()
             }
 
-            console.log("data", data);
-        } catch (err: any) {
+        } catch (err) {
+
             console.log("error", err);
 
-            setError(err.response?.data?.message || "Add member failed");
+            if (err instanceof AxiosError) {
+
+                setError(err.response?.data?.message || "Add member failed");
+            }
         }
 
     }
 
     return (
         <div className="member-form">
+            <div className="error-msg">{error}</div>
             <Formik
-                initialValues={{email: "", name: ""}}
+                initialValues={{email: "", phone: "", name: ""}}
                 validationSchema={memberSchema}
                 onSubmit={handleSubmit}
             >
@@ -77,6 +85,17 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
                             placeholder="Email"
                         />
                         <ErrorMessage name="email" component="div" className="error-msg"/>
+                    </div>
+
+                    <div className={"input-row"}>
+                        <label htmlFor="phone">Phone</label>
+                        <Field
+                            type="text"
+                            name="phone"
+                            id="phone"
+                            placeholder="Phone"
+                        />
+                        <ErrorMessage name="phone" component="div" className="error-msg"/>
                     </div>
 
                     <div className={"input-row"}>

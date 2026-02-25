@@ -1,7 +1,9 @@
 import api from "./axios";
+import {MemberType} from "@/types/MemberType";
 
 export type MemberPayload = {
     email: string;
+    phone: string,
     name: string;
 };
 export type AddMemberResponse = {
@@ -21,7 +23,7 @@ export async function addMember(
     return response.data;
 }
 
-export async function getMembers(): Promise<any> {
-    const response = await api.get<AddMemberResponse>("/member");
+export async function getMembers(): Promise<MemberType[]> {
+    const response = await api.get<MemberType[]>("/member");
     return response.data;
 }

@@ -4,6 +4,7 @@ import {useAuth} from "@/context/AuthContext";
 import {registerRequest} from "@/api/auth.api";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup"
+import {AxiosError} from "axios";
 
 export const Register = () => {
     const {login} = useAuth();
@@ -12,11 +13,12 @@ export const Register = () => {
     const [error, setError] = useState("");
 
     const signupSchema = Yup.object({
-        companyName: Yup.string().min(3, "Minimum 3 characters").required("Required"),
-        name: Yup.string().min(3, "Minimum 3 characters").required("Required"),
-        address: Yup.string().min(3, "Minimum 3 characters").required("Required"),
-        email: Yup.string().email("Invalid email").required("Required"),
-        password: Yup.string().min(6, "Minimum 6 characters").required("Required"),
+        companyName: Yup.string().min(3, "Minimum 3 characters").required("Company name is required"),
+        name: Yup.string().min(3, "Minimum 3 characters").required("Name is required"),
+        address: Yup.string().min(3, "Minimum 3 characters").required("Address is required"),
+        email: Yup.string().email("Invalid email").required("Email is required"),
+        phone: Yup.string().required("Phone is required"),
+        password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
         confirmPassword: Yup.string()
             .oneOf([Yup.ref("password")], "Passwords must match")
             .required("Required"),
@@ -27,6 +29,7 @@ export const Register = () => {
         name: string;
         address: string;
         email: string;
+        phone: string;
         password: string;
         confirmPassword: string;
     };
@@ -39,12 +42,13 @@ export const Register = () => {
         const companyName = values.companyName;
         const name = values.name;
         const email = values.email;
+        const phone = values.phone;
         const password = values.password;
         const address = values.address;
 
 
         try {
-            const data = await registerRequest({companyName, name, email, password, address});
+            const data = await registerRequest({companyName, name, email, phone, password, address});
 
             localStorage.setItem("accessToken", data.token);
             localStorage.setItem("refreshToken", data.refreshToken);
@@ -53,9 +57,11 @@ export const Register = () => {
 
             navigate("/");
 
-        } catch (err: any) {
+        } catch (err) {
+            if (err instanceof AxiosError) {
 
-            setError(err.response?.data?.message || "Login failed");
+                setError(err.response?.data?.message || "Login failed");
+            }
         }
     };
 
@@ -68,7 +74,15 @@ export const Register = () => {
 
             {error.length > 0 && <div className="error-msg">{error}</div>}
             <Formik
-                initialValues={{companyName: "", name: "", email: "", password: "", confirmPassword: "", address: ""}}
+                initialValues={{
+                    companyName: "",
+                    name: "",
+                    email: "",
+                    phone: "",
+                    password: "",
+                    confirmPassword: "",
+                    address: ""
+                }}
                 validationSchema={signupSchema}
                 onSubmit={handleSubmit}
             >
@@ -80,7 +94,7 @@ export const Register = () => {
                             type="text"
                             id="companyName"
                             name="companyName"
-                            placeholder="Company name"
+                            placeholder="Some company"
                         />
                         <ErrorMessage name="companyName" component="div" className="error-msg"/>
                     </div>
@@ -92,7 +106,7 @@ export const Register = () => {
                             type="text"
                             id="name"
                             name="name"
-                            placeholder="Company name"
+                            placeholder="John..."
                         />
                         <ErrorMessage name="name" component="div" className="error-msg"/>
                     </div>
@@ -107,6 +121,17 @@ export const Register = () => {
                             placeholder="Email"
                         />
                         <ErrorMessage name="email" component="div" className="error-msg"/>
+                    </div>
+
+                    <div className={"input-row"}>
+                        <label htmlFor="phone">Your phone *</label>
+                        <Field
+                            type="text"
+                            id="phone"
+                            name="phone"
+                            placeholder="+ 9 ..."
+                        />
+                        <ErrorMessage name="phone" component="div" className="error-msg"/>
                     </div>
 
                     <div className={"input-row"}>
@@ -144,7 +169,7 @@ export const Register = () => {
 
 
                     <div className={"input-row"}>
-                        <button className={'btn primary'}>Register</button>
+                        <button className={'btn primary'} type={"submit"}>Register</button>
                     </div>
                 </Form>
             </Formik>

@@ -1,13 +1,12 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { getMeRequest } from "@/api/auth.api";
-import api from "@/api/axios"; // <-- import your API call
+import {createContext, useContext, useEffect, useState} from "react";
+import {getMeRequest} from "@/api/auth.api";
 
 type User = {
     id: number;
     email: string;
 };
 
-type AuthContextType = {
+export type AuthContextType = {
     user: User | null;
     loading: boolean;
     login: (token: string, user: User) => void;
@@ -16,7 +15,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({children}: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -29,7 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     return;
                 }
 
-                let userFromApi = await getMeRequest();
+                const userFromApi = await getMeRequest();
                 setUser(userFromApi);
             } catch (err: any) {
                 logout();
@@ -54,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout }}>
+        <AuthContext.Provider value={{user, loading, login, logout}}>
             {children}
         </AuthContext.Provider>
     );

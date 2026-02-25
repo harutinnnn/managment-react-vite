@@ -1,7 +1,8 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/context/AuthContext";
-import {ErrorResponse, loginRequest} from "@/api/auth.api";
+import {loginRequest} from "@/api/auth.api";
+import {AxiosError} from "axios";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup"
 
@@ -28,7 +29,6 @@ export const Login = () => {
 
         setError("");
 
-
         const email = values.loginEmail;
         const password = values.loginPassword;
 
@@ -48,9 +48,14 @@ export const Login = () => {
             }
 
 
-        } catch (err: any) {
+        } catch (err) {
 
-            setError(err.response?.data?.message || "Login failed");
+            console.error(err);
+
+            if (err instanceof AxiosError) {
+
+                setError(err.response?.data?.message || "Login failed");
+            }
         }
     };
 
@@ -91,7 +96,7 @@ export const Login = () => {
                     </div>
 
                     <div className={"input-row"}>
-                        <button className={'btn primary'}>Sign in</button>
+                        <button className={'btn primary'} type={"submit"}>Sign in</button>
                     </div>
                 </Form>
             </Formik>
