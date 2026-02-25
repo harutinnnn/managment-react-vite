@@ -2,8 +2,8 @@ import {useEffect, useState} from "react";
 import {SkillType} from "@/types/SkillType";
 import {SquarePen, Tags, Trash2, X} from "lucide-react";
 import Modal from "react-modal";
-import {deleteSkill, getSkills} from "@/api/skills.api";
-import {SkillForm} from "@/context/SkillForm";
+import {deleteSkill, getSkill, getSkills} from "@/api/skills.api";
+import {SkillForm} from "@/pages/skils/SkillForm";
 import {ConfirmPopup} from "@/context/ConfirmPopup";
 
 const Skills = () => {
@@ -11,6 +11,7 @@ const Skills = () => {
     const [skills, setSkills] = useState<SkillType[] | []>([])
     const [deleteId, setDeleteId] = useState<number>(0)
     const [modalIsOpen, setIsOpen] = useState(false);
+    const [editSkill, setEditSkill] = useState<SkillType | null>(null)
 
     const openModal = () => {
         setIsOpen(true);
@@ -24,7 +25,7 @@ const Skills = () => {
 
     const closeModal = () => {
         setIsOpen(false);
-
+        setEditSkill(null);
     }
 
     const customStyles = {
@@ -50,7 +51,7 @@ const Skills = () => {
         }
         fetchSkills()
 
-    }, [setSkills])
+    }, [])
 
 
     const getSkillsHandle = async () => {
@@ -80,9 +81,6 @@ const Skills = () => {
         setDeleteId(0)
     }
     const confirmDelete = async () => {
-
-
-
         if (deleteId > 0) {
 
             await deleteSkill(deleteId)
@@ -92,9 +90,16 @@ const Skills = () => {
             setSkills(skills)
 
         }
-
-
     };
+
+
+    const editSkillFn = async (id: number) => {
+
+        const skill: SkillType = await getSkill(id)
+        setEditSkill(skill)
+        setIsOpen(true);
+
+    }
 
     return (<>
             <div className={"page-header mb-20"}>
@@ -124,7 +129,7 @@ const Skills = () => {
                             <td>{skill.name}</td>
                             <td className="actions">
 
-                                <SquarePen size={24} className={'edit-element'}/>
+                                <SquarePen size={24} className={'edit-element'} onClick={() => editSkillFn(skill.id)}/>
                                 <Trash2 size={24} className={'delete-element'} onClick={() => handleDelete(skill.id)}/>
 
                             </td>
@@ -150,11 +155,9 @@ const Skills = () => {
                 style={customStyles}
                 contentLabel="Example Modal"
             >
-
-
                 <X onClick={closeModal} className="close-modal"/>
 
-                <SkillForm closeModal={() => closeModal()} getMembers={() => getSkillsHandle()}/>
+                <SkillForm closeModal={() => closeModal()} getMembers={() => getSkillsHandle()} skillData={editSkill}/>
 
             </Modal>
         </>
