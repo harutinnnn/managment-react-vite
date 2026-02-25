@@ -12,6 +12,7 @@ import Messages from "@/pages/Messages";
 import Settings from "@/pages/Settings";
 import Profile from "@/pages/profile/Profile";
 import MembersEdit from "@/pages/members/MembersEdit";
+import Skills from "@/pages/skils/Skills";
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/members/:id" element={<MembersEdit/>}/>
                 <Route path="/messages" element={<Messages/>}/>
                 <Route path="/settings" element={<Settings/>}/>
+                <Route path="/skills" element={<Skills/>}/>
                 <Route path="/profile" element={<Profile/>}/>
             </Route>
         </Routes>

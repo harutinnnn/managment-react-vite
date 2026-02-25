@@ -2,7 +2,6 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {MemberType} from "@/types/MemberType";
 import {getMember} from "@/api/members.api";
-import {Loader} from "lucide-react";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 
 const MembersEdit = () => {
@@ -22,14 +21,17 @@ const MembersEdit = () => {
             setLoading(false)
         }
         getMemberFn()
-    })
+    },[id])
 
     if (loading) {
         return <PageInnerLoader/>
     }
 
 
-    return <h1>{member?.name}</h1>;
+    return <>
+
+        <h1>{member?.name}</h1>
+    </>;
 };
 
 export default MembersEdit;

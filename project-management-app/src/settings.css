@@ -2,9 +2,11 @@
     --white: #fff;
     --black: #000;
     --gray: lab(60.5129% -1.49679 -7.27124);
+    --dark-gray: #3f4245;
     --light-gray: #b7c4d5;
     --lightes-blue: lab(93.02% -2.12058 -7.10671);
     --primacy-color: lab(63.3112% -5.86495 -53.8932);
+    --error-color: rgb(244, 63, 94);;
     --blue: lab(37.8366% 7.03645 -56.5753);
     --green: lab(59.0978% -58.6621 41.2579);
 }
@@ -36,6 +38,11 @@
     cursor: pointer;
 }
 
+.btn.sm{
+    height: 30px;
+    padding: 0 15px;
+    font-size: 15px;
+}
 .btn:hover {
     background-color: var(--primacy-color);
     color: var(--white);
@@ -50,6 +57,17 @@
     background-color: var(--primacy-color);
     opacity: 0.8;
 }
+
+.btn.danger {
+    background-color: var(--error-color);
+    color: var(--white);
+}
+
+
+.btn.danger:hover {
+    opacity: 0.8;
+}
+
 
 .input-row {
     width: 100%;
@@ -70,7 +88,7 @@
     font-size: 16px;
 }
 
-.input-row .btn{
+.input-row .btn {
     width: 100%;
 }
 
@@ -116,7 +134,7 @@
 }
 
 
-.ml-auto{
+.ml-auto {
     margin-left: auto;
 }
 

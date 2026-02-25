@@ -4,7 +4,7 @@ import {MessageCircle, UserRound, UserRoundPen, X} from "lucide-react";
 import {useEffect, useState} from "react";
 import Modal from "react-modal";
 import {MemberForm} from "@/pages/members/MemberForm";
-import {getMember, getMembers} from "@/api/members.api";
+import {getMembers} from "@/api/members.api";
 import {MemberType} from "@/types/MemberType";
 import {useAuth} from "@/context/AuthContext";
 import {useNavigate} from "react-router-dom";

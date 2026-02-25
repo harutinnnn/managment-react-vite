@@ -1,10 +1,12 @@
 import logo from "../assets/checklist.png";
 import {NavLink} from "react-router-dom";
-import {CalendarCheck, FolderOpenDot, Gauge, LogOut, Mail, Settings, UserRound, UsersRound} from "lucide-react";
+import {CalendarCheck, FolderOpenDot, Gauge, LogOut, Mail, Settings, Tags, UserRound, UsersRound} from "lucide-react";
 import {useAuth} from "@/context/AuthContext";
+import {UserRoles} from "@/enums/UserRoles";
 
 function Sidebar() {
 
+    const {user} = useAuth();
 
     const {logout} = useAuth();
     return (
@@ -62,6 +64,16 @@ function Sidebar() {
                                 <span>Profile</span>
                             </NavLink>
                         </li>
+
+
+                        {user?.role === UserRoles.ADMIN &&
+                            <li>
+                                <NavLink to={'/skills'} className={({isActive}) => (isActive ? "active" : "")}>
+                                    <Tags size={22}/>
+                                    <span>Skills</span>
+                                </NavLink>
+                            </li>
+                        }
                         <li>
                             <div className="nav-link " onClick={() => logout()}>
                                 <LogOut size={22}/>

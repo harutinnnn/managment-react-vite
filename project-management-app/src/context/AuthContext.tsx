@@ -1,11 +1,7 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {getMeRequest, refreshRequest} from "@/api/auth.api";
 import {AxiosError} from "axios";
-
-type User = {
-    id: number;
-    email: string;
-};
+import {User} from "@/types/User";
 
 export type AuthContextType = {
     user: User | null;
@@ -31,7 +27,7 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
                 }
 
                 const userFromApi = await getMeRequest();
-                console.log('userFromApi', userFromApi);
+
                 setUser(userFromApi);
 
             } catch (err) {
@@ -46,11 +42,11 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
                     if (refreshToken) {
 
                         const refresh = await refreshRequest(refreshToken)
-                        console.log('accessToken ', refresh.token);
+
                         localStorage.setItem("accessToken", refresh.token);
 
                         const userFromApi = await getMeRequest();
-                        console.log('userFromApi', userFromApi);
+
                         setUser(userFromApi);
 
                     } else {

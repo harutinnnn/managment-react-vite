@@ -1,4 +1,5 @@
 import api from "./axios";
+import {User} from "@/types/User";
 
 export type LoginPayload = {
     email: string;
@@ -12,11 +13,6 @@ export type RegisterPayload = {
     phone: string;
     password: string;
     address: string;
-};
-
-export type User = {
-    id: number;
-    email: string;
 };
 
 export type LoginResponse = {
@@ -53,7 +49,7 @@ export async function logoutRequest() {
     return api.post("/auth/logout");
 }
 
-export async function getMeRequest(): Promise<User> {
+export async function getMeRequest(): Promise<User | null> {
     const response = await api.get<User>("/auth/me");
     return response.data;
 }
