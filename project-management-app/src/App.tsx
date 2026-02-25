@@ -13,6 +13,7 @@ import Settings from "@/pages/Settings";
 import Profile from "@/pages/profile/Profile";
 import MembersEdit from "@/pages/members/MembersEdit";
 import Skills from "@/pages/skils/Skills";
+import Professions from "@/pages/professions/Professions";
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
                 <Route path="/messages" element={<Messages/>}/>
                 <Route path="/settings" element={<Settings/>}/>
                 <Route path="/skills" element={<Skills/>}/>
+                <Route path="/professions" element={<Professions/>}/>
                 <Route path="/profile" element={<Profile/>}/>
             </Route>
         </Routes>
