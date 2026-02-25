@@ -1,8 +1,10 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import * as Yup from "yup";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {addMember} from "@/api/members.api";
 import {AxiosError} from "axios";
+import {ProfessionType} from "@/types/ProfessionType";
+import {getProfessions} from "@/api/profession.api";
 
 export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, getMembers: () => void }) => {
 
@@ -13,26 +15,37 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
         email: Yup.string().email("Invalid email").required("Email is required"),
         phone: Yup.string().required("Phone is required"),
         name: Yup.string().required("Name is required"),
+        professionId: Yup.number().required("Profession ID is required").test(
+            "Profession is required",
+            (value) => value !== 0
+        )
     });
 
     type MemberFormValues = {
         email: string;
         phone: string;
         name: string;
+        professionId: number;
     };
+
+
+    const [professions, setProfessions] = useState<ProfessionType[]>([]);
+
+    useEffect(() => {
+        (async () => {
+            const professions = await getProfessions();
+            setProfessions(professions)
+        })()
+    }, [setProfessions])
 
     const handleSubmit = async (values: MemberFormValues) => {
 
         setError("");
 
-
-        const email = values.email;
-        const phone = values.phone;
-        const name = values.name;
-
+        const payload = {...values, professionId: Number(values.professionId)};
         try {
 
-            const data = await addMember({email, phone, name});
+            const data = await addMember(payload);
 
 
             if ("error" in data) {
@@ -59,51 +72,80 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
         <div className="member-form">
             <div className="error-msg">{error}</div>
             <Formik
-                initialValues={{email: "", phone: "", name: ""}}
+                initialValues={{
+                    email: "",
+                    phone: "",
+                    name: "",
+                    professionId: professions[0]?.id || 0
+                }}
                 validationSchema={memberSchema}
                 onSubmit={handleSubmit}
             >
-                <Form>
+                {() => (
 
-                    <div className={"input-row"}>
-                        <label htmlFor="name">Name</label>
-                        <Field
-                            type="text"
-                            name="name"
-                            id="name"
-                            placeholder="Name"
-                        />
-                        <ErrorMessage name="name" component="div" className="error-msg"/>
-                    </div>
+                    <Form>
 
-                    <div className={"input-row"}>
-                        <label htmlFor="email">Email</label>
-                        <Field
-                            type="email"
-                            name="email"
-                            id="email"
-                            placeholder="Email"
-                        />
-                        <ErrorMessage name="email" component="div" className="error-msg"/>
-                    </div>
+                        <div className={"input-row"}>
+                            <label htmlFor="name">Name</label>
+                            <Field
+                                type="text"
+                                name="name"
+                                id="name"
+                                placeholder="Name"
+                            />
+                            <ErrorMessage name="name" component="div" className="error-msg"/>
+                        </div>
 
-                    <div className={"input-row"}>
-                        <label htmlFor="phone">Phone</label>
-                        <Field
-                            type="text"
-                            name="phone"
-                            id="phone"
-                            placeholder="Phone"
-                        />
-                        <ErrorMessage name="phone" component="div" className="error-msg"/>
-                    </div>
+                        <div className={"input-row"}>
+                            <label htmlFor="email">Email</label>
+                            <Field
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="Email"
+                            />
+                            <ErrorMessage name="email" component="div" className="error-msg"/>
+                        </div>
 
-                    <div className={"input-row"}>
-                        <button className={'btn primary'} type="submit">Add member</button>
-                    </div>
+                        <div className={"input-row"}>
+                            <label htmlFor="phone">Phone</label>
+                            <Field
+                                type="text"
+                                name="phone"
+                                id="phone"
+                                placeholder="Phone"
+                            />
+                            <ErrorMessage name="phone" component="div" className="error-msg"/>
+                        </div>
+                        <div className={"input-row"}>
+                            <label htmlFor="phone">Phone</label>
+                            <Field
+                                type="text"
+                                name="phone"
+                                id="phone"
+                                placeholder="Phone"
+                            />
+                            <ErrorMessage name="phone" component="div" className="error-msg"/>
+                        </div>
+                        <div className={"input-row"}>
+                            <div className={"input-row"}>
+                                <label htmlFor="phone">Profession</label>
+                                <Field as="select" name="professionId" id="professionId">
+                                    <option value={0}>Select profession</option>
+                                    {professions.map((profession: ProfessionType) => (
+                                        <option value={profession.id}>{profession.name}</option>
+                                    ))}
+                                </Field>
+                                <ErrorMessage name="professionId" component="div" className="error-msg"/>
+                            </div>
+                        </div>
 
+                        <div className={"input-row"}>
+                            <button className={'btn primary'} type="submit">Add member</button>
+                        </div>
 
-                </Form>
+                    </Form>
+                )}
             </Formik>
         </div>
     )

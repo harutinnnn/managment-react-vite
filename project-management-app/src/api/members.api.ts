@@ -5,6 +5,7 @@ export type MemberPayload = {
     email: string;
     phone: string,
     name: string;
+    professionId: number;
 };
 export type AddMemberResponse = {
     email: string;
