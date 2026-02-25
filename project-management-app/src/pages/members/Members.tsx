@@ -4,9 +4,10 @@ import {MessageCircle, UserRound, UserRoundPen, X} from "lucide-react";
 import {useEffect, useState} from "react";
 import Modal from "react-modal";
 import {MemberForm} from "@/pages/members/MemberForm";
-import {getMembers} from "@/api/members.api";
+import {getMember, getMembers} from "@/api/members.api";
 import {MemberType} from "@/types/MemberType";
 import {useAuth} from "@/context/AuthContext";
+import {useNavigate} from "react-router-dom";
 
 
 // Bind modal to your appElement (for accessibility)
@@ -15,6 +16,7 @@ Modal.setAppElement("#root");
 
 const Members = () => {
 
+    const navigate = useNavigate();
 
     const {user} = useAuth();
 
@@ -76,6 +78,10 @@ const Members = () => {
     }, [])
 
 
+    const getMemberProfile = async (id: number) => {
+        navigate(`/members/${id}`);
+    }
+
     return (<>
 
             <div className={"page-header mb-20"}>
@@ -130,7 +136,7 @@ const Members = () => {
 
                         <div className="member-actions">
 
-                            <button className={"btn"}>
+                            <button className={"btn"} onClick={() => getMemberProfile(Number(member.id))}>
                                 <UserRoundPen size={18}/>
                                 <span>Profile</span>
                             </button>

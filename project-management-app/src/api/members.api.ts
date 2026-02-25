@@ -27,3 +27,8 @@ export async function getMembers(): Promise<MemberType[]> {
     const response = await api.get<MemberType[]>("/member");
     return response.data;
 }
+
+export async function getMember(id: number): Promise<MemberType> {
+    const response = await api.get<MemberType>(`/member/${id}`);
+    return response.data;
+}

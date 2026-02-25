@@ -11,6 +11,7 @@ import Members from "@/pages/members/Members";
 import Messages from "@/pages/Messages";
 import Settings from "@/pages/Settings";
 import Profile from "@/pages/profile/Profile";
+import MembersEdit from "@/pages/members/MembersEdit";
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/projects" element={<Projects/>}/>
                 <Route path="/tasks" element={<Tasks/>}/>
                 <Route path="/members" element={<Members/>}/>
+                <Route path="/members/:id" element={<MembersEdit/>}/>
                 <Route path="/messages" element={<Messages/>}/>
                 <Route path="/settings" element={<Settings/>}/>
                 <Route path="/profile" element={<Profile/>}/>

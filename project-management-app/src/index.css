@@ -157,6 +157,8 @@ body {
 
 .main-content .content-inner {
     padding: 20px;
+    position: relative;
+    min-height: calc(100vh - 60px);
 }
 
 .main-header {
@@ -281,4 +283,32 @@ body {
     position: absolute;
     top: 5px;
     right: 5px;
+}
+
+.page-inner-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--light-gray);
+}
+
+.page-inner-loader .loader-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white);
+    animation: rotate 5s linear infinite;
+}
+
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

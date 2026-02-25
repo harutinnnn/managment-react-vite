@@ -1,5 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
-import {getMeRequest} from "@/api/auth.api";
+import {getMeRequest, refreshRequest} from "@/api/auth.api";
+import {AxiosError} from "axios";
 
 type User = {
     id: number;
@@ -20,6 +21,7 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+
         async function restoreSession() {
             try {
                 const token = localStorage.getItem("accessToken");
@@ -29,9 +31,36 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
                 }
 
                 const userFromApi = await getMeRequest();
+                console.log('userFromApi', userFromApi);
                 setUser(userFromApi);
-            } catch (err: any) {
-                logout();
+
+            } catch (err) {
+
+                if (err instanceof AxiosError) {
+
+                    console.log(err.code);
+
+                    const refreshToken = localStorage.getItem("refreshToken");
+                    console.log('refreshToken ', refreshToken);
+
+                    if (refreshToken) {
+
+                        const refresh = await refreshRequest(refreshToken)
+                        console.log('accessToken ', refresh.token);
+                        localStorage.setItem("accessToken", refresh.token);
+
+                        const userFromApi = await getMeRequest();
+                        console.log('userFromApi', userFromApi);
+                        setUser(userFromApi);
+
+                    } else {
+                        logout();
+                    }
+
+                } else {
+                    logout();
+                }
+
             } finally {
                 setLoading(false);
             }
