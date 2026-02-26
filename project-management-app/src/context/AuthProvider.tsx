@@ -17,6 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const userFromApi = await getMeRequest();
                 setUser(userFromApi);
             } catch (err) {
+
                 if (err instanceof AxiosError) {
                     const refreshToken = localStorage.getItem("refreshToken");
                     if (refreshToken) {

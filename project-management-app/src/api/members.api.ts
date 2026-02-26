@@ -15,6 +15,7 @@ export type UpdateProfileResponse = {
     name: string;
     phone: string;
     professionId: number;
+    skills: number[];
 };
 
 export type ErrorResponse = {

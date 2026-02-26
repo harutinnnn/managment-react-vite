@@ -5,7 +5,7 @@
     --dark-gray: #3f4245;
     --light-gray: #b7c4d5;
     --lightes-blue: lab(93.02% -2.12058 -7.10671);
-    --primacy-color: lab(63.3112% -5.86495 -53.8932);
+    --primary-color: lab(63.3112% -5.86495 -53.8932);
     --error-color: rgb(244, 63, 94);;
     --blue: lab(37.8366% 7.03645 -56.5753);
     --green: lab(59.0978% -58.6621 41.2579);
@@ -44,17 +44,17 @@
     font-size: 15px;
 }
 .btn:hover {
-    background-color: var(--primacy-color);
+    background-color: var(--primary-color);
     color: var(--white);
 }
 
 .btn.primary {
-    background-color: var(--primacy-color);
+    background-color: var(--primary-color);
     color: var(--white);
 }
 
 .btn.primary:hover {
-    background-color: var(--primacy-color);
+    background-color: var(--primary-color);
     opacity: 0.8;
 }
 

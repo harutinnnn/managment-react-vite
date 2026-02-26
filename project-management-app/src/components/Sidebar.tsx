@@ -70,7 +70,7 @@ function Sidebar() {
                             </NavLink>
                         </li>
 
-                        {user?.role === UserRoles.ADMIN &&
+                        {user?.user.role === UserRoles.ADMIN &&
                             <>
                                 <li>
                                     <NavLink to={'/skills'} className={({isActive}) => (isActive ? "active" : "")}>

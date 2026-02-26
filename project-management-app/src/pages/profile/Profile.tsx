@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {getMeRequest} from "@/api/auth.api";
+import {addMemberAvatar, getMeRequest} from "@/api/auth.api";
 import {User} from "@/types/User";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {AxiosError} from "axios";
@@ -10,16 +10,26 @@ import {getProfessions} from "@/api/profession.api";
 import {ProfessionType} from "@/types/ProfessionType";
 import {Alerts} from "@/components/Alerts";
 import {AlertEnums} from "@/enums/AlertEnums";
+import {SkillType} from "@/types/SkillType";
+import {getSkills} from "@/api/skills.api";
+import {Camera, CircleCheck} from "lucide-react";
+
 
 const Profile = () => {
 
+    const apiUrl: string = import.meta.env.VITE_API_URL || ""
+
     const [professions, setProfessions] = useState<ProfessionType[]>([]);
+    const [skills, setSkills] = useState<SkillType[] | []>([]);
 
     const [user, setUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>();
     const [success, setSuccess] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [submitting, setSubmitting] = useState(false);
+
+
+    const [userSkills, setUserSkills] = useState<number[]>([]);
 
     useEffect(() => {
 
@@ -30,9 +40,15 @@ const Profile = () => {
                 const professions = await getProfessions();
                 setProfessions(professions)
 
+                const skills = await getSkills();
+                setSkills(skills)
+
                 const user = await getMeRequest()
                 setUser(user)
 
+                if (user?.skills && user?.skills.length) {
+                    setUserSkills(user?.skills)
+                }
                 setLoading(false)
             } catch (err) {
 
@@ -71,11 +87,11 @@ const Profile = () => {
         const name = values.name;
         const phone = values.phone;
         const professionId: number = Number(values.professionId);
-
+        const skills = userSkills;
 
         try {
 
-            const data = await updateProfileRequest({name, phone, professionId});
+            const data = await updateProfileRequest({name, phone, professionId, skills});
 
             if ("error" in data) {
                 setError(data.error)
@@ -86,7 +102,6 @@ const Profile = () => {
                     setSuccess(null)
                 }, 2000)
             }
-
             setSubmitting(false);
 
         } catch (err) {
@@ -96,6 +111,45 @@ const Profile = () => {
             if (err instanceof AxiosError) {
 
                 setError(err.response?.data?.message || "Login failed");
+            }
+        }
+    };
+
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setError(null);
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith("image/")) {
+            setError("Only image files are allowed");
+            return;
+        }
+
+        // Validate file size (max 1MB)
+        if (file.size > 1024 * 1024) {
+            setError("File size must be 1MB or less");
+            return;
+        }
+
+        // Upload immediately
+        const formData = new FormData();
+        formData.append("avatar", file);
+
+        try {
+
+            await addMemberAvatar(formData)
+
+            const user = await getMeRequest()
+            setUser(user)
+
+        } catch (err) {
+
+            if (err instanceof AxiosError) {
+                setError(err.response?.data?.message || "Login failed");
+            } else {
+                setError("Upload failed");
             }
         }
     };
@@ -126,14 +180,26 @@ const Profile = () => {
 
                 <div className={"input-row"}>
                     <label htmlFor="name">Your role</label>
-                    <input type="text" disabled={true} value={user?.role}/>
+                    <input type="text" disabled={true} value={user?.user?.role}/>
                 </div>
+
+                <label className="user-avatar" form="avatar-img">
+
+                    <img
+                        src={user?.user.avatar ? apiUrl + user.user.avatar : (`/src/assets/avatars/${user?.user.gender}.png`)}/>
+                    <Camera size={82} className="change-avatar"/>
+
+                    <input type="file" name="avatar-img" id="avatar-img" style={{display: "none"}}
+                           onChange={handleFileChange}/>
+
+                </label>
+
 
                 <Formik
                     initialValues={{
-                        name: user?.name || "",
-                        phone: user?.phone || "",
-                        professionId: user?.professionId || 0
+                        name: user?.user?.name || "",
+                        phone: user?.user?.phone || "",
+                        professionId: user?.user?.professionId || 0
                     }}
                     validationSchema={userProfileSchema}
                     onSubmit={handleLoginSubmit}
@@ -176,6 +242,30 @@ const Profile = () => {
                                     <ErrorMessage name="professionId" component="div" className="error-msg"/>
                                 </div>
                             </div>
+
+                            <div className="profile-skills-list">
+
+                                {skills && skills.map(skill => (
+                                    <div className={"skill-item " + (userSkills.includes(skill.id) ? 'active' : '')}
+                                         key={skill.id}
+                                         onClick={() => {
+                                             setUserSkills(prevState => {
+                                                 // Check if the skill is already in the array
+                                                 if (prevState.includes(skill.id)) {
+                                                     return prevState.filter(id => id !== skill.id);
+                                                 } else {
+                                                     return [...prevState, skill.id];
+                                                 }
+                                             });
+
+                                         }}>
+                                        <span>{skill.name}</span>
+                                        <CircleCheck size={14}/>
+                                    </div>
+                                ))}
+
+                            </div>
+
 
                             <div className={"input-row"}>
                                 <button className={'btn primary'} type="submit" disabled={submitting}>Save changes

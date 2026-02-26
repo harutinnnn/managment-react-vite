@@ -1,5 +1,4 @@
 import './Members.css'
-import avatar from '../../assets/avatar.png'
 import {MessageCircle, UserRound, UserRoundPen, X} from "lucide-react";
 import {useEffect, useState} from "react";
 import Modal from "react-modal";
@@ -16,6 +15,8 @@ Modal.setAppElement("#root");
 
 
 const Members = () => {
+
+    const apiUrl: string = import.meta.env.VITE_API_URL || ""
 
     const navigate = useNavigate();
 
@@ -87,7 +88,7 @@ const Members = () => {
 
             <div className={"page-header mb-20"}>
                 <h1 className={"page-title "}>Members({members.length ? members.length - 1 : 0})</h1>
-                {user?.role === UserRoles.ADMIN &&
+                {user?.user.role === UserRoles.ADMIN &&
                     <button className={"btn ml-auto"} onClick={() => {
                         openModal()
                     }}>
@@ -99,10 +100,12 @@ const Members = () => {
 
             <div className="members">
 
-                {members.filter(member => Number(member.id) !== user?.id).map((member: MemberType, i) =>
+                {members.filter(member => Number(member.id) !== user?.user?.id).map((member: MemberType, i) =>
                     <div className="member-item" key={i}>
                         <div className="member-header">
-                            <img src={avatar} alt="Avatar" className="member-avarar"/>
+                            <img
+                                src={member.avatar ? apiUrl + member.avatar : (`/src/assets/avatars/${member.gender}.png`)}
+                                alt="Avatar" className="member-avarar"/>
                             <div className={"member-header-info"}>
 
                                 <h3>{member.name}</h3>

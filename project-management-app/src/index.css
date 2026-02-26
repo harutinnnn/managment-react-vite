@@ -105,7 +105,7 @@ body {
 
 .sidebar .sidebar-nav ul li div.nav-link svg,
 .sidebar .sidebar-nav ul li a svg {
-    color: var(--primacy-color);
+    color: var(--primary-color);
 }
 
 .sidebar .sidebar-nav ul li div.nav-link.active,
@@ -113,7 +113,7 @@ body {
 .sidebar .sidebar-nav ul li div.nav-link:hover,
 .sidebar .sidebar-nav ul li a:hover {
     background-color: var(--lightes-blue);
-    color: var(--primacy-color);
+    color: var(--primary-color);
 }
 
 
@@ -147,14 +147,12 @@ body {
 .minimised-sidebar .sidebar .sidebar-nav ul li:hover a span,
 .minimised-sidebar .sidebar .sidebar-nav ul li:hover div.nav-link span {
     display: block;
-
     color: var(--white);
-    background-color: var(--primacy-color);
+    background-color: var(--primary-color);
     padding: 8px 10px;
     border-radius: 5px;
     visibility: visible;
     opacity: 1;
-
 }
 
 .main-content {
@@ -380,6 +378,77 @@ body {
     transition: background-color 0.2s ease-in-out;
 }
 
+.profile-skills-list {
+
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.profile-skills-list .skill-item {
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    color: var(--white);
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s ease-in-out;
+
+    &:hover {
+        opacity: .7;
+    }
+}
+
+.profile-skills-list .skill-item svg {
+    display: none;
+}
+
+.profile-skills-list .skill-item.active {
+    background-color: var(--green);
+}
+
+.profile-skills-list .skill-item.active svg {
+    display: block;
+}
+
+.user-avatar {
+
+    width: 150px;
+    height: 150px;
+
+    padding: 10px;
+    border-radius: 5px;
+    border: solid 1px var(--light-gray);
+    margin-bottom: 20px;
+    position: relative;
+    cursor: pointer;
+    display: block;
+}
+
+.user-avatar .change-avatar {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.user-avatar:hover .change-avatar {
+    opacity: 1;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+}
+
 /* Optional: rounded corners */
 .custom-table {
     border-radius: 5px;
@@ -396,7 +465,7 @@ body {
 }
 
 .custom-table td.actions .edit-element {
-    color: var(--primacy-color);
+    color: var(--primary-color);
 }
 
 .custom-table td.actions .delete-element {
@@ -471,7 +540,7 @@ body {
 }
 
 .badge-item .badge-header .badge-icon svg {
-    color: var(--primacy-color);
+    color: var(--primary-color);
 }
 
 .badge-item .badge-info .badge-counter {

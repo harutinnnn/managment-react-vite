@@ -53,3 +53,10 @@ export async function getMeRequest(): Promise<User | null> {
     const response = await api.get<User>("/auth/me");
     return response.data;
 }
+
+export async function addMemberAvatar(data: FormData): Promise<User | null> {
+    const response = await api.post("/member/avatar", data, {
+        headers: {"Content-Type": "multipart/form-data"}
+    });
+    return response.data;
+}

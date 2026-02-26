@@ -3,5 +3,7 @@ export type MemberType = {
     name: string;
     email: string;
     phone?: string;
-    role: string
+    role: string;
+    gender: 'male' | 'female' | 'unknown';
+    avatar: string;
 }
