@@ -1,5 +1,5 @@
 import api from "./axios";
-import {MemberType} from "@/types/MemberType";
+import {MemberJoinSkillType, MemberType} from "@/types/MemberType";
 
 export type MemberPayload = {
     email: string;
@@ -37,8 +37,8 @@ export async function updateProfileRequest(
     return response.data;
 }
 
-export async function getMembers(): Promise<MemberType[]> {
-    const response = await api.get<MemberType[]>("/member");
+export async function getMembers(): Promise<MemberJoinSkillType[]> {
+    const response = await api.get<MemberJoinSkillType[]>("/member");
     return response.data;
 }
 

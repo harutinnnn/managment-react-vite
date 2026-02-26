@@ -10,6 +10,7 @@ export type RegisterPayload = {
     companyName: string;
     name: string;
     email: string;
+    gender: string;
     phone: string;
     password: string;
     address: string;

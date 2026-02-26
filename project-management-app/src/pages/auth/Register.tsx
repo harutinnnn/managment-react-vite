@@ -1,13 +1,16 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { registerRequest } from "@/api/auth.api";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "@/hooks/useAuth";
+import {registerRequest} from "@/api/auth.api";
+import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup"
-import { AxiosError } from "axios";
+import {AxiosError} from "axios";
+import {Gender} from "@/enums/Gender";
+import {ProfessionType} from "@/types/ProfessionType";
+import {capitalize} from "@/helpers/text.helper";
 
 export const Register = () => {
-    const { login } = useAuth();
+    const {login} = useAuth();
     const navigate = useNavigate();
 
     const [error, setError] = useState("");
@@ -17,6 +20,9 @@ export const Register = () => {
         name: Yup.string().min(3, "Minimum 3 characters").required("Name is required"),
         address: Yup.string().min(3, "Minimum 3 characters").required("Address is required"),
         email: Yup.string().email("Invalid email").required("Email is required"),
+        gender: Yup.mixed<Gender>()
+            .oneOf(Object.values(Gender), "Invalid gender")
+            .required("Gender is required"),
         phone: Yup.string().required("Phone is required"),
         password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
         confirmPassword: Yup.string()
@@ -29,6 +35,7 @@ export const Register = () => {
         name: string;
         address: string;
         email: string;
+        gender: Gender;
         phone: string;
         password: string;
         confirmPassword: string;
@@ -42,13 +49,14 @@ export const Register = () => {
         const companyName = values.companyName;
         const name = values.name;
         const email = values.email;
+        const gender = values.gender;
         const phone = values.phone;
         const password = values.password;
         const address = values.address;
 
 
         try {
-            const data = await registerRequest({ companyName, name, email, phone, password, address });
+            const data = await registerRequest({companyName, name, email, gender, phone, password, address});
 
             localStorage.setItem("accessToken", data.token);
             localStorage.setItem("refreshToken", data.refreshToken);
@@ -78,6 +86,7 @@ export const Register = () => {
                     companyName: "",
                     name: "",
                     email: "",
+                    gender: Gender.MALE,
                     phone: "",
                     password: "",
                     confirmPassword: "",
@@ -96,7 +105,7 @@ export const Register = () => {
                             name="companyName"
                             placeholder="Some company"
                         />
-                        <ErrorMessage name="companyName" component="div" className="error-msg" />
+                        <ErrorMessage name="companyName" component="div" className="error-msg"/>
                     </div>
 
 
@@ -108,7 +117,7 @@ export const Register = () => {
                             name="name"
                             placeholder="John..."
                         />
-                        <ErrorMessage name="name" component="div" className="error-msg" />
+                        <ErrorMessage name="name" component="div" className="error-msg"/>
                     </div>
 
 
@@ -120,7 +129,22 @@ export const Register = () => {
                             name="email"
                             placeholder="Email"
                         />
-                        <ErrorMessage name="email" component="div" className="error-msg" />
+                        <ErrorMessage name="email" component="div" className="error-msg"/>
+                    </div>
+
+                    <div className={"input-row"}>
+                        <label htmlFor="email">Gender *</label>
+                        <Field as="select" name="professionId" id="professionId">
+
+                            <option value={Gender.MALE}
+                                    key={Gender.MALE}>{capitalize(Gender.MALE)}</option>
+                            <option value={Gender.FEMALE}
+                                    key={Gender.FEMALE}>{capitalize(Gender.FEMALE)}</option>
+                            <option value={Gender.UNKNOWN}
+                                    key={Gender.UNKNOWN}>{capitalize(Gender.UNKNOWN)}</option>
+
+
+                        </Field>
                     </div>
 
                     <div className={"input-row"}>
@@ -131,7 +155,7 @@ export const Register = () => {
                             name="phone"
                             placeholder="+ 9 ..."
                         />
-                        <ErrorMessage name="phone" component="div" className="error-msg" />
+                        <ErrorMessage name="phone" component="div" className="error-msg"/>
                     </div>
 
                     <div className={"input-row"}>
@@ -142,7 +166,7 @@ export const Register = () => {
                             name="password"
                             placeholder="Password"
                         />
-                        <ErrorMessage name="password" component="div" className="error-msg" />
+                        <ErrorMessage name="password" component="div" className="error-msg"/>
                     </div>
 
                     <div className={"input-row"}>
@@ -153,7 +177,7 @@ export const Register = () => {
                             name="confirmPassword"
                             placeholder="Password confirmation"
                         />
-                        <ErrorMessage name="confirmPassword" component="div" className="error-msg" />
+                        <ErrorMessage name="confirmPassword" component="div" className="error-msg"/>
                     </div>
 
                     <div className={"input-row"}>
@@ -164,7 +188,7 @@ export const Register = () => {
                             name="address"
                             placeholder="Address"
                         />
-                        <ErrorMessage name="address" component="div" className="error-msg" />
+                        <ErrorMessage name="address" component="div" className="error-msg"/>
                     </div>
 
 

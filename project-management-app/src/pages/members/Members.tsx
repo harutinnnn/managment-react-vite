@@ -4,10 +4,11 @@ import {useEffect, useState} from "react";
 import Modal from "react-modal";
 import {MemberForm} from "@/pages/members/MemberForm";
 import {getMembers} from "@/api/members.api";
-import {MemberType} from "@/types/MemberType";
+import {MemberJoinSkillType, MemberType} from "@/types/MemberType";
 import {useAuth} from "@/hooks/useAuth";
 import {useNavigate} from "react-router-dom";
 import {UserRoles} from "@/enums/UserRoles";
+import {capitalize} from "@/helpers/text.helper";
 
 
 // Bind modal to your appElement (for accessibility)
@@ -23,7 +24,7 @@ const Members = () => {
     const {user} = useAuth();
 
     // const members: number[] = new Array(10).fill(0)
-    const [members, setMembers] = useState<MemberType[] | []>([]);
+    const [members, setMembers] = useState<MemberJoinSkillType[] | []>([]);
 
     const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -56,7 +57,7 @@ const Members = () => {
     const getMembersHandle = async () => {
 
         try {
-            const members: MemberType[] = await getMembers()
+            const members: MemberJoinSkillType[] = await getMembers()
             setMembers(members)
         } catch (e) {
             if (e instanceof Error) {
@@ -100,18 +101,18 @@ const Members = () => {
 
             <div className="members">
 
-                {members.filter(member => Number(member.id) !== user?.user?.id).map((member: MemberType, i) =>
+                {members.filter(member => Number(member.user.id) !== user?.user?.id).map((member: MemberJoinSkillType, i) =>
                     <div className="member-item" key={i}>
                         <div className="member-header">
                             <img
-                                src={member.avatar ? apiUrl + member.avatar : (`/src/assets/avatars/${member.gender}.png`)}
+                                src={member.user.avatar ? apiUrl + member.user.avatar : (`/src/assets/avatars/${member.user.gender}.png`)}
                                 alt="Avatar" className="member-avarar"/>
                             <div className={"member-header-info"}>
 
-                                <h3>{member.name}</h3>
+                                <h3>{member.user.name}</h3>
                                 <div className={"member-prof-status"}>
                                     <div className={"member-profession"}>Developer</div>
-                                    <div className={"member-status status-active"}>Active</div>
+                                    <div className={`member-status status-${member.user.status}`}>{capitalize(member.user.status)}</div>
                                 </div>
                             </div>
                         </div>
@@ -119,30 +120,30 @@ const Members = () => {
                         <div className="member-info">
                             <div>
                                 <span>Email</span>
-                                <span>{member.email}</span>
+                                <span>{member.user.email}</span>
                             </div>
                             <div>
                                 <span>Phone</span>
-                                <span>{member.phone}</span>
+                                <span>{member.user.phone}</span>
                             </div>
                             <div>
                                 <span>Role</span>
-                                <span>{member.role}</span>
+                                <span>{member.user.role}</span>
                             </div>
 
                         </div>
 
                         <div className="member-skills">
 
-                            <div className={"member-skill"}>React</div>
-                            <div className={"member-skill"}>Node.js</div>
-                            <div className={"member-skill"}>TypeS</div>
+                            {member.skills && member.skills.map(skill => (
+                                <div className={"member-skill"}>{skill.name}</div>
+                            ))}
 
                         </div>
 
                         <div className="member-actions">
 
-                            <button className={"btn"} onClick={() => getMemberProfile(Number(member.id))}>
+                            <button className={"btn"} onClick={() => getMemberProfile(Number(member.user.id))}>
                                 <UserRoundPen size={18}/>
                                 <span>Profile</span>
                             </button>

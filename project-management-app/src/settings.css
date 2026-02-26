@@ -9,15 +9,33 @@
     --error-color: rgb(244, 63, 94);;
     --blue: lab(37.8366% 7.03645 -56.5753);
     --green: lab(59.0978% -58.6621 41.2579);
+    --warning-color: #dd8322;
 }
 
-.status-active {
+.status-published {
     font-size: 14px;
     font-weight: bold;
     padding: 1px 10px;
     color: var(--green);
     border: solid 1px var(--green);
+    border-radius: 10px;
+}
+.status-pending {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 1px 10px;
+    color: var(--warning-color);
+    border: solid 1px var(--warning-color);
+    border-radius: 10px;
+}
 
+
+.status-blocked {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 1px 10px;
+    color: var(--error-color);
+    border: solid 1px var(--error-color);
     border-radius: 10px;
 }
 
@@ -38,11 +56,12 @@
     cursor: pointer;
 }
 
-.btn.sm{
+.btn.sm {
     height: 30px;
     padding: 0 15px;
     font-size: 15px;
 }
+
 .btn:hover {
     background-color: var(--primary-color);
     color: var(--white);
@@ -69,14 +88,21 @@
 }
 
 
+.input-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
 .input-row {
     width: 100%;
     margin-bottom: 20px;
 }
 
-.input-row input:disabled{
+.input-row input:disabled {
     background-color: var(--lightes-blue) !important;
 }
+
 .input-row input[type=text],
 .input-row input[type=email],
 .input-row input[type=tel],

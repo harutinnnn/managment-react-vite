@@ -207,39 +207,44 @@ const Profile = () => {
 
                     {() => (
                         <Form>
-                            <div className={"input-row"}>
-                                <label htmlFor="name">Name</label>
-                                <Field
-                                    type="text"
-                                    name="name"
-                                    id="name"
-                                    placeholder="Name"
-                                />
-                                <ErrorMessage name="name" component="div" className="error-msg"/>
-                            </div>
-
-                            <div className={"input-row"}>
-                                <label htmlFor="phone">Phone</label>
-                                <Field
-                                    type="text"
-                                    name="phone"
-                                    id="phone"
-                                    placeholder="Phone"
-                                />
-                                <ErrorMessage name="phone" component="div" className="error-msg"/>
-                            </div>
-
-
-                            <div className={"input-row"}>
+                            <div className="input-row-2">
                                 <div className={"input-row"}>
-                                    <label htmlFor="phone">Profession</label>
-                                    <Field as="select" name="professionId" id="professionId">
-                                        <option value={0} key={0}>Select profession</option>
-                                        {professions.map((profession: ProfessionType) => (
-                                            <option value={profession.id} key={profession.id}>{profession.name}</option>
-                                        ))}
-                                    </Field>
-                                    <ErrorMessage name="professionId" component="div" className="error-msg"/>
+                                    <label htmlFor="name">Name</label>
+                                    <Field
+                                        type="text"
+                                        name="name"
+                                        id="name"
+                                        placeholder="Name"
+                                    />
+                                    <ErrorMessage name="name" component="div" className="error-msg"/>
+                                </div>
+
+
+                                <div className={"input-row"}>
+                                    <label htmlFor="phone">Phone</label>
+                                    <Field
+                                        type="text"
+                                        name="phone"
+                                        id="phone"
+                                        placeholder="Phone"
+                                    />
+                                    <ErrorMessage name="phone" component="div" className="error-msg"/>
+                                </div>
+                            </div>
+
+                            <div className="input-row-2">
+                                <div className={"input-row"}>
+                                    <div className={"input-row"}>
+                                        <label htmlFor="phone">Profession</label>
+                                        <Field as="select" name="professionId" id="professionId">
+                                            <option value={0} key={0}>Select profession</option>
+                                            {professions.map((profession: ProfessionType) => (
+                                                <option value={profession.id}
+                                                        key={profession.id}>{profession.name}</option>
+                                            ))}
+                                        </Field>
+                                        <ErrorMessage name="professionId" component="div" className="error-msg"/>
+                                    </div>
                                 </div>
                             </div>
 
