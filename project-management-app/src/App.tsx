@@ -14,6 +14,8 @@ import Profile from "@/pages/profile/Profile";
 import MembersEdit from "@/pages/members/MembersEdit";
 import Skills from "@/pages/skils/Skills";
 import Professions from "@/pages/professions/Professions";
+import ActivationCode from "@/pages/ActivationCode";
+import {Link} from "lucide-react";
 
 function App() {
 
@@ -25,6 +27,8 @@ function App() {
                 <Route path="/login" element={<Auth/>}/>
             </Route>
 
+            <Route path="/wrong-activation-code" element={<ActivationCode/>}/>
+
             {/* Protected layout */}
             <Route
                 element={
@@ -34,6 +38,7 @@ function App() {
                 }
             >
                 <Route path="/" element={<Home/>}/>
+
                 <Route path="/projects" element={<Projects/>}/>
                 <Route path="/tasks" element={<Tasks/>}/>
                 <Route path="/members" element={<Members/>}/>

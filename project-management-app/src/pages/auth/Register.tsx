@@ -1,19 +1,18 @@
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useAuth} from "@/hooks/useAuth";
 import {registerRequest} from "@/api/auth.api";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup"
 import {AxiosError} from "axios";
 import {Gender} from "@/enums/Gender";
-import {ProfessionType} from "@/types/ProfessionType";
 import {capitalize} from "@/helpers/text.helper";
+import {Alerts} from "@/components/Alerts";
+import {AlertEnums} from "@/enums/AlertEnums";
 
 export const Register = () => {
-    const {login} = useAuth();
-    const navigate = useNavigate();
 
-    const [error, setError] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const [disableBtn, setDisableBtn] = useState(false);
 
     const signupSchema = Yup.object({
         companyName: Yup.string().min(3, "Minimum 3 characters").required("Company name is required"),
@@ -44,7 +43,8 @@ export const Register = () => {
 
     const handleSubmit = async (values: SignupFormValues) => {
 
-        setError("");
+        setError(null);
+        setDisableBtn(true);
 
         const companyName = values.companyName;
         const name = values.name;
@@ -58,17 +58,33 @@ export const Register = () => {
         try {
             const data = await registerRequest({companyName, name, email, gender, phone, password, address});
 
-            localStorage.setItem("accessToken", data.token);
-            localStorage.setItem("refreshToken", data.refreshToken);
+            if ("error" in data) {
+                setError(data.error as string);
+            } else {
 
-            login(data.token, data.user);
+                setSuccess("Successfully registered please check your email!");
 
-            navigate("/");
+                setTimeout(() => {
+                    setSuccess(null);
+                }, 5000)
+
+                values.companyName = ''
+                values.name = ''
+                values.email = ''
+                values.phone = ''
+                values.password = ''
+                values.address = ''
+            }
+            setDisableBtn(false);
 
         } catch (err) {
+
+            setDisableBtn(false);
+
             if (err instanceof AxiosError) {
 
                 setError(err.response?.data?.message || "Login failed");
+
             }
         }
     };
@@ -80,7 +96,8 @@ export const Register = () => {
 
             <h1 className={"mb-20"}>Sign Up</h1>
 
-            {error.length > 0 && <div className="error-msg">{error}</div>}
+            {error && <Alerts text={error} type={AlertEnums.danger}/>}
+            {success && <Alerts text={success} type={AlertEnums.success}/>}
             <Formik
                 initialValues={{
                     companyName: "",
@@ -193,7 +210,7 @@ export const Register = () => {
 
 
                     <div className={"input-row"}>
-                        <button className={'btn primary'} type={"submit"}>Register</button>
+                        <button className={'btn primary'} type={"submit"} disabled={disableBtn}>Register</button>
                     </div>
                 </Form>
             </Formik>
