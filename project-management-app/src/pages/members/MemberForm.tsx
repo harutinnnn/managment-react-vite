@@ -11,6 +11,8 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
 
     const [error, setError] = useState("");
 
+    const [submitting, setSubmitting] = useState(false);
+
     const memberSchema = Yup.object({
         email: Yup.string().email("Invalid email").required("Email is required"),
         phone: Yup.string().required("Phone is required"),
@@ -40,6 +42,7 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
 
     const handleSubmit = async (values: MemberFormValues) => {
 
+        setSubmitting(true);
         setError("");
 
         const payload = {...values, professionId: Number(values.professionId)};
@@ -55,6 +58,7 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
                 closeModal()
                 getMembers()
             }
+            setSubmitting(false);
 
         } catch (err) {
 
@@ -117,16 +121,7 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
                             />
                             <ErrorMessage name="phone" component="div" className="error-msg"/>
                         </div>
-                        <div className={"input-row"}>
-                            <label htmlFor="phone">Phone</label>
-                            <Field
-                                type="text"
-                                name="phone"
-                                id="phone"
-                                placeholder="Phone"
-                            />
-                            <ErrorMessage name="phone" component="div" className="error-msg"/>
-                        </div>
+
                         <div className={"input-row"}>
                             <div className={"input-row"}>
                                 <label htmlFor="phone">Profession</label>
@@ -141,7 +136,7 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
                         </div>
 
                         <div className={"input-row"}>
-                            <button className={'btn primary'} type="submit">Add member</button>
+                            <button className={'btn primary'} type="submit" disabled={submitting}>Add member</button>
                         </div>
 
                     </Form>

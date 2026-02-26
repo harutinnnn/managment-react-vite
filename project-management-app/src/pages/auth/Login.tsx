@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { loginRequest } from "@/api/auth.api";
+import { loginRequest, getMeRequest } from "@/api/auth.api";
 import { AxiosError } from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup"
@@ -39,11 +39,21 @@ export const Login = () => {
                 setError(data.error)
             } else {
                 localStorage.setItem("refreshToken", data.refreshToken);
+                localStorage.setItem("accessToken", data.token);
 
-                login(data.token, data.user);
+                let userToSet = data.user;
+                try {
+                    const userFromApi = await getMeRequest();
+                    if (userFromApi) {
+                        userToSet = userFromApi;
+                    }
+                } catch (apiErr) {
+                    console.error("Failed to fetch full user profile", apiErr);
+                }
+
+                login(data.token, userToSet);
 
                 navigate("/");
-                localStorage.setItem("accessToken", data.token);
 
             }
 
