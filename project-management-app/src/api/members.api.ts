@@ -11,6 +11,11 @@ export type AddMemberResponse = {
     email: string;
     name: string;
 };
+export type UpdateProfileResponse = {
+    name: string;
+    phone: string;
+    professionId: number;
+};
 
 export type ErrorResponse = {
     error: string;
@@ -21,6 +26,13 @@ export async function addMember(
     data: MemberPayload
 ): Promise<AddMemberResponse | ErrorResponse> {
     const response = await api.post<AddMemberResponse>("/member", data);
+    return response.data;
+}
+
+export async function updateProfileRequest(
+    data: UpdateProfileResponse
+): Promise<UpdateProfileResponse | ErrorResponse> {
+    const response = await api.post<UpdateProfileResponse>("/auth/me", data);
     return response.data;
 }
 

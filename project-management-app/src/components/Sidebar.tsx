@@ -69,13 +69,6 @@ function Sidebar() {
                                 <span>Settings</span>
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink to={'/profile'} className={({isActive}) => (isActive ? "active" : "")}>
-                                <UserRound size={22}/>
-                                <span>Profile</span>
-                            </NavLink>
-                        </li>
-
 
                         {user?.role === UserRoles.ADMIN &&
                             <>
@@ -93,6 +86,13 @@ function Sidebar() {
                                 </li>
                             </>
                         }
+
+                        <li>
+                            <NavLink to={'/profile'} className={({isActive}) => (isActive ? "active" : "")}>
+                                <UserRound size={22}/>
+                                <span>Profile</span>
+                            </NavLink>
+                        </li>
                         <li>
                             <div className="nav-link " onClick={() => logout()}>
                                 <LogOut size={22}/>
