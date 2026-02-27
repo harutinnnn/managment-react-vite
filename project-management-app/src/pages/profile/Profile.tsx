@@ -13,6 +13,8 @@ import {AlertEnums} from "@/enums/AlertEnums";
 import {SkillType} from "@/types/SkillType";
 import {getSkills} from "@/api/skills.api";
 import {Camera, CircleCheck} from "lucide-react";
+import {Gender} from "@/enums/Gender";
+import {capitalize} from "@/helpers/text.helper";
 
 
 const Profile = () => {
@@ -69,12 +71,16 @@ const Profile = () => {
         professionId: Yup.number().required("Profession ID is required").test(
             "Profession is required",
             (value) => value !== 0
-        )
+        ),
+        gender: Yup.mixed<Gender>()
+            .oneOf(Object.values(Gender), "Invalid gender")
+            .required("Gender is required"),
     });
 
     type ProfileFormValues = {
         phone: string;
         name: string;
+        gender: Gender;
         professionId: number;
     };
 
@@ -86,12 +92,13 @@ const Profile = () => {
 
         const name = values.name;
         const phone = values.phone;
+        const gender = values.gender;
         const professionId: number = Number(values.professionId);
         const skills = userSkills;
 
         try {
 
-            const data = await updateProfileRequest({name, phone, professionId, skills});
+            const data = await updateProfileRequest({name, phone, professionId, skills, gender});
 
             if ("error" in data) {
                 setError(data.error)
@@ -117,6 +124,7 @@ const Profile = () => {
 
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+
         setError(null);
         const file = e.target.files?.[0];
         if (!file) return;
@@ -168,11 +176,15 @@ const Profile = () => {
 
 
             {error && error.length &&
-                <Alerts text={error} type={AlertEnums.danger}/>
+                <Alerts text={error} type={AlertEnums.danger} cb={() => {
+                    setError(null)
+                }} />
             }
 
             {success && success.length &&
-                <Alerts text={success} type={AlertEnums.success}/>
+                <Alerts text={success} type={AlertEnums.success} cb={() => {
+                    setSuccess(null)
+                }} />
             }
 
             <div className="profile-container">
@@ -199,6 +211,7 @@ const Profile = () => {
                     initialValues={{
                         name: user?.user?.name || "",
                         phone: user?.user?.phone || "",
+                        gender: user?.user?.gender as Gender || Gender.MALE,
                         professionId: user?.user?.professionId || 0
                     }}
                     validationSchema={userProfileSchema}
@@ -207,6 +220,38 @@ const Profile = () => {
 
                     {() => (
                         <Form>
+
+                            <div className="input-row-2">
+                                <div className={"input-row"}>
+                                    <label htmlFor="email">Gender *</label>
+                                    <Field as="select" name="gender" id="gender">
+
+                                        <option value={Gender.MALE}
+                                                key={Gender.MALE}>{capitalize(Gender.MALE)}</option>
+                                        <option value={Gender.FEMALE}
+                                                key={Gender.FEMALE}>{capitalize(Gender.FEMALE)}</option>
+                                        <option value={Gender.UNKNOWN}
+                                                key={Gender.UNKNOWN}>{capitalize(Gender.UNKNOWN)}</option>
+
+
+                                    </Field>
+                                </div>
+
+                                <div className={"input-row"}>
+                                    <div className={"input-row"}>
+                                        <label htmlFor="phone">Profession</label>
+                                        <Field as="select" name="professionId" id="professionId">
+                                            <option value={0} key={0}>Select profession</option>
+                                            {professions.map((profession: ProfessionType) => (
+                                                <option value={profession.id}
+                                                        key={profession.id}>{profession.name}</option>
+                                            ))}
+                                        </Field>
+                                        <ErrorMessage name="professionId" component="div" className="error-msg"/>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="input-row-2">
                                 <div className={"input-row"}>
                                     <label htmlFor="name">Name</label>
@@ -229,22 +274,6 @@ const Profile = () => {
                                         placeholder="Phone"
                                     />
                                     <ErrorMessage name="phone" component="div" className="error-msg"/>
-                                </div>
-                            </div>
-
-                            <div className="input-row-2">
-                                <div className={"input-row"}>
-                                    <div className={"input-row"}>
-                                        <label htmlFor="phone">Profession</label>
-                                        <Field as="select" name="professionId" id="professionId">
-                                            <option value={0} key={0}>Select profession</option>
-                                            {professions.map((profession: ProfessionType) => (
-                                                <option value={profession.id}
-                                                        key={profession.id}>{profession.name}</option>
-                                            ))}
-                                        </Field>
-                                        <ErrorMessage name="professionId" component="div" className="error-msg"/>
-                                    </div>
                                 </div>
                             </div>
 

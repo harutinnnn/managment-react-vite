@@ -289,12 +289,22 @@ body {
 }
 
 .alert {
+    display: flex;
+    align-items: center;
     padding: 10px 15px;
     border-radius: 5px;
     background-color: var(--lightes-blue);
     color: var(--dark-gray);
     border: solid 1px var(--light-gray);
     margin-bottom: 10px;
+}
+
+.alert svg {
+    display: flex;
+    align-items: center;
+    color: var(--dark-gray);
+    margin-left: auto;
+    cursor: pointer;
 }
 
 .alert.success {

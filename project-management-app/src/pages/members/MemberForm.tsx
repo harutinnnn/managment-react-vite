@@ -5,6 +5,8 @@ import {addMember} from "@/api/members.api";
 import {AxiosError} from "axios";
 import {ProfessionType} from "@/types/ProfessionType";
 import {getProfessions} from "@/api/profession.api";
+import {Gender} from "@/enums/Gender";
+import {capitalize} from "@/helpers/text.helper";
 
 export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, getMembers: () => void }) => {
 
@@ -17,6 +19,9 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
         email: Yup.string().email("Invalid email").required("Email is required"),
         phone: Yup.string().required("Phone is required"),
         name: Yup.string().required("Name is required"),
+        gender: Yup.mixed<Gender>()
+            .oneOf(Object.values(Gender), "Invalid gender")
+            .required("Gender is required"),
         professionId: Yup.number().required("Profession ID is required").test(
             "Profession is required",
             (value) => value !== 0
@@ -27,6 +32,7 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
         email: string;
         phone: string;
         name: string;
+        gender: Gender;
         professionId: number;
     };
 
@@ -46,6 +52,7 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
         setError("");
 
         const payload = {...values, professionId: Number(values.professionId)};
+
         try {
 
             const data = await addMember(payload);
@@ -80,6 +87,7 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
                     email: "",
                     phone: "",
                     name: "",
+                    gender: Gender.MALE,
                     professionId: professions[0]?.id || 0
                 }}
                 validationSchema={memberSchema}
@@ -120,6 +128,21 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
                                 placeholder="Phone"
                             />
                             <ErrorMessage name="phone" component="div" className="error-msg"/>
+                        </div>
+
+                        <div className={"input-row"}>
+                            <label htmlFor="email">Gender *</label>
+                            <Field as="select" name="gender" id="gender">
+
+                                <option value={Gender.MALE}
+                                        key={Gender.MALE}>{capitalize(Gender.MALE)}</option>
+                                <option value={Gender.FEMALE}
+                                        key={Gender.FEMALE}>{capitalize(Gender.FEMALE)}</option>
+                                <option value={Gender.UNKNOWN}
+                                        key={Gender.UNKNOWN}>{capitalize(Gender.UNKNOWN)}</option>
+
+
+                            </Field>
                         </div>
 
                         <div className={"input-row"}>

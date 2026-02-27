@@ -1,10 +1,12 @@
 import api from "./axios";
 import {MemberJoinSkillType, MemberType} from "@/types/MemberType";
+import {Gender} from "@/enums/Gender";
 
 export type MemberPayload = {
     email: string;
     phone: string,
     name: string;
+    gender: Gender;
     professionId: number;
 };
 export type AddMemberResponse = {
@@ -15,6 +17,7 @@ export type UpdateProfileResponse = {
     name: string;
     phone: string;
     professionId: number;
+    gender:Gender;
     skills: number[];
 };
 

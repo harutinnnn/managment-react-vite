@@ -96,8 +96,12 @@ export const Register = () => {
 
             <h1 className={"mb-20"}>Sign Up</h1>
 
-            {error && <Alerts text={error} type={AlertEnums.danger}/>}
-            {success && <Alerts text={success} type={AlertEnums.success}/>}
+            {error && <Alerts text={error} type={AlertEnums.danger} cb={() => {
+                setError(null)
+            }} />}
+            {success && <Alerts text={success} type={AlertEnums.success} cb={() => {
+                setSuccess(null)
+            }} />}
             <Formik
                 initialValues={{
                     companyName: "",
@@ -151,7 +155,7 @@ export const Register = () => {
 
                     <div className={"input-row"}>
                         <label htmlFor="email">Gender *</label>
-                        <Field as="select" name="professionId" id="professionId">
+                        <Field as="select" name="gender" id="gender">
 
                             <option value={Gender.MALE}
                                     key={Gender.MALE}>{capitalize(Gender.MALE)}</option>
