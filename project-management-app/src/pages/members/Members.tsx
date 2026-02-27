@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import Modal from "react-modal";
 import {MemberForm} from "@/pages/members/MemberForm";
 import {getMembers} from "@/api/members.api";
-import {MemberJoinSkillType, MemberType} from "@/types/MemberType";
+import {MemberJoinSkillType} from "@/types/MemberType";
 import {useAuth} from "@/hooks/useAuth";
 import {useNavigate} from "react-router-dom";
 import {UserRoles} from "@/enums/UserRoles";

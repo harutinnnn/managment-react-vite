@@ -1,7 +1,7 @@
 import {Badge} from "@/components/Badge";
 import {Activity, Check, MessageSquare, UsersRound} from "lucide-react";
 import {useEffect, useState} from "react";
-import {MemberJoinSkillType, MemberType} from "@/types/MemberType";
+import {MemberJoinSkillType} from "@/types/MemberType";
 import {getMembers} from "@/api/members.api";
 import {AxiosError} from "axios";
 import {Alerts} from "@/components/Alerts";

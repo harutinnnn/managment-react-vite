@@ -15,7 +15,6 @@ import MembersEdit from "@/pages/members/MembersEdit";
 import Skills from "@/pages/skils/Skills";
 import Professions from "@/pages/professions/Professions";
 import ActivationCode from "@/pages/ActivationCode";
-import {Link} from "lucide-react";
 
 function App() {
 
