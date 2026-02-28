@@ -10,6 +10,7 @@
     --blue: lab(37.8366% 7.03645 -56.5753);
     --green: lab(59.0978% -58.6621 41.2579);
     --warning-color: #dd8322;
+    --yellow-color: #e8d948;
 }
 
 .status-published {
@@ -192,3 +193,7 @@ select {
 }
 
 /*END Margins and paddings*/
+
+.ReactModal__Overlay{
+    z-index: 9999;
+}

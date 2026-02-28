@@ -1,13 +1,19 @@
 import {useEffect, useState} from "react";
-import {FolderKanban, SquarePen, Trash2, X} from "lucide-react";
+import {FolderKanban, PencilLine, SquarePen, Trash2, X} from "lucide-react";
 import Modal from "react-modal";
 import {ProjectsForm} from "@/pages/projects/ProjectsForm";
 import {ProjectType} from "@/types/ProjectType";
 import {deleteProject, getProject, getProjects} from "@/api/project.api";
 import {ConfirmPopup} from "@/context/ConfirmPopup";
-
+import './Projects.css'
+import {capitalize} from "@/helpers/text.helper";
+import {formatDateTime} from "@/helpers/date.heper";
+import {ProgressBar} from "@/components/ProgressBar";
+import {useNavigate} from "react-router-dom";
 
 const Projects = () => {
+
+    const navigate = useNavigate();
 
     const [projects, setProjects] = useState<ProjectType[] | []>([])
     const [modalIsOpen, setIsOpen] = useState(false);
@@ -103,38 +109,40 @@ const Projects = () => {
                 </button>
             </div>
 
-            <div className="items-list">
-                <table className="custom-table">
-                    <thead>
-                    <tr>
-                        <th>ID:</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Created at</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {projects && projects.map(project => (
-                        <tr key={project.id}>
-                            <td>{project.id}</td>
-                            <td>{project.title}</td>
-                            <td>{project.description}</td>
-                            <td>{project.createdAt.toString()}</td>
-                            <td>{project.status}</td>
-                            <td className="actions">
 
-                                <SquarePen size={24} className={'edit-element'}
-                                           onClick={() => editProjectFn(project.id)}/>
-                                <Trash2 size={24} className={'delete-element'}
+            <div className="projects-list">
+                {projects && projects.map(project => (
+                    <div className="project-item" key={project.id}>
+                        <h3 className="project-title">
+                            <span>{project.title}</span>
+
+
+                            <div className="project-actions">
+                                <Trash2 size={20} className={'delete-project'}
                                         onClick={() => handleDelete(project.id)}/>
 
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                                <PencilLine size={24} className={"edit-project"}
+                                            onClick={() => editProjectFn(project.id)}/>
+
+                                <FolderKanban size={24} onClick={() => navigate('/project/tasks/' + project.id)}
+                                              className="project-tasks"/>
+
+                            </div>
+                        </h3>
+
+                        <ProgressBar percent={project.progress} label={"Progress"}/>
+
+
+                        <div className={"project-status " + project.status}>{capitalize(project.status)}</div>
+                        <p className="project-desc">
+                            {project.description}
+                        </p>
+
+
+                        {typeof project.createdAt}
+                        <div className="project-created">{formatDateTime(project.createdAt.toString())}</div>
+                    </div>
+                ))}
 
             </div>
 
