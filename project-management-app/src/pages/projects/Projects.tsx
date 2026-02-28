@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {FolderKanban, PencilLine, SquarePen, Trash2, X} from "lucide-react";
+import {FolderKanban, PencilLine, Trash2, X} from "lucide-react";
 import Modal from "react-modal";
 import {ProjectsForm} from "@/pages/projects/ProjectsForm";
 import {ProjectType} from "@/types/ProjectType";
@@ -100,7 +100,7 @@ const Projects = () => {
 
     return (<>
             <div className={"page-header mb-20"}>
-                <h1>Projects Page</h1>
+                <h1>Projects</h1>
                 <button className={"btn ml-auto"} onClick={() => {
                     openModal()
                 }}>
@@ -124,7 +124,7 @@ const Projects = () => {
                                 <PencilLine size={24} className={"edit-project"}
                                             onClick={() => editProjectFn(project.id)}/>
 
-                                <FolderKanban size={24} onClick={() => navigate('/project/tasks/' + project.id)}
+                                <FolderKanban size={24} onClick={() => navigate('/project/' + project.id)}
                                               className="project-tasks"/>
 
                             </div>
@@ -138,8 +138,6 @@ const Projects = () => {
                             {project.description}
                         </p>
 
-
-                        {typeof project.createdAt}
                         <div className="project-created">{formatDateTime(project.createdAt.toString())}</div>
                     </div>
                 ))}

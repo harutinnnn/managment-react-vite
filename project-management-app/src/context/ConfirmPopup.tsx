@@ -22,7 +22,7 @@ export const ConfirmPopup: React.FC<ConfirmPopupProps> = ({message, onConfirm, o
                 <p className="popup-message">{message}</p>
                 <div style={{display: "flex", justifyContent: "flex-end", gap: "10px"}}>
                     <button className="btn sm danger" onClick={onCancel}>Cancel</button>
-                    <button className="btn sm primary" onClick={onConfirm}>Confirm</button>
+                    <button className="btn sm success" onClick={onConfirm}>Confirm</button>
                 </div>
             </div>
         </div>

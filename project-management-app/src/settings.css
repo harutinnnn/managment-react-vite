@@ -79,6 +79,18 @@
     opacity: 0.8;
 }
 
+
+.btn.success {
+    background-color: var(--green);
+    color: var(--white);
+}
+
+.btn.success:hover {
+    background-color: var(--green);
+    opacity: 0.8;
+}
+
+
 .btn.danger {
     background-color: var(--error-color);
     color: var(--white);

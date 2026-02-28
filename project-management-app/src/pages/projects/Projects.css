@@ -28,13 +28,15 @@
     -moz-box-shadow: 0px 0px 10px 0px rgba(213, 213, 213, 0.75);
 }
 
-
 .projects-list .project-item .project-title {
-
     font-size: 22px;
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.projects-list .project-item .project-title span{
+
 }
 
 
@@ -119,6 +121,18 @@
     color: var(--primary-color);
     text-align: right;
     margin-top: auto;
+}
+
+@media (max-width: 1400px) {
+    .projects-list {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 1100px) {
+    .projects-list {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 800px) {

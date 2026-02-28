@@ -16,6 +16,7 @@ import Skills from "@/pages/skils/Skills";
 import Professions from "@/pages/professions/Professions";
 import ActivationCode from "@/pages/ActivationCode";
 import './App.css'
+import {ProjectKanban} from "@/pages/projects/ProjectKanban";
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
                 <Route path="/" element={<Home/>}/>
 
                 <Route path="/projects" element={<Projects/>}/>
+                <Route path="/project/:id" element={<ProjectKanban/>}/>
                 <Route path="/tasks" element={<Tasks/>}/>
                 <Route path="/members" element={<Members/>}/>
                 <Route path="/members/:id" element={<MembersEdit/>}/>

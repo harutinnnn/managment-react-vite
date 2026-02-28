@@ -1,4 +1,4 @@
-import {useState} from "react";
+    import {useState} from "react";
 import * as Yup from "yup";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {AxiosError} from "axios";
@@ -88,11 +88,16 @@ export const ProjectsForm = ({closeModal, getProjects, projectData}: ProjectForm
                             <label htmlFor="status">Status *</label>
                             <Field as="select" name="status" id="status">
 
+                                {projectData?.id &&
+                                    <>
+                                        <option value={ProjectStatuses.COMPLETED}
+                                                key={ProjectStatuses.COMPLETED}>{capitalize(ProjectStatuses.COMPLETED)}</option>
+                                        <option value={ProjectStatuses.ACTIVE}
+                                                key={ProjectStatuses.ACTIVE}>{capitalize(ProjectStatuses.ACTIVE)}</option>
+                                    </>
+                                }
                                 <option value={ProjectStatuses.PENDING}
                                         key={ProjectStatuses.PENDING}>{capitalize(ProjectStatuses.PENDING)}</option>
-
-                                <option value={ProjectStatuses.ACTIVE}
-                                        key={ProjectStatuses.ACTIVE}>{capitalize(ProjectStatuses.ACTIVE)}</option>
 
 
                             </Field>
