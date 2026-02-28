@@ -66,6 +66,7 @@ const Professions = () => {
             }
         }
     }
+
     const handleDelete = (id: number) => {
         setDeleteId(id)
         setShowPopup(true)

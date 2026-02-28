@@ -131,7 +131,7 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
                         </div>
 
                         <div className={"input-row"}>
-                            <label htmlFor="email">Gender *</label>
+                            <label htmlFor="gender">Gender *</label>
                             <Field as="select" name="gender" id="gender">
 
                                 <option value={Gender.MALE}

@@ -135,9 +135,10 @@ const Profile = () => {
             return;
         }
 
+        const mb = 2;
         // Validate file size (max 1MB)
-        if (file.size > 1024 * 1024) {
-            setError("File size must be 1MB or less");
+        if (file.size > mb * 1024 * 1024) {
+            setError(`File size must be ${mb}MB or less`);
             return;
         }
 
@@ -178,13 +179,13 @@ const Profile = () => {
             {error && error.length &&
                 <Alerts text={error} type={AlertEnums.danger} cb={() => {
                     setError(null)
-                }} />
+                }}/>
             }
 
             {success && success.length &&
                 <Alerts text={success} type={AlertEnums.success} cb={() => {
                     setSuccess(null)
-                }} />
+                }}/>
             }
 
             <div className="profile-container">

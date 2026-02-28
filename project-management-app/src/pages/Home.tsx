@@ -35,7 +35,7 @@ const Home = () => {
 
             }
         })()
-    })
+    },[])
 
     return (<>
             <div className={"page-header mb-20"}>

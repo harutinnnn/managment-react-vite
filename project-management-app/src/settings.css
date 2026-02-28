@@ -20,6 +20,7 @@
     border: solid 1px var(--green);
     border-radius: 10px;
 }
+
 .status-pending {
     font-size: 14px;
     font-weight: bold;
@@ -117,6 +118,27 @@
     outline: none;
     padding: 0 15px;
     font-size: 16px;
+}
+
+.input-row textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: none;
+    border-radius: 3px;
+    border: 1px solid var(--light-gray);
+    background-color: var(--white);
+    outline: none;
+    padding: 5px 15px;
+    font-size: 16px;
+}
+
+select {
+    appearance: none;
+    background-image: url("./assets/icons/chevron-down.svg");
+    background-repeat: no-repeat;
+    padding-right: 25px;
+    background-position: right 10px center;
+    background-size: 16px;
 }
 
 .input-row .btn {
