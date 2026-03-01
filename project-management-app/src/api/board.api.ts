@@ -1,14 +1,23 @@
 import api from "./axios";
 import {ProfessionType} from "@/types/ProfessionType";
 import {Priorities} from "@/enums/Priorities";
+import {KanbanData} from "@/types/KanbanData";
 
 export type BoardColumnPayload = {
     id?: number;
     projectId: number;
     title: string;
 };
+
+export type SortColumnsPayload = {
+    projectId: number;
+    columns: number[];
+};
+
 export type TaskPayload = {
     id?: string;
+    projectId: number;
+    columnId: number;
     title: string;
     description: string;
     priority: Priorities;
@@ -29,6 +38,12 @@ export type ErrorResponse = {
 }
 
 
+export async function getBoardData(projectId: number): Promise<KanbanData> {
+    const response = await api.post("/board/project", {projectId: projectId});
+    return response.data;
+}
+
+
 export async function addBoardColumn(
     data: BoardColumnPayload,
 ): Promise<AddBoardColumnResponse | ErrorResponse> {
@@ -37,42 +52,16 @@ export async function addBoardColumn(
 }
 
 export async function addTask(
-    data: Omit<TaskPayload, 'projectId' | 'boardColumnId'>,
-    projectId: number,
-    boardColumnId: number
+    data: Omit<TaskPayload, 'boardColumnId'>,
 ): Promise<AddBoardColumnResponse | ErrorResponse> {
 
-    const parsedData = {
-        ...data,
-        projectId,
-        boardColumnId
-    }
-
-    const response = await api.post<AddBoardColumnResponse>("/board/task", parsedData);
+    const response = await api.post<AddBoardColumnResponse>("/board/task", data);
     return response.data;
 }
 
-export async function editProfession(
-    data: BoardColumnPayload,
-): Promise<AddBoardColumnResponse | ErrorResponse> {
-    const response = await api.post<AddBoardColumnResponse>("/profession", data);
-    console.log(response);
-    return response.data;
-}
 
-export async function getProfessions(): Promise<ProfessionType[]> {
-    const response = await api.get<ProfessionType[]>("/profession");
-    return response.data;
-}
-
-export async function getProfession(id: number): Promise<ProfessionType> {
-    const response = await api.get<ProfessionType>(`/profession/${id}`);
-    return response.data;
-}
-
-export async function deleteProfession(
-    id: number,
-): Promise<AddBoardColumnResponse | ErrorResponse> {
-    const response = await api.delete<AddBoardColumnResponse>(`/profession/${id}`);
-    return response.data;
+export async function sortColumns(
+    data: SortColumnsPayload,
+): Promise<void | ErrorResponse> {
+    await api.post<AddBoardColumnResponse>("/board/sort-column", data);
 }
