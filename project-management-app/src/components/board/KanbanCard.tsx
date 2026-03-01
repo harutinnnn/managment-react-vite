@@ -1,6 +1,6 @@
 // components/KanbanCard.tsx
 import React from 'react';
-import { Draggable } from '@hello-pangea/dnd';
+import {Draggable} from '@hello-pangea/dnd';
 import './KanbanCard.css';
 import {Task} from "@/types/Task";
 
@@ -28,11 +28,11 @@ const priorityLabels = {
 };
 
 export const KanbanCard: React.FC<KanbanCardProps> = ({
-    task,
-    index,
-    onEdit,
-    onDelete
-}) => {
+                                                          task,
+                                                          index,
+                                                          onEdit,
+                                                          onDelete
+                                                      }) => {
     // const formatDate = (date: Date) => {
     //     return new Intl.DateTimeFormat('en-US', {
     //         month: 'short',
@@ -44,36 +44,32 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
     const formatDate = (date: string | Date) => {
         const d = typeof date === "string" ? new Date(date) : date;
         const pad = (n: number) => n.toString().padStart(2, "0");
-        return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     };
 
     return (
         <Draggable draggableId={`task-${task.id}`} index={index}>
             {(provided, snapshot) => (
                 <div
-                    className={`kanban-card ${snapshot.isDragging ? 'dragging' : ''}`}
+                    className={`kanban-card ${task.priority} ${snapshot.isDragging ? 'dragging' : ''}`}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     style={{
-                        ...provided.draggableProps.style,
-                        borderLeft: `4px solid ${priorityColors[task.priority]}`
+                        ...provided.draggableProps.style
+                    }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit();
                     }}
                 >
                     <div className="card-header">
-                        <h4>{task.title}</h4>
+                        <h4>
+                            <span>{task.title}</span>
+                            <div className={"task-priority " + task.priority}/>
+                        </h4>
                         <div className="card-actions">
-                            <button
-                                className="edit-card-btn"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onEdit();
-                                }}
-                                title="Edit task"
-                            >
-                                ✎
-                            </button>
-                            <button
+                            {/* <button
                                 className="delete-card-btn"
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -82,31 +78,11 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
                                 title="Delete task"
                             >
                                 ×
-                            </button>
+                            </button>*/}
                         </div>
                     </div>
 
                     <p className="card-description">{task.description}</p>
-
-                    <div className="card-meta">
-                        <span className="card-priority">
-                            {priorityLabels[task.priority]}
-                        </span>
-
-                        {task.assignee && (
-                            <span className="card-assignee">
-                                👤 {task.assignee}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="card-footer">
-                        {task.dueDate && (
-                            <div className="card-due-date">
-                                📅 {formatDate(task.dueDate)}
-                            </div>
-                        )}
-                    </div>
 
                     <div className="card-created">
                         <small>Created: {formatDate(task.createdAt)}</small>

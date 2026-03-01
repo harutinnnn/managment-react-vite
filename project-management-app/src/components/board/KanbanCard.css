@@ -1,5 +1,87 @@
 /* Add to styles/KanbanCard.css */
 
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.kanban-card {
+    padding: 5px 10px;
+    background-color: var(--white);
+    border-radius: 5px;
+}
+
+.card-header {
+    margin-bottom: 10px;
+}
+
+.card-header h4 {
+    display: grid;
+    font-size: 16px;
+    font-weight: normal;
+    grid-template-columns: 1fr 20px;
+    align-items: start;
+    gap: 10px;
+}
+
+.task-priority {
+    display: block;
+    width: 20px;
+    height: 13px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-top: 3px;
+}
+
+.task-priority.lowest {
+    background-color: var(--yellow-color);
+}
+
+.task-priority.low {
+    background-color: var(--primary-color);
+}
+
+.task-priority.medium {
+    background-color: var(--green);
+}
+
+.task-priority.high {
+    background-color: var(--warning-color);
+}
+
+.task-priority.highest {
+    background-color: var(--error-color);
+}
+
+.kanban-card.lowest {
+    border-left: 4px solid var(--yellow-color);
+}
+
+.kanban-card.low {
+    border-left: 4px solid var(--primary-color);
+}
+
+.kanban-card.medium {
+    border-left: 4px solid var(--green);
+}
+
+.kanban-card.high {
+    border-left: 4px solid var(--warning-color);
+}
+
+.kanban-card.highest {
+    border-left: 4px solid var(--error-color);
+}
+
+.card-created{
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: bold;
+    margin-top: 5px;
+}
+
 .kanban-card.editing {
     cursor: default;
     background-color: #f8f9fa;
