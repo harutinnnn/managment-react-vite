@@ -2,7 +2,7 @@
 import React from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import './KanbanCard.css';
-import type { Task } from "../types/Task.ts";
+import {Task} from "@/types/Task";
 
 interface KanbanCardProps {
     task: Task;
@@ -12,15 +12,19 @@ interface KanbanCardProps {
 }
 
 const priorityColors = {
+    lowest: '#e9f7e1',
     low: '#e9f7e1',
     medium: '#fff3cd',
-    high: '#f8d7da'
+    high: '#f8d7da',
+    highest: '#f8d7da'
 };
 
 const priorityLabels = {
+    lowest: '🟢 Low',
     low: '🟢 Low',
     medium: '🟡 Medium',
-    high: '🔴 High'
+    high: '🔴 High',
+    highest: '🔴 High'
 };
 
 export const KanbanCard: React.FC<KanbanCardProps> = ({

@@ -1,4 +1,3 @@
-// components/KanbanBoard.tsx
 import React, {useEffect, useState} from 'react';
 import {DragDropContext, Droppable, type DropResult} from '@hello-pangea/dnd';
 import {AddColumn} from './AddColumn';
@@ -31,11 +30,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
     useEffect(() => {
 
         (async () => {
-
-
             try {
-
-
                 const boardData: KanbanData = await getBoardData(projectId)
 
                 boardData.tasks.map(task => {
@@ -63,7 +58,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
     }
 
 
-    const onDragEnd = (result: DropResult) => {
+    const onDragEnd = async (result: DropResult) => {
+
 
         const {destination, source, draggableId: draggableIdString, type} = result;
 
@@ -76,24 +72,31 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
             return;
         }
 
-        if (type === 'column') {
+        if (type === 'column' && data?.columns) {
+
             const newColumns = Array.from(data.columns);
 
             const [removedColumn] = newColumns.splice(source.index, 1);
 
             newColumns.splice(destination.index, 0, removedColumn);
 
-            console.log('newColumns', newColumns.map(col => col.id));
 
-            sortColumns({
+            const columnsResponse = await sortColumns({
                 projectId: projectId,
                 columns: newColumns.map(col => col.id)
             });
 
-            setData({
-                ...data,
-                columns: newColumns
-            });
+            if ("columns" in columnsResponse) {
+                setData({
+                    ...data,
+                    columns: columnsResponse.columns as Column[]
+                });
+            }
+
+            // setData({
+            //     ...data,
+            //     columns: newColumns
+            // });
             return;
         }
 
@@ -101,15 +104,17 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
         const destinationDroppableId = parseInt(destination.droppableId.replace('column-', ''), 10);
         const draggableTaskId = parseInt(draggableIdString.replace('task-', ''), 10);
 
-        const startColumnIndex = data.columns.findIndex(col => col.id === sourceDroppableId);
-        const finishColumnIndex = data.columns.findIndex(col => col.id === destinationDroppableId);
+        const startColumnIndex = data?.columns.findIndex(col => col.id === sourceDroppableId);
+        const finishColumnIndex = data?.columns.findIndex(col => col.id === destinationDroppableId);
 
-        if (startColumnIndex === -1 || finishColumnIndex === -1) return;
+        if (typeof startColumnIndex === 'undefined' || startColumnIndex === -1 || typeof finishColumnIndex === 'undefined' || finishColumnIndex === -1) return;
 
-        const startColumn = data.columns[startColumnIndex];
-        const finishColumn = data.columns[finishColumnIndex];
 
-        if (startColumn.id === finishColumn.id) {
+        const startColumn = data?.columns[startColumnIndex];
+        const finishColumn = data?.columns[finishColumnIndex];
+
+        if (startColumn?.id === finishColumn?.id && startColumn?.taskIds) {
+
             const newTaskIds = Array.from(startColumn.taskIds);
             newTaskIds.splice(source.index, 1);
             newTaskIds.splice(destination.index, 0, draggableTaskId);
@@ -119,34 +124,37 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                 taskIds: newTaskIds
             };
 
-            const newColumns = Array.from(data.columns);
+            const newColumns = Array.from(data?.columns || []);
             newColumns[startColumnIndex] = newColumn;
 
             setData({
-                ...data,
+                tasks: data?.tasks || [],
                 columns: newColumns
             });
         } else {
-            const startTaskIds = Array.from(startColumn.taskIds);
+            const startTaskIds = Array.from(startColumn?.taskIds || []);
             startTaskIds.splice(source.index, 1);
             const newStartColumn = {
                 ...startColumn,
                 taskIds: startTaskIds
             };
 
-            const finishTaskIds = Array.from(finishColumn.taskIds);
+            const finishTaskIds = Array.from(finishColumn?.taskIds || []);
+
             finishTaskIds.splice(destination.index, 0, draggableTaskId);
             const newFinishColumn = {
                 ...finishColumn,
                 taskIds: finishTaskIds
             };
 
-            const newColumns = Array.from(data.columns);
+            const newColumns = Array.from(data?.columns || []);
+
+
             newColumns[startColumnIndex] = newStartColumn;
             newColumns[finishColumnIndex] = newFinishColumn;
 
             setData({
-                ...data,
+                tasks: data?.tasks || [],
                 columns: newColumns
             });
         }
@@ -169,15 +177,16 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                 const newColumn: Column = {
                     id: newColumnId,
                     title,
-                    taskIds: []
+                    pos: boardColumnResponse.pos,
+                    taskIds: [],
                 };
 
 
                 console.log(boardColumnResponse);
 
                 setData({
-                    ...data,
-                    columns: [...data.columns, newColumn]
+                    tasks: data?.tasks || [],
+                    columns: [...data?.columns || [], newColumn]
                 });
                 setShowAddColumn(false);
             }
@@ -192,12 +201,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
     const handleAddTask = async (taskData: Omit<Task, 'id' | 'createdAt'>) => {
         if (!selectedColumn) return;
 
-        const newTaskId = Date.now();
-        const newTask: Task = {
-            ...taskData,
-            id: newTaskId,
-            createdAt: new Date()
-        };
 
         //TODO add task in column
         const taskResponse = await addTask(
@@ -212,32 +215,47 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                 tags: taskData.tags,
             }
         );
+        console.log(taskResponse);
 
-        console.log(taskResponse)
+        if ('id' in taskResponse) {
+            const newTaskId = taskResponse.id;
 
-        const columnIndex = data.columns.findIndex(col => col.id === selectedColumn);
-        if (columnIndex === -1) return;
 
-        const column = data.columns[columnIndex];
-        const updatedColumn = {
-            ...column,
-            taskIds: [...column.taskIds, newTaskId]
-        };
+            const newTask: Task = {
+                ...taskData,
+                id: newTaskId,
+                createdAt: new Date()
+            };
+            const columnIndex = data?.columns.findIndex(col => col.id === selectedColumn);
 
-        const newColumns = Array.from(data.columns);
-        newColumns[columnIndex] = updatedColumn;
+            console.log('columnIndex', columnIndex);
 
-        setData({
-            ...data,
-            tasks: [...data.tasks, newTask],
-            columns: newColumns
-        });
-        setShowAddTask(false);
-        setSelectedColumn(null);
+            if (typeof columnIndex === 'undefined' || columnIndex === -1) return;
+
+            const column = data?.columns[columnIndex];
+            const updatedColumn = {
+                ...column,
+                taskIds: [...column?.taskIds || [], newTaskId]
+            };
+
+            const newColumns = Array.from(data?.columns || []);
+
+
+            newColumns[columnIndex] = updatedColumn;
+
+
+            setData({
+                ...data,
+                tasks: [...data?.tasks || [], newTask],
+                columns: newColumns
+            });
+            setShowAddTask(false);
+            setSelectedColumn(null);
+        }
     };
 
     const handleEditTask = (taskId: number, columnId: number) => {
-        const task = data.tasks.find(t => t.id === taskId);
+        const task = data?.tasks.find(t => t.id === taskId);
         if (task) {
             setEditingTask({task, columnId});
             setShowEditTask(true);
@@ -249,7 +267,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
         setData({
             ...data,
-            tasks: data.tasks.map(t => t.id === updatedTask.id ? updatedTask : t)
+            tasks: data?.tasks.map(t => t.id === updatedTask.id ? updatedTask : t)
         });
 
         setShowEditTask(false);
@@ -257,41 +275,49 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
     };
 
     const handleDeleteTask = (taskId: number, columnId: number) => {
-        const columnIndex = data.columns.findIndex(col => col.id === columnId);
-        if (columnIndex === -1) return;
 
-        const column = data.columns[columnIndex];
-        const updatedTaskIds = column.taskIds.filter(id => id !== taskId);
+        const columnIndex = data?.columns.findIndex(col => col.id === columnId);
+
+        if (typeof columnIndex === 'undefined' || columnIndex === -1) return;
+
+        const column = data?.columns[columnIndex];
+        const updatedTaskIds = column?.taskIds.filter(id => id !== taskId);
 
         const updatedColumn = {
             ...column,
             taskIds: updatedTaskIds
         };
 
-        const updatedTasks = data.tasks.filter(t => t.id !== taskId);
+        const updatedTasks = data?.tasks.filter(t => t.id !== taskId);
 
-        const newColumns = Array.from(data.columns);
+        const newColumns = Array.from(data?.columns || []);
         newColumns[columnIndex] = updatedColumn;
 
-        setData({
-            ...data,
-            tasks: updatedTasks,
-            columns: newColumns
-        });
+        if (updatedTasks && newColumns) {
+
+            setData({
+                ...data,
+                tasks: updatedTasks,
+                columns: newColumns
+            });
+        }
     };
 
     const handleDeleteColumn = (columnId: number) => {
-        const column = data.columns.find(col => col.id === columnId);
+        const column = data?.columns.find(col => col.id === columnId);
         if (!column) return;
 
-        const updatedTasks = data.tasks.filter(t => !column.taskIds.includes(t.id));
-        const updatedColumns = data.columns.filter(col => col.id !== columnId);
+        const updatedTasks = data?.tasks.filter(t => !column.taskIds.includes(t.id));
+        const updatedColumns = data?.columns.filter(col => col.id !== columnId);
 
-        setData({
-            ...data,
-            tasks: updatedTasks,
-            columns: updatedColumns
-        });
+        if (updatedTasks && updatedColumns) {
+
+            setData({
+                ...data,
+                tasks: updatedTasks,
+                columns: updatedColumns
+            });
+        }
     };
 
     return (
@@ -318,8 +344,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                             {...provided.droppableProps}
                             ref={provided.innerRef}
                         >
-                            {data.columns.sort((a, b) => a.pos - b.pos).map((column, index) => {
-                                const tasks = column.taskIds.map(taskId => data.tasks.find(t => t.id === taskId)!).filter(Boolean);
+                            {data?.columns.sort((a, b) => a.pos - b.pos).map((column, index) => {
+                                const tasks: Task[] = column.taskIds.map(taskId => data.tasks.find(t => t.id === taskId)!).filter(Boolean);
 
                                 return (
                                     <KanbanColumn

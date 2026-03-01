@@ -1,7 +1,7 @@
 import api from "./axios";
-import {ProfessionType} from "@/types/ProfessionType";
 import {Priorities} from "@/enums/Priorities";
 import {KanbanData} from "@/types/KanbanData";
+import type {Column} from "@/types/Column";
 
 export type BoardColumnPayload = {
     id?: number;
@@ -15,7 +15,7 @@ export type SortColumnsPayload = {
 };
 
 export type TaskPayload = {
-    id?: string;
+    id: string;
     projectId: number;
     columnId: number;
     title: string;
@@ -30,6 +30,7 @@ export type TaskPayload = {
 export type AddBoardColumnResponse = {
     id: number;
     title: string;
+    pos: number;
 };
 
 
@@ -52,7 +53,7 @@ export async function addBoardColumn(
 }
 
 export async function addTask(
-    data: Omit<TaskPayload, 'boardColumnId'>,
+    data: Omit<TaskPayload, 'boardColumnId' | 'id'>,
 ): Promise<AddBoardColumnResponse | ErrorResponse> {
 
     const response = await api.post<AddBoardColumnResponse>("/board/task", data);
@@ -62,6 +63,7 @@ export async function addTask(
 
 export async function sortColumns(
     data: SortColumnsPayload,
-): Promise<void | ErrorResponse> {
-    await api.post<AddBoardColumnResponse>("/board/sort-column", data);
+): Promise<Column[] | ErrorResponse> {
+    const columns = await api.post("/board/sort-column", data);
+    return columns.data;
 }
