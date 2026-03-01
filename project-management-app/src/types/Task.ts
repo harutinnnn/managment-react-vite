@@ -10,5 +10,4 @@ export interface Task {
     assignee?: number | null;
     createdAt: Date;
     dueDate?: Date;
-    tags?: string[];
 }

@@ -18,7 +18,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, proje
     const [priority, setPriority] = useState<Priorities>(Priorities.MEDIUM);
     const [assignee, setAssignee] = useState<number | null>(null);
     const [dueDate, setDueDate] = useState('');
-    const [tags, setTags] = useState('');
 
     const handleSubmit = (e: React.SubmitEvent) => {
         e.preventDefault();
@@ -31,7 +30,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, proje
             priority,
             assignee: assignee || null,
             dueDate: dueDate ? new Date(dueDate) : undefined,
-            tags: tags ? tags.split(',').map(tag => tag.trim()) : []
         });
     };
 
@@ -97,15 +95,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, proje
                         </select>
                     </div>
 
-                    <div className="form-group">
-                        <label>Tags (comma separated)</label>
-                        <input
-                            type="text"
-                            value={tags}
-                            onChange={e => setTags(e.target.value)}
-                            placeholder="design, feature, bug"
-                        />
-                    </div>
 
                     <div className="modal-actions">
                         <button type="button" onClick={onClose} className="cancel-btn">

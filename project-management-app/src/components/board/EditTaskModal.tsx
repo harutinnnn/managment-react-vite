@@ -21,7 +21,6 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
     const [dueDate, setDueDate] = useState(
         task.dueDate ? task.dueDate.toISOString().split('T')[0] : ''
     );
-    const [tags, setTags] = useState(task.tags?.join(', ') || '');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,7 +32,6 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
             priority,
             assignee: assignee || undefined,
             dueDate: dueDate ? new Date(dueDate) : undefined,
-            tags: tags ? tags.split(',').map(tag => tag.trim()).filter(tag => tag) : []
         };
 
         onUpdate(updatedTask);
@@ -97,19 +95,6 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             onChange={e => setAssignee(e.target.value)}
                             placeholder="Enter assignee name"
                         />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Tags (comma separated)</label>
-                        <input
-                            type="text"
-                            value={tags}
-                            onChange={e => setTags(e.target.value)}
-                            placeholder="design, feature, bug"
-                        />
-                        <small className="form-hint">
-                            Separate tags with commas (e.g., design, frontend, urgent)
-                        </small>
                     </div>
 
                     <div className="modal-actions">

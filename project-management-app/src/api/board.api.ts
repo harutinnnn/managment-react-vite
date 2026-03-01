@@ -67,3 +67,18 @@ export async function sortColumns(
     const columns = await api.post("/board/sort-column", data);
     return columns.data;
 }
+
+export async function deleteColumn(
+    columnId: number,
+    projectId:number
+): Promise<Column[] | ErrorResponse> {
+    const columns = await api.post("/board/delete-column", {columnId: columnId, projectId: projectId});
+    return columns.data;
+}
+
+export async function deleteTask(
+    taskId: number, columnId: number,
+): Promise<Column[] | ErrorResponse> {
+    const columns = await api.post("/board/delete-task", {taskId: taskId, columnId: columnId});
+    return columns.data;
+}

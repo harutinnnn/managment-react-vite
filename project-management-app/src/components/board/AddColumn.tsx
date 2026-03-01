@@ -11,8 +11,6 @@ interface AddColumnProps {
 export const AddColumn: React.FC<AddColumnProps> = ({onClose, onAdd, projectId}) => {
     const [title, setTitle] = useState('');
 
-    console.log(projectId)
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (title.trim()) {

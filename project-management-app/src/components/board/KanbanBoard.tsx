@@ -8,8 +8,9 @@ import {Task} from "@/types/Task";
 import {Column} from "@/types/Column";
 import {KanbanColumn} from "@/components/board/KanbanColumn";
 import {EditTaskModal} from "@/components/board/EditTaskModal";
-import {addBoardColumn, addTask, getBoardData, sortColumns} from "@/api/board.api";
+import {addBoardColumn, addTask, deleteColumn, deleteTask, getBoardData, sortColumns} from "@/api/board.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
+import {AxiosError} from "axios";
 
 
 interface KanbanBoardProps {
@@ -37,15 +38,11 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                     task.createdAt = task.createdAt as Date;
                 })
 
-                console.log('boardData', boardData)
                 setData(boardData)
-                console.log(boardData);
                 setLoading(false);
-
 
             } catch (err) {
                 console.log(err);
-
             }
         })()
 
@@ -149,7 +146,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
             const newColumns = Array.from(data?.columns || []);
 
-
             newColumns[startColumnIndex] = newStartColumn;
             newColumns[finishColumnIndex] = newFinishColumn;
 
@@ -181,9 +177,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                     taskIds: [],
                 };
 
-
-                console.log(boardColumnResponse);
-
                 setData({
                     tasks: data?.tasks || [],
                     columns: [...data?.columns || [], newColumn]
@@ -212,10 +205,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                 priority: taskData.priority,
                 // assignee: taskData.assignee,
                 // dueDate: taskData.dueDate,
-                tags: taskData.tags,
             }
         );
-        console.log(taskResponse);
 
         if ('id' in taskResponse) {
             const newTaskId = taskResponse.id;
@@ -227,8 +218,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                 createdAt: new Date()
             };
             const columnIndex = data?.columns.findIndex(col => col.id === selectedColumn);
-
-            console.log('columnIndex', columnIndex);
 
             if (typeof columnIndex === 'undefined' || columnIndex === -1) return;
 
@@ -274,49 +263,74 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
         setEditingTask(null);
     };
 
-    const handleDeleteTask = (taskId: number, columnId: number) => {
+    const handleDeleteTask = async (taskId: number, columnId: number) => {
 
-        const columnIndex = data?.columns.findIndex(col => col.id === columnId);
+        try {
 
-        if (typeof columnIndex === 'undefined' || columnIndex === -1) return;
 
-        const column = data?.columns[columnIndex];
-        const updatedTaskIds = column?.taskIds.filter(id => id !== taskId);
+            await deleteTask(taskId, columnId);
 
-        const updatedColumn = {
-            ...column,
-            taskIds: updatedTaskIds
-        };
+            const columnIndex = data?.columns.findIndex(col => col.id === columnId);
 
-        const updatedTasks = data?.tasks.filter(t => t.id !== taskId);
+            if (typeof columnIndex === 'undefined' || columnIndex === -1) return;
 
-        const newColumns = Array.from(data?.columns || []);
-        newColumns[columnIndex] = updatedColumn;
+            const column = data?.columns[columnIndex];
+            const updatedTaskIds = column?.taskIds.filter(id => id !== taskId);
 
-        if (updatedTasks && newColumns) {
+            const updatedColumn = {
+                ...column,
+                taskIds: updatedTaskIds
+            };
 
-            setData({
-                ...data,
-                tasks: updatedTasks,
-                columns: newColumns
-            });
+            const updatedTasks = data?.tasks.filter(t => t.id !== taskId);
+
+            const newColumns = Array.from(data?.columns || []);
+            newColumns[columnIndex] = updatedColumn;
+
+            if (updatedTasks && newColumns) {
+
+                setData({
+                    ...data,
+                    tasks: updatedTasks,
+                    columns: newColumns
+                });
+            }
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                console.error(err.response?.data?.message);
+            } else if (err instanceof Error) {
+                console.error(err.message);
+            }
         }
     };
 
-    const handleDeleteColumn = (columnId: number) => {
-        const column = data?.columns.find(col => col.id === columnId);
-        if (!column) return;
+    const handleDeleteColumn = async (columnId: number) => {
 
-        const updatedTasks = data?.tasks.filter(t => !column.taskIds.includes(t.id));
-        const updatedColumns = data?.columns.filter(col => col.id !== columnId);
 
-        if (updatedTasks && updatedColumns) {
+        try {
 
-            setData({
-                ...data,
-                tasks: updatedTasks,
-                columns: updatedColumns
-            });
+            await deleteColumn(columnId, projectId)
+
+            const column = data?.columns.find(col => col.id === columnId);
+            if (!column) return;
+
+            const updatedTasks = data?.tasks.filter(t => !column.taskIds.includes(t.id));
+            const updatedColumns = data?.columns.filter(col => col.id !== columnId);
+
+            if (updatedTasks && updatedColumns) {
+
+                setData({
+                    ...data,
+                    tasks: updatedTasks,
+                    columns: updatedColumns
+                });
+            }
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                console.error(err.response?.data?.message);
+            } else if (err instanceof Error) {
+                console.error(err.message);
+            }
         }
     };
 

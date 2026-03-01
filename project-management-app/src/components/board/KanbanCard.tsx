@@ -101,16 +101,6 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
                     </div>
 
                     <div className="card-footer">
-                        {task.tags && task.tags.length > 0 && (
-                            <div className="card-tags">
-                                {task.tags.map(tag => (
-                                    <span key={tag} className="tag">
-                                        #{tag}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
-
                         {task.dueDate && (
                             <div className="card-due-date">
                                 📅 {formatDate(task.dueDate)}
