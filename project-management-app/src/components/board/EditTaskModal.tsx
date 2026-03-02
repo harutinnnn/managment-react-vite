@@ -22,7 +22,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
     const [title, setTitle] = useState(task.title);
     const [description, setDescription] = useState(task.description);
     const [priority, setPriority] = useState<Task['priority']>(task.priority);
-    const [assignee, setAssignee] = useState(task.assignee || '');
+    const [assignee, setAssignee] = useState<number | null>(task.assignee || null);
 
     console.log(task.dueDate ? formatDateOnly(task.dueDate) : '')
 
@@ -39,7 +39,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
             title,
             description,
             priority,
-            // assignee: Number(assignee) || null,
+            assignee: assignee,
             dueDate: dueDate ? new Date(dueDate) : null,
         };
 
@@ -104,6 +104,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             value={assignee?.toString()}
                             onChange={e => setAssignee(Number(e.target.value))}
                         >
+                            <option value={0} key={0}>Select member optional</option>
                             {members &&  members.map(member => (
                                 <option value={member.user.id} key={member.user.id}>{member.user.name}</option>
                             ))}

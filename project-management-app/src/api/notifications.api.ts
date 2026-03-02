@@ -15,7 +15,16 @@ export type NotificationsResponse = {
 
 };
 
+export type UpdateNotification = {
+    id: number;
+}
+
 export async function getNotifications(): Promise<NotificationsResponse[] | ErrorResponse> {
-    const response = await api.get<NotificationsResponse[]>("/notifications");
+    const response = await api.get("/notifications");
+    return response.data;
+}
+
+export async function setUpdateNotification(data: UpdateNotification): Promise<UpdateNotification | ErrorResponse> {
+    const response = await api.post("/notifications/update", data);
     return response.data;
 }

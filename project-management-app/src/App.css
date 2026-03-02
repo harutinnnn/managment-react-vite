@@ -61,11 +61,10 @@
 .notification-popup {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     position: absolute;
     top: 55px;
     padding: 15px 15px 15px 10px;
-    background-color: var(--white);
     right: 10px;
     min-height: 100px;
     border-radius: 10px;
@@ -79,7 +78,6 @@
     width: 100%;
     max-width: 200px;
     max-height: 400px;
-
     overflow-y: auto;
     background-color: var(--lightes-blue);
 }
@@ -88,10 +86,21 @@
     font-size: 12px;
     padding: 5px 10px;
     border-bottom: solid 1px var(--light-gray);
+    background-color: var(--white);
     border-radius: 10px;
     cursor: pointer;
 
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    transition: all .2s ease-in-out;
+
     &:hover{
         background-color: var(--light-gray);
+        display:block;
+        overflow: unset;
     }
 }

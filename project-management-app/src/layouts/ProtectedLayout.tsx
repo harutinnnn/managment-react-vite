@@ -8,31 +8,27 @@ import {Loader} from "lucide-react";
 
 export default function ProtectedLayout() {
     const [minMaxSidebar, setMinMaxSidebar] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const [notifications, setNotifications] = useState<NotificationsResponse[]>([]);
 
-    useEffect(() => {
+    const getNotificationsHandle = async (): Promise<void> => {
+        const notifications = await getNotifications()
+        setNotifications(notifications as NotificationsResponse[]);
+    }
 
+
+    useEffect(() => {
         (async () => {
             try {
+                getNotificationsHandle()
 
-
-                const notifications = await getNotifications()
-                setNotifications(notifications as NotificationsResponse[]);
-                setIsLoading(false);
             } catch (err) {
-
+                console.error(err);
             }
-
         })()
 
     }, [setNotifications]);
 
-
-    if(isLoading){
-        return <Loader />;
-    }
 
     return (
         <div id="wrapper" className={minMaxSidebar ? "minimised-sidebar" : ""}>
@@ -43,6 +39,7 @@ export default function ProtectedLayout() {
                 <MainHeader
                     minMaxSidebar={() => setMinMaxSidebar((prev) => !prev)}
                     notifications={notifications}
+                    updateNotificationList={getNotificationsHandle}
 
                 />
 

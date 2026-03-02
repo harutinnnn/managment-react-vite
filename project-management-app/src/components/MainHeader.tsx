@@ -1,15 +1,26 @@
 import {Bell, BellDot} from "lucide-react";
-import {NotificationsResponse} from "@/api/notifications.api";
+import {NotificationsResponse, setUpdateNotification} from "@/api/notifications.api";
 import {useState} from "react";
 
 export const MainHeader = (
-    {minMaxSidebar, notifications}: { minMaxSidebar: () => void, notifications: NotificationsResponse[] }
+    {minMaxSidebar, notifications, updateNotificationList}: {
+        minMaxSidebar: () => void,
+        notifications: NotificationsResponse[],
+        updateNotificationList: () => void
+    }
 ) => {
 
 
     const [showNotifications, setShowNotifications] = useState<boolean>(false);
     const handleClick = () => {
         minMaxSidebar()
+    }
+
+
+    const handleSetViewedNotification = async (id: number) => {
+
+        await setUpdateNotification({id: id})
+        updateNotificationList();
     }
 
     return (
@@ -23,7 +34,7 @@ export const MainHeader = (
 
 
             <div className={"header-notifications " + (showNotifications ? 'active' : '')}>
-                {notifications?.notifications && notifications?.notifications.length ?
+                {notifications && notifications.length ?
                     <BellDot onClick={() => {
                         setShowNotifications(!showNotifications)
                     }}/> :
@@ -35,9 +46,11 @@ export const MainHeader = (
 
             <div className="notification-popup" style={{display: (showNotifications ? 'flex' : 'none')}}>
 
-                {notifications?.notifications && notifications.notifications.map((notification, index) => (
+                {notifications && notifications.map((notification, index) => (
 
-                    <div className={"notify-item"} key={notification.id}>
+                    <div className={"notify-item"} key={notification.id} onClick={() => {
+                        handleSetViewedNotification(notification.id);
+                    }}>
                         {index + 1}. {notification.message}
                     </div>
 
