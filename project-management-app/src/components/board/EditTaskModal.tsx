@@ -36,8 +36,8 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
             title,
             description,
             priority,
-            assignee: Number(assignee) || null,
-            dueDate: dueDate ? new Date(dueDate) : undefined,
+            // assignee: Number(assignee) || null,
+            dueDate: dueDate ? new Date(dueDate) : null,
         };
 
         onUpdate(updatedTask);

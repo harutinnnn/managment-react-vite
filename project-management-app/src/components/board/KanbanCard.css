@@ -1,7 +1,7 @@
 /* Add to styles/KanbanCard.css */
 
 
-.task-list .task-list-inner{
+.task-list .task-list-inner {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -30,11 +30,11 @@
 
 .task-priority {
     display: block;
-    width: 20px;
-    height: 13px;
+    width: 15px;
+    height: 10px;
     border-radius: 5px;
     margin-left: auto;
-    margin-top: 3px;
+    margin-top: 5px;
 }
 
 .task-priority.lowest {
@@ -77,7 +77,7 @@
     border-left: 4px solid var(--error-color);
 }
 
-.card-created{
+.card-created {
     font-size: 12px;
     color: var(--gray);
     font-weight: bold;

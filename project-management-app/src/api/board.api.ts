@@ -15,16 +15,15 @@ export type SortColumnsPayload = {
 };
 
 export type TaskPayload = {
-    id: string;
+    id: number;
     projectId: number;
     columnId: number;
     title: string;
     description: string;
     priority: Priorities;
-    assignee?: string;
+    assignee: number | null;
     createdAt?: Date;
-    dueDate?: Date;
-    tags?: string[];
+    dueDate?: Date | null;
 };
 
 export type AddBoardColumnResponse = {
@@ -53,10 +52,18 @@ export async function addBoardColumn(
 }
 
 export async function addTask(
-    data: Omit<TaskPayload, 'boardColumnId' | 'id'>,
+    data: Omit<TaskPayload, 'boardColumnId' | 'id' | "assignee" | "dueDate">,
 ): Promise<AddBoardColumnResponse | ErrorResponse> {
 
     const response = await api.post<AddBoardColumnResponse>("/board/task", data);
+    return response.data;
+}
+
+export async function editTask(
+    data: TaskPayload,
+): Promise<TaskPayload | ErrorResponse> {
+
+    const response = await api.put<TaskPayload>("/board/task", data);
     return response.data;
 }
 
@@ -70,7 +77,7 @@ export async function sortColumns(
 
 export async function deleteColumn(
     columnId: number,
-    projectId:number
+    projectId: number
 ): Promise<Column[] | ErrorResponse> {
     const columns = await api.post("/board/delete-column", {columnId: columnId, projectId: projectId});
     return columns.data;

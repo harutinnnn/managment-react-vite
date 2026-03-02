@@ -8,7 +8,7 @@ import {Task} from "@/types/Task";
 import {Column} from "@/types/Column";
 import {KanbanColumn} from "@/components/board/KanbanColumn";
 import {EditTaskModal} from "@/components/board/EditTaskModal";
-import {addBoardColumn, addTask, deleteColumn, deleteTask, getBoardData, sortColumns} from "@/api/board.api";
+import {addBoardColumn, addTask, deleteColumn, deleteTask, editTask, getBoardData, sortColumns} from "@/api/board.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {AxiosError} from "axios";
 
@@ -251,16 +251,34 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
         }
     };
 
-    const handleUpdateTask = (updatedTask: Task) => {
-        if (!editingTask) return;
+    const handleUpdateTask = async (updatedTask: Task) => {
 
-        setData({
-            ...data,
-            tasks: data?.tasks.map(t => t.id === updatedTask.id ? updatedTask : t)
-        });
 
-        setShowEditTask(false);
-        setEditingTask(null);
+        try {
+
+            await editTask(updatedTask)
+
+            if (!editingTask) return;
+
+            if (data?.tasks) {
+
+                setData({
+                    ...data,
+                    tasks: data?.tasks.map(t => t.id === updatedTask.id ? updatedTask : t)
+                });
+            }
+
+            setShowEditTask(false);
+            setEditingTask(null);
+
+        } catch (err) {
+
+            if (err instanceof AxiosError) {
+                console.error(err.response?.data?.message);
+            } else if (err instanceof Error) {
+                console.error(err.message);
+            }
+        }
     };
 
     const handleDeleteTask = async (taskId: number, columnId: number) => {

@@ -8,6 +8,6 @@ export interface Task {
     description: string;
     priority: Priorities;
     assignee: number | null;
-    createdAt: Date;
-    dueDate?: Date;
+    createdAt?: Date;
+    dueDate?: Date | null;
 }
