@@ -19,6 +19,7 @@ export type SortTablePayloadItem = {
     taskIds: number[];
 }
 export type SortTasksPayload = {
+    draggedTaskId?: number;
     projectId: number;
     columns: SortTablePayloadItem[]
 };

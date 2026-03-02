@@ -74,7 +74,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
     const onDragEnd = async (result: DropResult) => {
 
-
         const {destination, source, draggableId: draggableIdString, type} = result;
 
         if (!destination) return;
@@ -183,7 +182,12 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
             })
             console.log('closTaskIds', closTaskIds)
 
+            const {draggableId} = result;
+
+            const taskId = draggableId.split('task-')[1];
+
             await sortTasks({
+                draggedTaskId: Number(taskId),
                 projectId: projectId,
                 columns: closTaskIds
             });
