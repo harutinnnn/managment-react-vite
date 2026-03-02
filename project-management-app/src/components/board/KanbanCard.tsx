@@ -78,10 +78,8 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
                         </div>
                     </div>
 
-                    <p className="card-description">{task.description}</p>
-
                     <div className="card-created">
-                        <small>Created: {formatDate(task.createdAt)}</small>
+                        <small>Created: {task.createdAt ? formatDate(task.createdAt) : ""}</small>
                     </div>
                 </div>
             )}
