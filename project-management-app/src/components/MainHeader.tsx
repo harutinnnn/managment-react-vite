@@ -1,8 +1,13 @@
 import {Bell, BellDot} from "lucide-react";
+import {NotificationsResponse} from "@/api/notifications.api";
+import {useState} from "react";
 
-export const MainHeader = ({minMaxSidebar}: { minMaxSidebar: () => void }) => {
+export const MainHeader = (
+    {minMaxSidebar, notifications}: { minMaxSidebar: () => void, notifications: NotificationsResponse[] }
+) => {
 
 
+    const [showNotifications, setShowNotifications] = useState<boolean>(false);
     const handleClick = () => {
         minMaxSidebar()
     }
@@ -18,8 +23,26 @@ export const MainHeader = ({minMaxSidebar}: { minMaxSidebar: () => void }) => {
 
 
             <div className={"header-notifications"}>
-                <Bell/>
-                <BellDot style={{display: "none"}}/>
+                {notifications?.notifications && notifications?.notifications.length ?
+                    <BellDot onClick={() => {
+                        setShowNotifications(!showNotifications)
+                    }}/> :
+                    <Bell onClick={() => {
+                        setShowNotifications(!showNotifications)
+                    }}/>
+                }
+            </div>
+
+            <div className="notification-popup" style={{display: (showNotifications ? 'flex' : 'none')}}>
+
+                {notifications?.notifications && notifications.notifications.map((notification, index) => (
+
+                    <div className={"notify-item"} key={notification.id}>
+                        {index + 1}. {notification.message}
+                    </div>
+
+                ))}
+
             </div>
 
         </div>
