@@ -1,6 +1,6 @@
 import {Bell, BellDot} from "lucide-react";
 import {NotificationsResponse, setUpdateNotification} from "@/api/notifications.api";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export const MainHeader = (
     {minMaxSidebar, notifications, updateNotificationList}: {
@@ -17,8 +17,40 @@ export const MainHeader = (
     }
 
 
-    const handleSetViewedNotification = async (id: number) => {
+    useEffect(() => {
 
+        const handleBodyClick = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+
+            let isClosePopup = true;
+            if (target.classList.contains('notification-popup')) {
+                isClosePopup = false;
+            }
+
+            if (target.classList.contains('header-notifications-icon')) {
+                isClosePopup = false;
+            }
+
+
+            const closestElement = target.closest(".notification-popup");
+
+            if (closestElement) {
+                isClosePopup = false;
+            }
+
+            if (isClosePopup) {
+                setShowNotifications(false);
+            }
+        };
+        document.addEventListener("click", handleBodyClick);
+
+        return () => {
+            document.removeEventListener("click", handleBodyClick);
+        };
+    }, []);
+
+
+    const handleSetViewedNotification = async (id: number) => {
         await setUpdateNotification({id: id})
         updateNotificationList();
     }
@@ -36,15 +68,19 @@ export const MainHeader = (
             <div className={"header-notifications " + (showNotifications ? 'active' : '')}>
                 {notifications && notifications.length ?
                     <BellDot onClick={() => {
-                        setShowNotifications(!showNotifications)
-                    }}/> :
+                        if (notifications && notifications.length > 0) {
+                            setShowNotifications(!showNotifications)
+                        }
+                    }} className={"header-notifications-icon"}/> :
                     <Bell onClick={() => {
-                        setShowNotifications(!showNotifications)
-                    }}/>
+                        if (notifications && notifications.length > 0) {
+                            setShowNotifications(!showNotifications)
+                        }
+                    }} className={"header-notifications-icon"}/>
                 }
             </div>
 
-            <div className="notification-popup" style={{display: (showNotifications ? 'flex' : 'none')}}>
+            <div className="notification-popup" style={{display: (showNotifications && notifications.length ? 'flex' : 'none')}}>
 
                 {notifications && notifications.map((notification, index) => (
 
