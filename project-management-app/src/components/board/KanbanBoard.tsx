@@ -8,9 +8,19 @@ import {Task} from "@/types/Task";
 import {Column} from "@/types/Column";
 import {KanbanColumn} from "@/components/board/KanbanColumn";
 import {EditTaskModal} from "@/components/board/EditTaskModal";
-import {addBoardColumn, addTask, deleteColumn, deleteTask, editTask, getBoardData, sortColumns} from "@/api/board.api";
+import {
+    addBoardColumn,
+    addTask,
+    deleteColumn,
+    deleteTask,
+    editTask,
+    getBoardData,
+    sortColumns, SortTablePayloadItem,
+    sortTasks, SortTasksPayload
+} from "@/api/board.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {AxiosError} from "axios";
+import {ConfirmPopup} from "@/context/ConfirmPopup";
 
 
 interface KanbanBoardProps {
@@ -48,6 +58,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
         // localStorage.setItem('kanban-data-v2', JSON.stringify(data));
     }, [setData]);
+
+    const [showPopup, setShowPopup] = useState(false);
+    const [deleteColumnId, setDeleteColumnId] = useState<number>(0)
+    const cancelDeleteColumnCancelDelete = () => {
+        setShowPopup(false)
+        setDeleteColumnId(0)
+    }
 
 
     if (loading) {
@@ -89,11 +106,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                     columns: columnsResponse.columns as Column[]
                 });
             }
-
-            // setData({
-            //     ...data,
-            //     columns: newColumns
-            // });
             return;
         }
 
@@ -124,6 +136,20 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
             const newColumns = Array.from(data?.columns || []);
             newColumns[startColumnIndex] = newColumn;
 
+
+            const closTaskIds: SortTablePayloadItem[] = newColumns.map((col: Column) => {
+                return {
+                    columnId: col.id,
+                    taskIds: col.taskIds
+                }
+            })
+            console.log('closTaskIds', closTaskIds)
+
+            await sortTasks({
+                projectId: projectId,
+                columns: closTaskIds
+            });
+
             setData({
                 tasks: data?.tasks || [],
                 columns: newColumns
@@ -148,6 +174,20 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
             newColumns[startColumnIndex] = newStartColumn;
             newColumns[finishColumnIndex] = newFinishColumn;
+
+            const closTaskIds: SortTablePayloadItem[] = newColumns.map((col: Column) => {
+                return {
+                    columnId: col.id,
+                    taskIds: col.taskIds
+                }
+            })
+            console.log('closTaskIds', closTaskIds)
+
+            await sortTasks({
+                projectId: projectId,
+                columns: closTaskIds
+            });
+
 
             setData({
                 tasks: data?.tasks || [],
@@ -322,6 +362,10 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
         }
     };
 
+    const confirmDeleteColumn = async (columnId: number) => {
+        setDeleteColumnId(columnId);
+        setShowPopup(true);
+    }
     const handleDeleteColumn = async (columnId: number) => {
 
 
@@ -343,6 +387,10 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                     columns: updatedColumns
                 });
             }
+
+            setDeleteColumnId(0);
+            setShowPopup(false);
+
         } catch (err) {
             if (err instanceof AxiosError) {
                 console.error(err.response?.data?.message);
@@ -391,7 +439,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                                         }}
                                         onEditTask={handleEditTask}
                                         onDeleteTask={(taskId) => handleDeleteTask(taskId, column.id)}
-                                        onDeleteColumn={() => handleDeleteColumn(column.id)}
+                                        onDeleteColumn={() => confirmDeleteColumn(column.id)}
                                     />
                                 );
                             })}
@@ -430,6 +478,16 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                         setEditingTask(null);
                     }}
                     onUpdate={handleUpdateTask}
+                />
+            )}
+
+            {showPopup && (
+                <ConfirmPopup
+                    message="Are you sure you want to delete this item?"
+                    onConfirm={async () => {
+                        await handleDeleteColumn(deleteColumnId)
+                    }}
+                    onCancel={cancelDeleteColumnCancelDelete}
                 />
             )}
         </div>

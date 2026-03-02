@@ -14,6 +14,15 @@ export type SortColumnsPayload = {
     columns: number[];
 };
 
+export type SortTablePayloadItem = {
+    columnId: number;
+    taskIds: number[];
+}
+export type SortTasksPayload = {
+    projectId: number;
+    columns: SortTablePayloadItem[]
+};
+
 export type TaskPayload = {
     id: number;
     projectId: number;
@@ -72,6 +81,13 @@ export async function sortColumns(
     data: SortColumnsPayload,
 ): Promise<Column[] | ErrorResponse> {
     const columns = await api.post("/board/sort-column", data);
+    return columns.data;
+}
+
+export async function sortTasks(
+    data: SortTasksPayload,
+): Promise<Column[] | ErrorResponse> {
+    const columns = await api.post("/board/sort-tasks", data);
     return columns.data;
 }
 
