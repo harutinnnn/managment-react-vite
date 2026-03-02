@@ -4,17 +4,20 @@ import {formatDateOnly} from "@/helpers/date.heper";
 import {Task} from "@/types/Task";
 import {Priorities} from "@/enums/Priorities";
 import {capitalize} from "@/helpers/text.helper";
+import {MemberJoinSkillType} from "@/types/MemberType";
 
 interface EditTaskModalProps {
     task: Task;
     onClose: () => void;
     onUpdate: (updatedTask: Task) => void;
+    members: MemberJoinSkillType[]
 }
 
 export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                                                                 task,
                                                                 onClose,
-                                                                onUpdate
+                                                                onUpdate,
+                                                                members
                                                             }) => {
     const [title, setTitle] = useState(task.title);
     const [description, setDescription] = useState(task.description);
@@ -97,12 +100,14 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
 
                     <div className="form-group">
                         <label>Assignee</label>
-                        <input
-                            type="text"
-                            value={assignee}
-                            onChange={e => setAssignee(e.target.value)}
-                            placeholder="Enter assignee name"
-                        />
+                        <select
+                            value={assignee?.toString()}
+                            onChange={e => setAssignee(Number(e.target.value))}
+                        >
+                            {members &&  members.map(member => (
+                                <option value={member.user.id}>{member.user.name}</option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className="modal-actions">

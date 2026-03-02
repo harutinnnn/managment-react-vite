@@ -21,6 +21,9 @@ import {
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {AxiosError} from "axios";
 import {ConfirmPopup} from "@/context/ConfirmPopup";
+import {User} from "@/types/User";
+import {getMembers} from "@/api/members.api";
+import {MemberJoinSkillType} from "@/types/MemberType";
 
 
 interface KanbanBoardProps {
@@ -28,6 +31,8 @@ interface KanbanBoardProps {
 }
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
+
+    const [members, setMembers] = useState<MemberJoinSkillType[]>([]);
 
     const [loading, setLoading] = useState<boolean>(true);
     const [data, setData] = useState<KanbanData>();
@@ -49,7 +54,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                 })
 
                 setData(boardData)
+
+                const members: MemberJoinSkillType[] = await getMembers()
+                setMembers(members)
+
+
                 setLoading(false);
+
 
             } catch (err) {
                 console.log(err);
@@ -470,6 +481,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                     onAdd={handleAddTask}
                     projectId={Number(projectId)}
                     columnId={selectedColumn}
+                    members={members}
 
                 />
             )}
@@ -482,6 +494,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                         setEditingTask(null);
                     }}
                     onUpdate={handleUpdateTask}
+                    members={members}
                 />
             )}
 

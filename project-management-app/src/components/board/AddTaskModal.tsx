@@ -4,15 +4,17 @@ import './Modal.css';
 import {Task} from "@/types/Task";
 import {Priorities} from "@/enums/Priorities";
 import {capitalize} from "@/helpers/text.helper";
+import {MemberJoinSkillType} from "@/types/MemberType";
 
 interface AddTaskModalProps {
     onClose: () => void;
     onAdd: (task: Omit<Task, 'id' | 'createdAt'>) => void;
     projectId: number;
     columnId: number;
+    members: MemberJoinSkillType[]
 }
 
-export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, projectId, columnId}) => {
+export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, projectId, columnId,members}) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState<Priorities>(Priorities.MEDIUM);
@@ -90,8 +92,9 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, proje
                             value={assignee?.toString()}
                             onChange={e => setAssignee(Number(e.target.value))}
                         >
-                            <option value={1}>User 1</option>
-                            <option value={2}>User 2</option>
+                            {members &&  members.map(member => (
+                                <option value={member.user.id}>{member.user.name}</option>
+                            ))}
                         </select>
                     </div>
 
