@@ -62,7 +62,7 @@ export async function addBoardColumn(
 }
 
 export async function addTask(
-    data: Omit<TaskPayload, 'boardColumnId' | 'id' | "assignee" | "dueDate">,
+    data: Omit<TaskPayload, 'boardColumnId' | 'id' | "dueDate">,
 ): Promise<AddBoardColumnResponse | ErrorResponse> {
 
     const response = await api.post<AddBoardColumnResponse>("/board/task", data);

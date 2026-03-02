@@ -89,7 +89,7 @@ const Members = () => {
 
             <div className={"page-header mb-20"}>
                 <h1 className={"page-title "}>Members({members.length ? members.length - 1 : 0})</h1>
-                {user?.user.role === UserRoles.ADMIN &&
+                {user?.user.role === UserRoles.SUPERADMIN &&
                     <button className={"btn ml-auto"} onClick={() => {
                         openModal()
                     }}>

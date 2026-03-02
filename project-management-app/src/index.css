@@ -207,6 +207,7 @@ body {
     justify-items: center;
     margin-left: auto;
     cursor: pointer;
+    position: relative;
 }
 
 

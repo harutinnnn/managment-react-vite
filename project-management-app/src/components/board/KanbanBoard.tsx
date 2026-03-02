@@ -258,7 +258,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                 title: taskData.title,
                 description: taskData.description,
                 priority: taskData.priority,
-                // assignee: taskData.assignee,
+                assignee: Number(taskData.assignee),
                 // dueDate: taskData.dueDate,
             }
         );

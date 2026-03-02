@@ -22,10 +22,7 @@ export const MemberForm = ({closeModal, getMembers}: { closeModal: () => void, g
         gender: Yup.mixed<Gender>()
             .oneOf(Object.values(Gender), "Invalid gender")
             .required("Gender is required"),
-        professionId: Yup.number().required("Profession ID is required").test(
-            "Profession is required",
-            (value) => value !== 0
-        )
+        professionId: Yup.number()
     });
 
     type MemberFormValues = {

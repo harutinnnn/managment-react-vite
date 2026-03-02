@@ -34,19 +34,19 @@
     transition: width .2s ease-in-out;
 }
 
-.progress.red .progress-bar{
+.progress.red .progress-bar {
     background-color: var(--error-color);
 }
 
-.progress.orange .progress-bar{
+.progress.orange .progress-bar {
     background-color: var(--warning-color);
 }
 
-.progress.yellow .progress-bar{
+.progress.yellow .progress-bar {
     background-color: var(--yellow-color);
 }
 
-.progress.green .progress-bar{
+.progress.green .progress-bar {
     background-color: var(--green);
 }
 
@@ -55,4 +55,43 @@
     font-weight: bold;
     font-size: 12px;
     margin-left: 5px;
+}
+
+
+.notification-popup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: 50px;
+    padding: 15px 15px 15px 10px;
+    background-color: var(--white);
+    right: 10px;
+    min-height: 100px;
+    border-radius: 10px;
+
+    box-shadow: 0px 0px 3px 0px rgba(195, 195, 195, 0.75);
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(195, 195, 195, 0.75);
+    -moz-box-shadow: 0px 0px 3px 0px rgba(195, 195, 195, 0.75);
+
+    z-index: 99999;
+
+    width: 100%;
+    max-width: 200px;
+    max-height: 400px;
+
+    overflow-y: auto;
+    background-color: var(--lightes-blue);
+}
+
+.notify-item {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-bottom: solid 1px var(--light-gray);
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:hover{
+        background-color: var(--light-gray);
+    }
 }

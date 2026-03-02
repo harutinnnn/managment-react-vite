@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import {useAuth} from "@/hooks/useAuth";
 import {UserRoles} from "@/enums/UserRoles";
+import {NotificationsResponse} from "@/api/notifications.api";
 
 function Sidebar() {
 
@@ -70,7 +71,7 @@ function Sidebar() {
                             </NavLink>
                         </li>
 
-                        {user?.user.role === UserRoles.ADMIN &&
+                        {user?.user.role === UserRoles.SUPERADMIN &&
                             <>
                                 <li>
                                     <NavLink to={'/skills'} className={({isActive}) => (isActive ? "active" : "")}>

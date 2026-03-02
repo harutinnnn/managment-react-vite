@@ -105,12 +105,16 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             onChange={e => setAssignee(Number(e.target.value))}
                         >
                             {members &&  members.map(member => (
-                                <option value={member.user.id}>{member.user.name}</option>
+                                <option value={member.user.id} key={member.user.id}>{member.user.name}</option>
                             ))}
                         </select>
                     </div>
 
                     <div className="modal-actions">
+                        <button type="button" onClick={() => {}} className="remove-btn">
+                            Delete
+                        </button>
+
                         <button type="button" onClick={onClose} className="cancel-btn">
                             Cancel
                         </button>

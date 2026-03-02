@@ -30,7 +30,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, proje
             title,
             description,
             priority,
-            assignee: assignee || null,
+            assignee: assignee,
             dueDate: dueDate ? new Date(dueDate) : undefined,
         });
     };
@@ -92,8 +92,9 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, proje
                             value={assignee?.toString()}
                             onChange={e => setAssignee(Number(e.target.value))}
                         >
+                            <option value={0} key={0}>Select member optional</option>
                             {members &&  members.map(member => (
-                                <option value={member.user.id}>{member.user.name}</option>
+                                <option value={member.user.id} key={member.user.id}>{member.user.name}</option>
                             ))}
                         </select>
                     </div>
