@@ -22,7 +22,6 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
                                                               index,
                                                               onAddTask,
                                                               onEditTask,
-                                                              onDeleteTask,
                                                               onDeleteColumn
                                                           }) => {
     return (
@@ -61,7 +60,6 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
                                             task={task}
                                             index={index}
                                             onEdit={() => onEditTask(task.id, column.id)}  // Pass edit handler
-                                            onDelete={() => onDeleteTask(task.id)}
                                         />
                                     ))}
                                     {provided.placeholder}

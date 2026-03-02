@@ -8,7 +8,7 @@ interface AddColumnProps {
     projectId: number;
 }
 
-export const AddColumn: React.FC<AddColumnProps> = ({onClose, onAdd, projectId}) => {
+export const AddColumn: React.FC<AddColumnProps> = ({onClose, onAdd}) => {
     const [title, setTitle] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {

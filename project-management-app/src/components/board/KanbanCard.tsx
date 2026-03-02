@@ -9,39 +9,14 @@ interface KanbanCardProps {
     task: Task;
     index: number;
     onEdit: () => void;  // New prop
-    onDelete: () => void;
 }
 
-const priorityColors = {
-    lowest: '#e9f7e1',
-    low: '#e9f7e1',
-    medium: '#fff3cd',
-    high: '#f8d7da',
-    highest: '#f8d7da'
-};
-
-const priorityLabels = {
-    lowest: '🟢 Low',
-    low: '🟢 Low',
-    medium: '🟡 Medium',
-    high: '🔴 High',
-    highest: '🔴 High'
-};
 
 export const KanbanCard: React.FC<KanbanCardProps> = ({
                                                           task,
                                                           index,
-                                                          onEdit,
-                                                          onDelete
+                                                          onEdit
                                                       }) => {
-    // const formatDate = (date: Date) => {
-    //     return new Intl.DateTimeFormat('en-US', {
-    //         month: 'short',
-    //         day: 'numeric',
-    //         year: 'numeric'
-    //     }).format(date);
-    // };
-    //
 
     return (
         <Draggable draggableId={`task-${task.id}`} index={index}>
@@ -64,18 +39,6 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
                             <span>{task.title}</span>
                             <div className={"task-priority " + task.priority}/>
                         </h4>
-                        <div className="card-actions">
-                            {/* <button
-                                className="delete-card-btn"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDelete();
-                                }}
-                                title="Delete task"
-                            >
-                                ×
-                            </button>*/}
-                        </div>
                     </div>
 
                     <div className="card-created">

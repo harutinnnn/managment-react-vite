@@ -10,14 +10,16 @@ interface EditTaskModalProps {
     task: Task;
     onClose: () => void;
     onUpdate: (updatedTask: Task) => void;
-    members: MemberJoinSkillType[]
+    members: MemberJoinSkillType[],
+    onDeleteTask: (taskId:number,columnId:number) => void;
 }
 
 export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                                                                 task,
                                                                 onClose,
                                                                 onUpdate,
-                                                                members
+                                                                members,
+                                                                onDeleteTask
                                                             }) => {
     const [title, setTitle] = useState(task.title);
     const [description, setDescription] = useState(task.description);
@@ -112,7 +114,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                     </div>
 
                     <div className="modal-actions">
-                        <button type="button" onClick={() => {}} className="remove-btn">
+                        <button type="button" onClick={() => onDeleteTask(task.id,task.columnId)} className="remove-btn">
                             Delete
                         </button>
 

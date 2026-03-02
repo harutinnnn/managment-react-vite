@@ -2,9 +2,7 @@ import {Outlet} from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import {MainHeader} from "@/components/MainHeader";
 import {useEffect, useState} from "react";
-import {getMembers} from "@/api/members.api";
 import {getNotifications, NotificationsResponse} from "@/api/notifications.api";
-import {Loader} from "lucide-react";
 
 export default function ProtectedLayout() {
     const [minMaxSidebar, setMinMaxSidebar] = useState<boolean>(false);

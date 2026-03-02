@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import {useAuth} from "@/hooks/useAuth";
 import {UserRoles} from "@/enums/UserRoles";
-import {NotificationsResponse} from "@/api/notifications.api";
 
 function Sidebar() {
 

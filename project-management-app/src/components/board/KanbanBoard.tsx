@@ -16,12 +16,11 @@ import {
     editTask,
     getBoardData,
     sortColumns, SortTablePayloadItem,
-    sortTasks, SortTasksPayload
+    sortTasks
 } from "@/api/board.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {AxiosError} from "axios";
 import {ConfirmPopup} from "@/context/ConfirmPopup";
-import {User} from "@/types/User";
 import {getMembers} from "@/api/members.api";
 import {MemberJoinSkillType} from "@/types/MemberType";
 
@@ -67,8 +66,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
             }
         })()
 
-        // localStorage.setItem('kanban-data-v2', JSON.stringify(data));
-    }, [setData]);
+    }, [setData, projectId]);
 
     const [showPopup, setShowPopup] = useState(false);
     const [deleteColumnId, setDeleteColumnId] = useState<number>(0)
@@ -368,6 +366,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                     columns: newColumns
                 });
             }
+            setShowEditTask(false);
+
         } catch (err) {
             if (err instanceof AxiosError) {
                 console.error(err.response?.data?.message);
@@ -453,7 +453,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                                             setShowAddTask(true);
                                         }}
                                         onEditTask={handleEditTask}
-                                        onDeleteTask={(taskId) => handleDeleteTask(taskId, column.id)}
                                         onDeleteColumn={() => confirmDeleteColumn(column.id)}
                                     />
                                 );
@@ -495,6 +494,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                     }}
                     onUpdate={handleUpdateTask}
                     members={members}
+                    onDeleteTask={(taskId, columnId) => handleDeleteTask(taskId, columnId)}
                 />
             )}
 
