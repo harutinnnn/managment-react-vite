@@ -1,7 +1,9 @@
-// components/EditTaskModal.tsx
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './Modal.css';
-import type {Task} from "../types/Task.ts";
+import {formatDateOnly} from "@/helpers/date.heper";
+import {Task} from "@/types/Task";
+import {Priorities} from "@/enums/Priorities";
+import {capitalize} from "@/helpers/text.helper";
 
 interface EditTaskModalProps {
     task: Task;
@@ -18,8 +20,12 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
     const [description, setDescription] = useState(task.description);
     const [priority, setPriority] = useState<Task['priority']>(task.priority);
     const [assignee, setAssignee] = useState(task.assignee || '');
+
+    console.log(task.dueDate ? formatDateOnly(task.dueDate) : '')
+
     const [dueDate, setDueDate] = useState(
-        task.dueDate ? task.dueDate.toISOString().split('T')[0] : ''
+        // task.dueDate ? task.dueDate.toISOString().split('T')[0] : ''
+        task.dueDate ? formatDateOnly(task.dueDate) : ''
     );
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -30,7 +36,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
             title,
             description,
             priority,
-            assignee: assignee || undefined,
+            assignee: Number(assignee) || null,
             dueDate: dueDate ? new Date(dueDate) : undefined,
         };
 
@@ -69,11 +75,13 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             <label>Priority</label>
                             <select
                                 value={priority}
-                                onChange={e => setPriority(e.target.value as Task['priority'])}
+                                onChange={e => setPriority(e.target.value as Priorities)}
                             >
-                                <option value="low">🟢 Low</option>
-                                <option value="medium">🟡 Medium</option>
-                                <option value="high">🔴 High</option>
+                                <option value={Priorities.LOWEST}>{capitalize(Priorities.LOWEST)}</option>
+                                <option value={Priorities.LOW}>{capitalize(Priorities.LOW)}</option>
+                                <option value={Priorities.MEDIUM}>{capitalize(Priorities.MEDIUM)}</option>
+                                <option value={Priorities.HIGH}>{capitalize(Priorities.HIGH)}</option>
+                                <option value={Priorities.HIGHEST}>{capitalize(Priorities.HIGHEST)}</option>
                             </select>
                         </div>
 

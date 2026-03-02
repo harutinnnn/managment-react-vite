@@ -1,7 +1,7 @@
 // components/KanbanColumn.tsx
 import React from 'react';
-import { Droppable, Draggable } from '@hello-pangea/dnd';
-import { KanbanCard } from './KanbanCard';
+import {Droppable, Draggable} from '@hello-pangea/dnd';
+import {KanbanCard} from './KanbanCard';
 import './KanbanColumn.css';
 import {Column} from "@/types/Column";
 import {Task} from "@/types/Task";
@@ -17,14 +17,14 @@ interface KanbanColumnProps {
 }
 
 export const KanbanColumn: React.FC<KanbanColumnProps> = ({
-    column,
-    tasks,
-    index,
-    onAddTask,
-    onEditTask,
-    onDeleteTask,
-    onDeleteColumn
-}) => {
+                                                              column,
+                                                              tasks,
+                                                              index,
+                                                              onAddTask,
+                                                              onEditTask,
+                                                              onDeleteTask,
+                                                              onDeleteColumn
+                                                          }) => {
     return (
         <Draggable draggableId={`column-${column.id}`} index={index}>
             {(provided, snapshot) => (
@@ -54,16 +54,18 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
                             >
-                                {tasks.map((task, index) => (
-                                    <KanbanCard
-                                        key={`task-${task.id}`}
-                                        task={task}
-                                        index={index}
-                                        onEdit={() => onEditTask(task.id, column.id)}  // Pass edit handler
-                                        onDelete={() => onDeleteTask(task.id)}
-                                    />
-                                ))}
-                                {provided.placeholder}
+                                <div className="task-list-inner">
+                                    {tasks.map((task, index) => (
+                                        <KanbanCard
+                                            key={`task-${task.id}`}
+                                            task={task}
+                                            index={index}
+                                            onEdit={() => onEditTask(task.id, column.id)}  // Pass edit handler
+                                            onDelete={() => onDeleteTask(task.id)}
+                                        />
+                                    ))}
+                                    {provided.placeholder}
+                                </div>
 
                                 <button className="add-task-btn" onClick={onAddTask}>
                                     + Add Task

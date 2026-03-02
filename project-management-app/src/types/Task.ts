@@ -7,7 +7,7 @@ export interface Task {
     title: string;
     description: string;
     priority: Priorities;
-    assignee?: number | null;
+    assignee: number | null;
     createdAt: Date;
     dueDate?: Date;
 }

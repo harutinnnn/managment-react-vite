@@ -1,10 +1,12 @@
 /* Add to styles/KanbanCard.css */
 
 
-.task-list {
+.task-list .task-list-inner{
     display: flex;
     flex-direction: column;
     gap: 15px;
+    max-height: calc(100vh - 300px);
+    overflow-x: auto;
 }
 
 .kanban-card {

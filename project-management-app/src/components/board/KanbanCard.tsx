@@ -3,6 +3,7 @@ import React from 'react';
 import {Draggable} from '@hello-pangea/dnd';
 import './KanbanCard.css';
 import {Task} from "@/types/Task";
+import {formatDate} from "@/helpers/date.heper";
 
 interface KanbanCardProps {
     task: Task;
@@ -41,11 +42,6 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
     //     }).format(date);
     // };
     //
-    const formatDate = (date: string | Date) => {
-        const d = typeof date === "string" ? new Date(date) : date;
-        const pad = (n: number) => n.toString().padStart(2, "0");
-        return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    };
 
     return (
         <Draggable draggableId={`task-${task.id}`} index={index}>
