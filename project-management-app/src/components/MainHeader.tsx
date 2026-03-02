@@ -22,7 +22,7 @@ export const MainHeader = (
             </div>
 
 
-            <div className={"header-notifications"}>
+            <div className={"header-notifications " + (showNotifications ? 'active' : '')}>
                 {notifications?.notifications && notifications?.notifications.length ?
                     <BellDot onClick={() => {
                         setShowNotifications(!showNotifications)
