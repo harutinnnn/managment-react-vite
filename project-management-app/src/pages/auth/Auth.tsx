@@ -2,11 +2,13 @@ import "./Login.css";
 import {Login} from "@/pages/auth/Login";
 import {useState} from "react";
 import {Register} from "@/pages/auth/Register";
+import {Forgot} from "@/pages/auth/Forgot";
 
 const Auth = () => {
 
 
     const [loginPage, setLoginPage] = useState(true);
+    const [forgot, setForgot] = useState(false);
 
 
     return (
@@ -14,7 +16,9 @@ const Auth = () => {
             <div className={"auth-container"}>
                 <div className="auth-form">
 
-                    {loginPage ? <Login/> : <Register/>}
+                    {!forgot ? (loginPage ? <Login cb={() => {
+                        setForgot(true)
+                    }}/> : <Register/>) : <Forgot/>}
 
                     <div>
                         <div className="btn" onClick={() => setLoginPage(prevState => !prevState)}>

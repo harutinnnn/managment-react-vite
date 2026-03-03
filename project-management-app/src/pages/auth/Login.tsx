@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { loginRequest, getMeRequest } from "@/api/auth.api";
-import { AxiosError } from "axios";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useAuth} from "@/hooks/useAuth";
+import {loginRequest, getMeRequest} from "@/api/auth.api";
+import {AxiosError} from "axios";
+import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup"
 
-export const Login = () => {
+export const Login = ({cb}: { cb: () => void }) => {
 
-    const { login } = useAuth();
+    const {login} = useAuth();
     const navigate = useNavigate();
 
     const [error, setError] = useState("");
@@ -33,7 +33,7 @@ export const Login = () => {
         const password = values.loginPassword;
 
         try {
-            const data = await loginRequest({ email, password });
+            const data = await loginRequest({email, password});
 
             if ("error" in data) {
                 setError(data.error)
@@ -78,7 +78,7 @@ export const Login = () => {
             <h1 className={"mb-20"}>Sign In</h1>
             {error.length > 0 && <div className="error-msg">{error}</div>}
             <Formik
-                initialValues={{ loginEmail: "", loginPassword: "" }}
+                initialValues={{loginEmail: "", loginPassword: ""}}
                 validationSchema={loginSchema}
                 onSubmit={handleLoginSubmit}
             >
@@ -91,7 +91,7 @@ export const Login = () => {
                             id="loginEmail"
                             placeholder="Email"
                         />
-                        <ErrorMessage name="loginEmail" component="div" className="error-msg" />
+                        <ErrorMessage name="loginEmail" component="div" className="error-msg"/>
                     </div>
 
                     <div className={"input-row"}>
@@ -102,7 +102,12 @@ export const Login = () => {
                             placeholder="Password"
                             name="loginPassword"
                         />
-                        <ErrorMessage name="loginPassword" component="div" className="error-msg" />
+                        <ErrorMessage name="loginPassword" component="div" className="error-msg"/>
+                    </div>
+
+                    <div className={"simple-link"} onClick={() => {
+                        cb()
+                    }}>Forgot password
                     </div>
 
                     <div className={"input-row"}>

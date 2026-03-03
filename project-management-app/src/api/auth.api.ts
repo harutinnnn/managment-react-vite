@@ -5,6 +5,9 @@ export type LoginPayload = {
     email: string;
     password: string;
 };
+export type ForgotPayload = {
+    email: string;
+};
 
 export type RegisterPayload = {
     companyName: string;
@@ -20,6 +23,11 @@ export type LoginResponse = {
     token: string;
     refreshToken: string;
     user: User;
+};
+
+export type ForgotResponse = {
+    email: string;
+    message: string;
 };
 
 
@@ -38,6 +46,13 @@ export async function loginRequest(
     data: LoginPayload
 ): Promise<LoginResponse | ErrorResponse> {
     const response = await api.post<LoginResponse>("/auth/login", data);
+    return response.data;
+}
+
+export async function forgotRequest(
+    data: ForgotPayload
+): Promise<ForgotResponse | ErrorResponse> {
+    const response = await api.post<ForgotResponse>("/auth/forgot", data);
     return response.data;
 }
 
