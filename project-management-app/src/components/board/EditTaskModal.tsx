@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './Modal.css';
 import {formatDateOnly} from "@/helpers/date.heper";
 import {Task} from "@/types/Task";
@@ -6,7 +6,7 @@ import {Priorities} from "@/enums/Priorities";
 import {capitalize} from "@/helpers/text.helper";
 import {MemberJoinSkillType} from "@/types/MemberType";
 import {ConfirmPopup} from "@/context/ConfirmPopup";
-import Select, { MultiValue } from "react-select";
+import Select, {MultiValue} from "react-select";
 
 interface EditTaskModalProps {
     task: Task;
@@ -35,10 +35,25 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
         setDeleteTask(null)
     }
 
+    const [selectedOptions, setSelectedOptions] = useState<MultiValue<OptionType>>([]);
+
+    const handleChange = (selected: MultiValue<OptionType>) => {
+        setAssignee(selected.map((item) => Number(item.value)));
+        setSelectedOptions(selected);
+    };
+
     const [dueDate, setDueDate] = useState(
-        // task.dueDate ? task.dueDate.toISOString().split('T')[0] : ''
         task.dueDate ? formatDateOnly(task.dueDate) : ''
     );
+
+    useEffect(() => {
+        setSelectedOptions(members.filter(member => task.assignee.includes(Number(member.user.id))).map(member => {
+            return {
+                value: member.user.id,
+                label: member.user.name
+            }
+        }))
+    }, [setSelectedOptions]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -60,18 +75,12 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
         label: string;
     };
 
-    const options: OptionType[] = [
-        { value: "react", label: "React" },
-        { value: "typescript", label: "TypeScript" },
-        { value: "node", label: "Node.js" },
-        { value: "mysql", label: "MySQL" },
-    ];
-
-
-    const [selectedOptions, setSelectedOptions] = useState<MultiValue<OptionType>>([]);
-    const handleChange = (selected: MultiValue<OptionType>) => {
-        setSelectedOptions(selected);
-    };
+    const options: OptionType[] = members.map(user => {
+        return {
+            value: user.user.id,
+            label: user.user.name
+        }
+    });
 
 
     return (
