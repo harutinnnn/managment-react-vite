@@ -1,25 +1,19 @@
 // components/AddTaskModal.tsx
 import React, {useState} from 'react';
 import './Modal.css';
-import {Task} from "@/types/Task";
-import {Priorities} from "@/enums/Priorities";
-import {capitalize} from "@/helpers/text.helper";
+import {TaskAdd} from "@/types/Task";
 import {MemberJoinSkillType} from "@/types/MemberType";
 
 interface AddTaskModalProps {
     onClose: () => void;
-    onAdd: (task: Omit<Task, 'id' | 'createdAt'>) => void;
+    onAdd: (task: TaskAdd) => void;
     projectId: number;
     columnId: number;
     members: MemberJoinSkillType[]
 }
 
-export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, projectId, columnId,members}) => {
+export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, projectId, columnId}) => {
     const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [priority, setPriority] = useState<Priorities>(Priorities.MEDIUM);
-    const [assignee, setAssignee] = useState<number[]>([]);
-    const [dueDate, setDueDate] = useState('');
 
     const handleSubmit = (e: React.SubmitEvent) => {
         e.preventDefault();
@@ -28,10 +22,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, proje
             projectId,
             columnId,
             title,
-            description,
-            priority,
-            assignee: assignee,
-            dueDate: dueDate ? new Date(dueDate) : undefined,
         });
     };
 

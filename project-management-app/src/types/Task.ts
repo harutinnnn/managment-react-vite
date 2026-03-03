@@ -1,5 +1,12 @@
 import {Priorities} from "@/enums/Priorities";
 
+export interface TaskAdd {
+    id?: number
+    projectId: number,
+    columnId: number,
+    title: string
+}
+
 export interface Task {
     id: number;
     projectId: number;

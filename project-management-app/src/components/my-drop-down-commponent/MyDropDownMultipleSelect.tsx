@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import './MyDropDownMultipleSelect.css'
-import {Check, CircleCheckBig, X} from "lucide-react";
+import { CircleCheckBig, X} from "lucide-react";
 
 type Item = {
     key: number;

@@ -2,7 +2,7 @@ import api from "./axios";
 import {Priorities} from "@/enums/Priorities";
 import {KanbanData} from "@/types/KanbanData";
 import type {Column} from "@/types/Column";
-import {Task, TaskListItem} from "@/types/Task";
+import {TaskAdd, TaskListItem} from "@/types/Task";
 
 export type BoardColumnPayload = {
     id?: number;
@@ -68,7 +68,7 @@ export async function addBoardColumn(
 }
 
 export async function addTask(
-    data: Omit<TaskPayload, 'boardColumnId' | 'id' | "dueDate">,
+    data: TaskAdd,
 ): Promise<AddBoardColumnResponse | ErrorResponse> {
 
     const response = await api.post<AddBoardColumnResponse>("/board/task", data);

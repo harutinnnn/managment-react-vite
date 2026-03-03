@@ -12,7 +12,6 @@ interface KanbanColumnProps {
     index: number;
     onAddTask: () => void;
     onEditTask: (taskId: number, columnId: number) => void;  // New prop
-    onDeleteTask: (taskId: number) => void;
     onDeleteColumn: () => void;
 }
 

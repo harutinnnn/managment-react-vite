@@ -4,7 +4,7 @@ import {AddColumn} from './AddColumn';
 import {AddTaskModal} from './AddTaskModal';
 import './KanbanBoard.css';
 import {KanbanData} from "@/types/KanbanData";
-import {Task} from "@/types/Task";
+import {Task, TaskAdd} from "@/types/Task";
 import {Column} from "@/types/Column";
 import {KanbanColumn} from "@/components/board/KanbanColumn";
 import {EditTaskModal} from "@/components/board/EditTaskModal";
@@ -244,7 +244,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
     };
 
-    const handleAddTask = async (taskData: Omit<Task, 'id' | 'createdAt'>) => {
+    const handleAddTask = async (taskData: TaskAdd) => {
         if (!selectedColumn) return;
 
 
@@ -254,10 +254,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
                 projectId: taskData.projectId,
                 columnId: taskData.columnId,
                 title: taskData.title,
-                description: taskData.description,
-                priority: taskData.priority,
-                assignee: Number(taskData.assignee),
-                // dueDate: taskData.dueDate,
             }
         );
 
@@ -265,10 +261,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
             const newTaskId = taskResponse.id;
 
 
-            const newTask: Task = {
+            const newTask: TaskAdd = {
                 ...taskData,
                 id: newTaskId,
-                createdAt: new Date()
             };
             const columnIndex = data?.columns.findIndex(col => col.id === selectedColumn);
 
@@ -288,7 +283,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
             setData({
                 ...data,
-                tasks: [...data?.tasks || [], newTask],
+                // tasks: [...data?.tasks || [], newTask],
+                // TODO problem on new task because type structure another newTask
+                tasks: [...data?.tasks || []],
                 columns: newColumns
             });
             setShowAddTask(false);
