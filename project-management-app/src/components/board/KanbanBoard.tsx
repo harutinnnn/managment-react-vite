@@ -261,10 +261,12 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
             const newTaskId = taskResponse.id;
 
 
-            const newTask: TaskAdd = {
-                ...taskData,
-                id: newTaskId,
+
+            const newTask: Task = {
+                ...taskResponse
             };
+            console.log(newTask)
+
             const columnIndex = data?.columns.findIndex(col => col.id === selectedColumn);
 
             if (typeof columnIndex === 'undefined' || columnIndex === -1) return;
@@ -283,9 +285,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
             setData({
                 ...data,
-                // tasks: [...data?.tasks || [], newTask],
+                tasks: [...data?.tasks || [], newTask],
                 // TODO problem on new task because type structure another newTask
-                tasks: [...data?.tasks || []],
+                // tasks: [...data?.tasks || []],
                 columns: newColumns
             });
             setShowAddTask(false);
