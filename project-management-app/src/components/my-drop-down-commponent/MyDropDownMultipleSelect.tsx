@@ -53,7 +53,12 @@ export const MyDropDownMultipleSelect: React.FC<MyDropDownMultipleSelectPayload>
                 // Add item
                 newItems = [...prev, item];
             }
-            setMembers(newItems.map(i => i.key)); // update members immediately
+
+            // Schedule the parent update after this render
+            setTimeout(() => {
+                setMembers(newItems.map(i => i.key));
+            }, 0);
+
             return newItems;
         });
     };
