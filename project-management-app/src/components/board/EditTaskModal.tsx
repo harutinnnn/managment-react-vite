@@ -6,8 +6,7 @@ import {Priorities} from "@/enums/Priorities";
 import {capitalize} from "@/helpers/text.helper";
 import {MemberJoinSkillType} from "@/types/MemberType";
 import {ConfirmPopup} from "@/context/ConfirmPopup";
-import {MyDropDownMultipleSelect} from "@/components/my-drop-down-commponent/MyDropDownMultipleSelect";
-
+import Select, { MultiValue } from "react-select";
 
 interface EditTaskModalProps {
     task: Task;
@@ -55,6 +54,25 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
 
         onUpdate(updatedTask);
     };
+
+    type OptionType = {
+        value: string;
+        label: string;
+    };
+
+    const options: OptionType[] = [
+        { value: "react", label: "React" },
+        { value: "typescript", label: "TypeScript" },
+        { value: "node", label: "Node.js" },
+        { value: "mysql", label: "MySQL" },
+    ];
+
+
+    const [selectedOptions, setSelectedOptions] = useState<MultiValue<OptionType>>([]);
+    const handleChange = (selected: MultiValue<OptionType>) => {
+        setSelectedOptions(selected);
+    };
+
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -110,19 +128,13 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
 
                     <div className="form-group">
                         <label>Assignee</label>
-                        <MyDropDownMultipleSelect
-                            setMembers={(memberIds) => {
-                                setAssignee(memberIds);
-                            }}
 
-                            list={members.map(ele => {
-                                return {
-                                    key: Number(ele.user.id),
-                                    value: ele.user.name
-                                }
-                            })}
-
-                            selectedMembers={task.assignee}
+                        <Select<OptionType, true>
+                            options={options}
+                            isMulti
+                            value={selectedOptions}
+                            onChange={handleChange}
+                            placeholder="Select technologies..."
                         />
                     </div>
 

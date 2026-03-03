@@ -25,6 +25,7 @@
     "react-kanban": "^0.0.0-test",
     "react-modal": "^3.16.3",
     "react-router-dom": "^6.30.3",
+    "react-select": "^5.10.2",
     "yup": "^1.7.1"
   },
   "devDependencies": {
