@@ -6,6 +6,8 @@ import {Priorities} from "@/enums/Priorities";
 import {capitalize} from "@/helpers/text.helper";
 import {MemberJoinSkillType} from "@/types/MemberType";
 import {ConfirmPopup} from "@/context/ConfirmPopup";
+import {MyDropDownMultipleSelect} from "@/components/my-drop-down-commponent/MyDropDownMultipleSelect";
+
 
 interface EditTaskModalProps {
     task: Task;
@@ -111,6 +113,18 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
 
                     <div className="form-group">
                         <label>Assignee</label>
+                        <MyDropDownMultipleSelect
+
+                            list={[
+                                {
+                                    key: 1,
+                                    value: "Gago"
+                                },
+                                {
+                                    key: 2,
+                                    value: "Sasun"
+                                }
+                            ]}/>
                         <select
                             value={assignee?.toString()}
                             onChange={e => setAssignee(Number(e.target.value))}
@@ -149,7 +163,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             onDeleteTask(deleteTask.id, deleteTask.columnId)
                             setTimeout(() => {
                                 setDeleteTask(null)
-                            },1000)
+                            }, 1000)
                         }
                     }}
                     onCancel={cancelDeleteColumnCancelDelete}

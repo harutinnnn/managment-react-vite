@@ -1,0 +1,27 @@
+.my-custom-drop-multiple {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.my-custom-drop-multiple .my-custom-drop-list {
+
+    padding: 10px;
+    background: #f1f1f1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.my-custom-drop-multiple .my-custom-drop-list .list-item {
+    display: flex;
+    border: solid 1px #ccc;
+    padding: 5px 10px;
+    background-color: var(--white);
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #f7ffe8;
+    }
+}
