@@ -18,7 +18,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, proje
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState<Priorities>(Priorities.MEDIUM);
-    const [assignee, setAssignee] = useState<number | null>(null);
+    const [assignee, setAssignee] = useState<number[]>([]);
     const [dueDate, setDueDate] = useState('');
 
     const handleSubmit = (e: React.SubmitEvent) => {
@@ -50,56 +50,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({onClose, onAdd, proje
                             required
                         />
                     </div>
-
-                    <div className="form-group">
-                        <label>Description</label>
-                        <textarea
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            rows={3}
-                        />
-                    </div>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label>Priority</label>
-                            <select
-                                value={priority}
-                                onChange={e => setPriority(e.target.value as Priorities)}
-                            >
-                                <option value={Priorities.LOWEST}>{capitalize(Priorities.LOWEST)}</option>
-                                <option value={Priorities.LOW}>{capitalize(Priorities.LOW)}</option>
-                                <option value={Priorities.MEDIUM}>{capitalize(Priorities.MEDIUM)}</option>
-                                <option value={Priorities.HIGH}>{capitalize(Priorities.HIGH)}</option>
-                                <option value={Priorities.HIGHEST}>{capitalize(Priorities.HIGHEST)}</option>
-                            </select>
-                        </div>
-
-                        <div className="form-group">
-                            <label>Due Date</label>
-                            <input
-                                type="date"
-                                value={dueDate}
-                                onChange={e => setDueDate(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <label>Assignee</label>
-
-                        <select
-                            value={assignee?.toString()}
-                            onChange={e => setAssignee(Number(e.target.value))}
-                        >
-                            <option value={0} key={0}>Select member optional</option>
-                            {members &&  members.map(member => (
-                                <option value={member.user.id} key={member.user.id}>{member.user.name}</option>
-                            ))}
-                        </select>
-                    </div>
-
-
                     <div className="modal-actions">
                         <button type="button" onClick={onClose} className="cancel-btn">
                             Cancel

@@ -27,7 +27,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
     const [title, setTitle] = useState(task.title);
     const [description, setDescription] = useState(task.description);
     const [priority, setPriority] = useState<Task['priority']>(task.priority);
-    const [assignee, setAssignee] = useState<number | null>(task.assignee || null);
+    const [assignee, setAssignee] = useState<number[]>(task.assignee || []);
 
     const [showConfirmPopup, setShowConfirmPopup] = useState(false);
     const [deleteTask, setDeleteTask] = useState<Task | null>(null)
@@ -35,9 +35,6 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
         setShowConfirmPopup(false)
         setDeleteTask(null)
     }
-
-
-    console.log(task.dueDate ? formatDateOnly(task.dueDate) : '')
 
     const [dueDate, setDueDate] = useState(
         // task.dueDate ? task.dueDate.toISOString().split('T')[0] : ''
@@ -114,26 +111,19 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                     <div className="form-group">
                         <label>Assignee</label>
                         <MyDropDownMultipleSelect
+                            setMembers={(memberIds) => {
+                                setAssignee(memberIds);
+                            }}
 
-                            list={[
-                                {
-                                    key: 1,
-                                    value: "Gago"
-                                },
-                                {
-                                    key: 2,
-                                    value: "Sasun"
+                            list={members.map(ele => {
+                                return {
+                                    key: Number(ele.user.id),
+                                    value: ele.user.name
                                 }
-                            ]}/>
-                        <select
-                            value={assignee?.toString()}
-                            onChange={e => setAssignee(Number(e.target.value))}
-                        >
-                            <option value={0} key={0}>Select member optional</option>
-                            {members && members.map(member => (
-                                <option value={member.user.id} key={member.user.id}>{member.user.name}</option>
-                            ))}
-                        </select>
+                            })}
+
+                            selectedMembers={task.assignee}
+                        />
                     </div>
 
                     <div className="modal-actions">
