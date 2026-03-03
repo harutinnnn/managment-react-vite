@@ -84,6 +84,11 @@
 }
 
 
+.btn.success.bordered {
+    background-color: var(--white);
+    border-color: var(--green);
+    color: var(--green);
+}
 .btn.success {
     background-color: var(--green);
     color: var(--white);
@@ -98,6 +103,12 @@
 .btn.danger {
     background-color: var(--error-color);
     color: var(--white);
+}
+
+.btn.danger.bordered {
+    background-color: var(--white);
+    border-color: var(--error-color);
+    color: var(--error-color);
 }
 
 
@@ -210,6 +221,6 @@ select {
 
 /*END Margins and paddings*/
 
-.ReactModal__Overlay{
+.ReactModal__Overlay {
     z-index: 9999;
 }

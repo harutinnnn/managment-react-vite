@@ -306,7 +306,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
     const handleUpdateTask = async (updatedTask: Task) => {
 
-
         try {
 
             await editTask(updatedTask)

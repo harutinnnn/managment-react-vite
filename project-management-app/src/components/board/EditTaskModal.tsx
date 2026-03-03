@@ -5,13 +5,14 @@ import {Task} from "@/types/Task";
 import {Priorities} from "@/enums/Priorities";
 import {capitalize} from "@/helpers/text.helper";
 import {MemberJoinSkillType} from "@/types/MemberType";
+import {ConfirmPopup} from "@/context/ConfirmPopup";
 
 interface EditTaskModalProps {
     task: Task;
     onClose: () => void;
     onUpdate: (updatedTask: Task) => void;
     members: MemberJoinSkillType[],
-    onDeleteTask: (taskId:number,columnId:number) => void;
+    onDeleteTask: (taskId: number, columnId: number) => void;
 }
 
 export const EditTaskModal: React.FC<EditTaskModalProps> = ({
@@ -25,6 +26,14 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
     const [description, setDescription] = useState(task.description);
     const [priority, setPriority] = useState<Task['priority']>(task.priority);
     const [assignee, setAssignee] = useState<number | null>(task.assignee || null);
+
+    const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+    const [deleteTask, setDeleteTask] = useState<Task | null>(null)
+    const cancelDeleteColumnCancelDelete = () => {
+        setShowConfirmPopup(false)
+        setDeleteTask(null)
+    }
+
 
     console.log(task.dueDate ? formatDateOnly(task.dueDate) : '')
 
@@ -107,14 +116,18 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             onChange={e => setAssignee(Number(e.target.value))}
                         >
                             <option value={0} key={0}>Select member optional</option>
-                            {members &&  members.map(member => (
+                            {members && members.map(member => (
                                 <option value={member.user.id} key={member.user.id}>{member.user.name}</option>
                             ))}
                         </select>
                     </div>
 
                     <div className="modal-actions">
-                        <button type="button" onClick={() => onDeleteTask(task.id,task.columnId)} className="remove-btn">
+                        <button type="button" onClick={() => {
+                            setDeleteTask(task);
+                            setShowConfirmPopup(true);
+                        }
+                        } className="remove-btn">
                             Delete
                         </button>
 
@@ -127,6 +140,21 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                     </div>
                 </form>
             </div>
+
+            {showConfirmPopup && (
+                <ConfirmPopup
+                    message="Are you sure you want to delete this item?"
+                    onConfirm={async () => {
+                        if (deleteTask) {
+                            onDeleteTask(deleteTask.id, deleteTask.columnId)
+                            setTimeout(() => {
+                                setDeleteTask(null)
+                            },1000)
+                        }
+                    }}
+                    onCancel={cancelDeleteColumnCancelDelete}
+                />
+            )}
         </div>
     );
 };
