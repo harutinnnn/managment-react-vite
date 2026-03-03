@@ -6,7 +6,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Auth from "@/pages/auth/Auth";
 import Home from "@/pages/Home";
 import Projects from "@/pages/projects/Projects";
-import Tasks from "@/pages/Tasks";
+import Tasks from "@/pages/tasks/Tasks";
 import Members from "@/pages/members/Members";
 import Messages from "@/pages/Messages";
 import Settings from "@/pages/Settings";

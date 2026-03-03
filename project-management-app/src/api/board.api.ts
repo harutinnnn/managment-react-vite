@@ -2,6 +2,7 @@ import api from "./axios";
 import {Priorities} from "@/enums/Priorities";
 import {KanbanData} from "@/types/KanbanData";
 import type {Column} from "@/types/Column";
+import {Task, TaskListItem} from "@/types/Task";
 
 export type BoardColumnPayload = {
     id?: number;
@@ -50,6 +51,11 @@ export type ErrorResponse = {
 
 export async function getBoardData(projectId: number): Promise<KanbanData> {
     const response = await api.post("/board/project", {projectId: projectId});
+    return response.data;
+}
+
+export async function getTasksList(): Promise<TaskListItem[]> {
+    const response = await api.get("/board/tasks");
     return response.data;
 }
 

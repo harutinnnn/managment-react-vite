@@ -8,6 +8,12 @@ export interface Task {
     description: string;
     priority: Priorities;
     assignee: number[];
-    createdAt?: Date;
+    createdAt: Date;
     dueDate?: Date | null;
+}
+
+export interface TaskListItem extends Task {
+    columnTitle: string,
+    projectTitle: string,
+    members: string,
 }
