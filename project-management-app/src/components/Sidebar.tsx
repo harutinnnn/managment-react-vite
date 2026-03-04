@@ -103,6 +103,7 @@ function Sidebar() {
                     <img className="avatar"
                          src={user?.user.avatar ? apiUrl + user.user.avatar : (`/src/assets/avatars/${user?.user.gender}.png`)}
                          alt=""/>
+
                     <div className="user-info">
 
                         <div className="user-name">{user?.user?.name}</div>

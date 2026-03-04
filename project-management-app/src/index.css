@@ -28,6 +28,18 @@ body {
     grid-template-columns: 50px 1fr;
 }
 
+
+.minimised-sidebar .user-side-profile{
+    padding: 8px 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.minimised-sidebar .user-side-profile .user-info,
+.minimised-sidebar .user-side-profile .user-side-logout{
+    display: none;
+}
+
 .sidebar {
     display: flex;
     flex-direction: column;
@@ -39,6 +51,7 @@ body {
     width: 250px;
     z-index: 999;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 
@@ -306,6 +319,17 @@ body {
 
     .sidebar .sidebar-nav ul li .nav-link span,
     .sidebar .sidebar-nav ul li a span {
+        display: none;
+    }
+
+    .user-side-profile{
+        padding: 8px 0;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .user-side-profile .user-info,
+    .user-side-profile .user-side-logout{
         display: none;
     }
 
