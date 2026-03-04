@@ -17,6 +17,8 @@ import {UserRoles} from "@/enums/UserRoles";
 
 function Sidebar() {
 
+    const apiUrl: string = import.meta.env.VITE_API_URL || ""
+
     const {user} = useAuth();
 
     const {logout} = useAuth();
@@ -93,15 +95,24 @@ function Sidebar() {
                                 <span>Profile</span>
                             </NavLink>
                         </li>
-                        <li>
-                            <div className="nav-link " onClick={() => logout()}>
-                                <LogOut size={22}/>
-                                <span>Logout</span>
-                            </div>
-                        </li>
                     </ul>
                 </div>
 
+
+                <div className="user-side-profile">
+                    <img className="avatar"
+                         src={user?.user.avatar ? apiUrl + user.user.avatar : (`/src/assets/avatars/${user?.user.gender}.png`)}
+                         alt=""/>
+                    <div className="user-info">
+
+                        <div className="user-name">{user?.user?.name}</div>
+                        <div className="user-email">{user?.user?.email}</div>
+
+                    </div>
+                    <div onClick={() => logout()} className="user-side-logout">
+                        <LogOut size={22}/>
+                    </div>
+                </div>
 
             </div>
         </>
