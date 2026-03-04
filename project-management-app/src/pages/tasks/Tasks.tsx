@@ -28,25 +28,26 @@ const Tasks = () => {
     }, [setTasks]);
 
 
-
-
     return (<>
             <div className={"page-header mb-20"}>
                 <h1>Tasks Page</h1>
             </div>
 
             <div className="tasks-list">
-
                 {tasks.map((task: TaskListItem) => (
                     <div key={task.id} className="task-item">
                         <h3 className="task-title">{task.title}</h3>
                         <div className="task-project">Project: {task.projectTitle}</div>
                         <div className="task-column">Column: {task.columnTitle}</div>
-                        <div className="task-members">Members: {(task?.members || "").trim().split(',').map(member => (
-                            <div className={"task-member-item"} key={member}>
-                                <span>{member}</span>
-                            </div>
-                        ))}</div>
+                        <div className="task-members">Members: {(task?.members || "").trim().split(',').map(member => {
+                            if (member.trim().length > 0) {
+                                return (
+                                    <div className={"task-member-item"} key={member}>
+                                        <span>{member}</span>
+                                    </div>
+                                )
+                            }
+                        })}</div>
 
                         <div className="task-created-at">{formatDate(task.createdAt)}</div>
                     </div>

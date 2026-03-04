@@ -29,6 +29,11 @@
 .tasks-list .task-item h3.task-title {
     font-size: 20px;
     color: var(--primary-color);
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;         /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .tasks-list .task-item .task-created-at {
