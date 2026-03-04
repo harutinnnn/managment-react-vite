@@ -8,7 +8,7 @@ import {capitalize} from "@/helpers/text.helper";
 import {Alerts} from "@/components/Alerts";
 import {AlertEnums} from "@/enums/AlertEnums";
 
-export const Register = () => {
+export const Register = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => void }) => {
 
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
@@ -98,10 +98,10 @@ export const Register = () => {
 
             {error && <Alerts text={error} type={AlertEnums.danger} cb={() => {
                 setError(null)
-            }} />}
+            }}/>}
             {success && <Alerts text={success} type={AlertEnums.success} cb={() => {
                 setSuccess(null)
-            }} />}
+            }}/>}
             <Formik
                 initialValues={{
                     companyName: "",
@@ -218,6 +218,12 @@ export const Register = () => {
                     </div>
                 </Form>
             </Formik>
+
+            <div>
+                <div className="btn" onClick={() => cb('login')}>
+                    Login page
+                </div>
+            </div>
 
         </div>
 

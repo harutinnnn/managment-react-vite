@@ -4,7 +4,7 @@ import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup"
 import {forgotRequest} from "@/api/auth.api";
 
-export const Forgot = () => {
+export const Forgot = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => void }) => {
 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -77,8 +77,13 @@ export const Forgot = () => {
                     </div>
                 </Form>
             </Formik>
-        </div>
 
+            <div>
+                <div className="btn" onClick={() => cb('login')}>
+                    Login page
+                </div>
+            </div>
+        </div>
     )
 
 }

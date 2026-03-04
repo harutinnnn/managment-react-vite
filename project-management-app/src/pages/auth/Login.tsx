@@ -6,7 +6,7 @@ import {AxiosError} from "axios";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup"
 
-export const Login = ({cb}: { cb: () => void }) => {
+export const Login = ({cb}: { cb: (type:'login' | 'register' | 'forgot') => void }) => {
 
     const {login} = useAuth();
     const navigate = useNavigate();
@@ -106,7 +106,7 @@ export const Login = ({cb}: { cb: () => void }) => {
                     </div>
 
                     <div className={"simple-link"} onClick={() => {
-                        cb()
+                        cb('forgot')
                     }}>Forgot password
                     </div>
 
@@ -115,6 +115,12 @@ export const Login = ({cb}: { cb: () => void }) => {
                     </div>
                 </Form>
             </Formik>
+
+            <div>
+                <div className="btn" onClick={() => cb('register')}>
+                    Register new company
+                </div>
+            </div>
         </div>
 
     )

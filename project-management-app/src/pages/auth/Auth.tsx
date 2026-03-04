@@ -7,8 +7,25 @@ import {Forgot} from "@/pages/auth/Forgot";
 const Auth = () => {
 
 
-    const [loginPage, setLoginPage] = useState(true);
-    const [forgot, setForgot] = useState(false);
+    const [loginPage, setLoginPage] = useState<'login' | 'register' | 'forgot'>('login');
+
+    let page = <Login cb={(type) => {
+        setLoginPage(type)
+    }}/>
+
+    if (loginPage === 'register') {
+        page = <Register cb={(type) => {
+            setLoginPage(type)
+        }}/>
+    } else if (loginPage === 'forgot') {
+        page = <Forgot cb={(type) => {
+            setLoginPage(type)
+        }}/>
+    } else if (loginPage === 'login') {
+        page = <Login cb={(type) => {
+            setLoginPage(type)
+        }}/>
+    }
 
 
     return (
@@ -16,15 +33,8 @@ const Auth = () => {
             <div className={"auth-container"}>
                 <div className="auth-form">
 
-                    {!forgot ? (loginPage ? <Login cb={() => {
-                        setForgot(true)
-                    }}/> : <Register/>) : <Forgot/>}
+                    {page}
 
-                    <div>
-                        <div className="btn" onClick={() => setLoginPage(prevState => !prevState)}>
-                            {loginPage ? "Register new company" : "Login"}
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
