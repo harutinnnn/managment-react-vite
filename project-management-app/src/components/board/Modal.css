@@ -16,10 +16,16 @@
     background-color: white;
     border-radius: 8px;
     padding: 24px;
-    max-width: 500px;
-    width: 90%;
+    width: calc(90% - 40px);
+    max-width: 1200px;
     max-height: 90vh;
     overflow-y: auto;
+}
+
+.edit-task-modal .modal-content .modal-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
 .modal-content.small {
@@ -119,4 +125,27 @@
 
 .remove-btn:hover {
     opacity: .8;
+}
+
+
+.task-right-side .task-attachments-block {
+    border: solid 1px var(--light-gray);
+    padding: 10px;
+}
+
+.task-right-side .task-attachments-block .attachment-input {
+    border: solid 1px var(--light-gray);
+    display: inline-flex;
+    padding: 10px;
+    border-radius: 5px;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--gray);
+    flex: 1;
+
+    &:hover {
+        color: var(--dark-gray);
+        border-color: var(--dark-gray);
+        cursor: pointer;
+    }
 }

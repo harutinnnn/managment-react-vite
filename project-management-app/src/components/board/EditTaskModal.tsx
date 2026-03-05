@@ -7,6 +7,9 @@ import {capitalize} from "@/helpers/text.helper";
 import {MemberJoinSkillType} from "@/types/MemberType";
 import {ConfirmPopup} from "@/context/ConfirmPopup";
 import Select, {MultiValue} from "react-select";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import {Paperclip} from "lucide-react";
 
 interface EditTaskModalProps {
     task: Task;
@@ -84,86 +87,109 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
 
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay edit-task-modal" onClick={onClose}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <h2>Edit Task</h2>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>Title *</label>
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={e => setTitle(e.target.value)}
-                            required
-                            placeholder="Enter task title"
-                        />
-                    </div>
 
-                    <div className="form-group">
-                        <label>Description</label>
-                        <textarea
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            rows={3}
-                            placeholder="Enter task description"
-                        />
-                    </div>
+                <div className="modal-body">
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label>Title *</label>
+                                <input
+                                    type="text"
+                                    value={title}
+                                    onChange={e => setTitle(e.target.value)}
+                                    required
+                                    placeholder="Enter task title"
+                                />
+                            </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label>Priority</label>
-                            <select
-                                value={priority}
-                                onChange={e => setPriority(e.target.value as Priorities)}
-                            >
-                                <option value={Priorities.LOWEST}>{capitalize(Priorities.LOWEST)}</option>
-                                <option value={Priorities.LOW}>{capitalize(Priorities.LOW)}</option>
-                                <option value={Priorities.MEDIUM}>{capitalize(Priorities.MEDIUM)}</option>
-                                <option value={Priorities.HIGH}>{capitalize(Priorities.HIGH)}</option>
-                                <option value={Priorities.HIGHEST}>{capitalize(Priorities.HIGHEST)}</option>
-                            </select>
+                            <div className="form-group">
+                                <ReactQuill
+                                    theme="snow"
+                                    value={description}
+                                    onChange={setDescription}
+                                />
+
+                            </div>
+
+                            {/*<div*/}
+                            {/*    className="content-display"*/}
+                            {/*    dangerouslySetInnerHTML={{ __html: description }}*/}
+                            {/*/>*/}
+
+
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>Priority</label>
+                                    <select
+                                        value={priority}
+                                        onChange={e => setPriority(e.target.value as Priorities)}
+                                    >
+                                        <option value={Priorities.LOWEST}>{capitalize(Priorities.LOWEST)}</option>
+                                        <option value={Priorities.LOW}>{capitalize(Priorities.LOW)}</option>
+                                        <option value={Priorities.MEDIUM}>{capitalize(Priorities.MEDIUM)}</option>
+                                        <option value={Priorities.HIGH}>{capitalize(Priorities.HIGH)}</option>
+                                        <option value={Priorities.HIGHEST}>{capitalize(Priorities.HIGHEST)}</option>
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Due Date</label>
+                                    <input
+                                        type="date"
+                                        value={dueDate}
+                                        onChange={e => setDueDate(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Assignee</label>
+
+                                <Select<OptionType, true>
+                                    options={options}
+                                    isMulti
+                                    value={selectedOptions}
+                                    onChange={handleChange}
+                                    placeholder="Select technologies..."
+                                />
+                            </div>
+
+                            <div className="modal-actions">
+                                <button type="button" onClick={() => {
+                                    setDeleteTask(task);
+                                    setShowConfirmPopup(true);
+                                }
+                                } className="remove-btn">
+                                    Delete
+                                </button>
+
+                                <button type="button" onClick={onClose} className="cancel-btn">
+                                    Cancel
+                                </button>
+                                <button type="submit" className="submit-btn">
+                                    Update Task
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="task-right-side">
+
+                        <div className="task-attachments-block">
+                            <div className="attachment-input">
+                                <Paperclip  size={20}/>
+                                <span>Attachments</span>
+
+                            </div>
                         </div>
 
-                        <div className="form-group">
-                            <label>Due Date</label>
-                            <input
-                                type="date"
-                                value={dueDate}
-                                onChange={e => setDueDate(e.target.value)}
-                            />
-                        </div>
+
                     </div>
-
-                    <div className="form-group">
-                        <label>Assignee</label>
-
-                        <Select<OptionType, true>
-                            options={options}
-                            isMulti
-                            value={selectedOptions}
-                            onChange={handleChange}
-                            placeholder="Select technologies..."
-                        />
-                    </div>
-
-                    <div className="modal-actions">
-                        <button type="button" onClick={() => {
-                            setDeleteTask(task);
-                            setShowConfirmPopup(true);
-                        }
-                        } className="remove-btn">
-                            Delete
-                        </button>
-
-                        <button type="button" onClick={onClose} className="cancel-btn">
-                            Cancel
-                        </button>
-                        <button type="submit" className="submit-btn">
-                            Update Task
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
 
             {showConfirmPopup && (
