@@ -10,6 +10,7 @@ import Select, {MultiValue} from "react-select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {Paperclip} from "lucide-react";
+import {Attachemnts} from "@/components/board/modules/Attachemnts";
 
 interface EditTaskModalProps {
     task: Task;
@@ -108,7 +109,9 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
 
                             <div className="form-group">
                                 <ReactQuill
+
                                     theme="snow"
+
                                     value={description}
                                     onChange={setDescription}
                                 />
@@ -119,7 +122,6 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             {/*    className="content-display"*/}
                             {/*    dangerouslySetInnerHTML={{ __html: description }}*/}
                             {/*/>*/}
-
 
 
                             <div className="form-row">
@@ -178,16 +180,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                         </form>
                     </div>
                     <div className="task-right-side">
-
-                        <div className="task-attachments-block">
-                            <div className="attachment-input">
-                                <Paperclip  size={20}/>
-                                <span>Attachments</span>
-
-                            </div>
-                        </div>
-
-
+                        <Attachemnts/>
                     </div>
                 </div>
             </div>
