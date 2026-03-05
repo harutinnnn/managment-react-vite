@@ -42,7 +42,6 @@ function App() {
 
                 <Route path="/projects" element={<Projects/>}/>
                 <Route path="/project/:id" element={<ProjectKanban/>}/>
-                <Route path="/tasks" element={<Tasks/>}/>
                 <Route path="/members" element={<Members/>}/>
                 <Route path="/members/:id" element={<MembersEdit/>}/>
                 <Route path="/messages" element={<Messages/>}/>

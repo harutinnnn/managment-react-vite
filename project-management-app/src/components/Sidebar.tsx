@@ -48,12 +48,6 @@ function Sidebar() {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/tasks'} className={({isActive}) => (isActive ? "active" : "")}>
-                                <CalendarCheck size={22}/>
-                                <span>Tasks</span>
-                            </NavLink>
-                        </li>
-                        <li>
                             <NavLink to={'/messages'} className={({isActive}) => (isActive ? "active" : "")}>
                                 <Mail size={22}/>
                                 <span>Messages</span>
