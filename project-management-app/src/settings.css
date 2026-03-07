@@ -224,3 +224,7 @@ select {
 .ReactModal__Overlay {
     z-index: 9999;
 }
+
+.d-none{
+    display: none !important;
+}
