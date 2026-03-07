@@ -3,6 +3,8 @@ import {Priorities} from "@/enums/Priorities";
 import {KanbanData} from "@/types/KanbanData";
 import type {Column} from "@/types/Column";
 import {TaskAdd, TaskListItem} from "@/types/Task";
+import {User} from "@/types/User";
+import {TaskFileType} from "@/types/TaskFileType";
 
 export type BoardColumnPayload = {
     id?: number;
@@ -111,4 +113,16 @@ export async function deleteTask(
 ): Promise<Column[] | ErrorResponse> {
     const columns = await api.post("/board/delete-task", {taskId: taskId, columnId: columnId});
     return columns.data;
+}
+
+export async function addTaskFile(data: FormData): Promise<TaskFileType> {
+    const response = await api.post("/board/task-file", data, {
+        headers: {"Content-Type": "multipart/form-data"}
+    });
+    return response.data;
+}
+
+export async function taskFileList(taskId: number): Promise<TaskFileType[] | []> {
+    const response = await api.get("/board/task-files/" + taskId);
+    return response.data;
 }

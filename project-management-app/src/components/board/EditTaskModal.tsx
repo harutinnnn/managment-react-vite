@@ -180,7 +180,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                         </form>
                     </div>
                     <div className="task-right-side">
-                        <Attachemnts/>
+                        <Attachemnts taskId={task.id} />
                     </div>
                 </div>
             </div>

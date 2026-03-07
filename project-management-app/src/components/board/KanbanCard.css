@@ -146,3 +146,26 @@
 .kanban-card:hover .edit-hint {
     opacity: 1;
 }
+
+.attachment-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.task-uploaded-file {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    border: 1px solid var(--light-gray);
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.task-uploaded-file img {
+    width: 100%;
+    height: 100%;
+}
