@@ -9,8 +9,8 @@ import {ConfirmPopup} from "@/context/ConfirmPopup";
 import Select, {MultiValue} from "react-select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {Paperclip} from "lucide-react";
 import {Attachemnts} from "@/components/board/modules/Attachemnts";
+import Editor from "@/components/board/modules/Editor";
 
 interface EditTaskModalProps {
     task: Task;
@@ -108,21 +108,15 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             </div>
 
                             <div className="form-group">
-                                <ReactQuill
-
-                                    theme="snow"
-
-                                    value={description}
-                                    onChange={setDescription}
-                                />
+                                <Editor description={description} setDesc={setDescription}/>
 
                             </div>
 
-                            {/*<div*/}
-                            {/*    className="content-display"*/}
-                            {/*    dangerouslySetInnerHTML={{ __html: description }}*/}
-                            {/*/>*/}
-
+                         {/*   <div
+                                className="content-display"
+                                dangerouslySetInnerHTML={{__html: description}}
+                            />
+*/}
 
                             <div className="form-row">
                                 <div className="form-group">
@@ -180,7 +174,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                         </form>
                     </div>
                     <div className="task-right-side">
-                        <Attachemnts taskId={task.id} />
+                        <Attachemnts taskId={task.id}/>
                     </div>
                 </div>
             </div>

@@ -35,7 +35,7 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
                 console.log(err)
             }
         })()
-    })
+    },[setUploadedFiles])
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 

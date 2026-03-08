@@ -1,5 +1,5 @@
 import {TaskFileType} from "@/types/TaskFileType";
-import {FileText} from "lucide-react";
+import {BsFiletypePdf,BsFileEarmarkExcel,BsFileEarmarkWord} from "react-icons/bs";
 
 export const TaskFileTypeDisplay = ({file}: { file: TaskFileType }) => {
 
@@ -17,9 +17,14 @@ export const TaskFileTypeDisplay = ({file}: { file: TaskFileType }) => {
                 break;
 
             case 'application/pdf':
+                return <BsFiletypePdf size={24}/>
+                break;
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                return <BsFileEarmarkExcel size={24}/>
+                break;
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                return <FileText string={32}/>
+                return <BsFileEarmarkWord size={24}/>
+                break;
         }
 
     }

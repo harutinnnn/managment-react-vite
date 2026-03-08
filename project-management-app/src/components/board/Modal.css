@@ -148,9 +148,14 @@
     color: var(--gray);
     flex: 1;
 
+    box-shadow: 1px 1px 5px 0px rgba(213, 213, 213, 0.75);
+    -webkit-box-shadow: 1px 1px 5px 0px rgba(213, 213, 213, 0.75);
+    -moz-box-shadow: 1px 1px 5px 0px rgba(213, 213, 213, 0.75);
+
     &:hover {
-        color: var(--dark-gray);
-        border-color: var(--dark-gray);
         cursor: pointer;
+        box-shadow: 1px 1px 5px 2px rgba(213, 213, 213, 0.75);
+        -webkit-box-shadow: 1px 1px 5px 2px rgba(213, 213, 213, 0.75);
+        -moz-box-shadow: 1px 1px 5px 2px rgba(213, 213, 213, 0.75);
     }
 }
