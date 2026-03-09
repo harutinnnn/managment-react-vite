@@ -203,7 +203,7 @@
 
 .editor-container .content-display img {
     max-width: 100%;
-    width: 100%;
+    width: auto;
 }
 
 .my-editor .ql-toolbar {
