@@ -1,9 +1,10 @@
 import {Paperclip} from "lucide-react";
 import {AxiosError} from "axios";
-import {useEffect, useState} from "react";
-import {addTaskFile, taskFileList} from "@/api/board.api";
+import React, {useEffect, useState} from "react";
+import {addTaskFile, removeTaskFile, taskFileList} from "@/api/board.api";
 import {TaskFileType} from "@/types/TaskFileType";
 import {TaskFileTypeDisplay} from "@/components/board/modules/TaskFileTypeDisplay";
+import {ConfirmPopup} from "@/context/ConfirmPopup";
 
 
 const allowMimes: string[] = [
@@ -23,22 +24,32 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
     const [fileErrors, setFileErrors] = useState<string[]>([]);
     const [uploadedFiles, setUploadedFiles] = useState<TaskFileType[] | []>([]);
 
+    const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+    const [deletedFile, setDeletedFile] = useState<TaskFileType | null>(null);
+
     useEffect(() => {
         (async () => {
             try {
-                const taskFiles: TaskFileType[] = await taskFileList(taskId);
-                setUploadedFiles(taskFiles);
+                await getTaskAtachments(taskId)
             } catch (err) {
                 console.log(err);
             }
         })();
     }, [taskId]);
 
+
+    const getTaskAtachments = async (taskId: number) => {
+        try {
+            const taskFiles: TaskFileType[] = await taskFileList(taskId);
+            setUploadedFiles(taskFiles);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
-
         if (e.target.files) {
-
 
             setError(null);
             const files = Array.from(e.target.files);
@@ -61,8 +72,6 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
                                 isFileOk = true;
                             }
                         })
-
-                        console.log('isFileOk', isFileOk);
 
                         if (!isFileOk) {
                             setFileErrors(prevState => [...prevState, "Wrong file format " + file.name])
@@ -103,6 +112,21 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
         }
     }
 
+    const handleRemoveTaskFile = async (file: TaskFileType) => {
+
+        try {
+
+            await removeTaskFile(taskId, file.id);
+            await getTaskAtachments(taskId);
+            setShowConfirmPopup(false);
+        } catch (err) {
+
+            console.log(err);
+
+        }
+
+
+    }
 
     return (
         <div className="task-attachments-block">
@@ -125,9 +149,28 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
             <div className="attachment-files">
                 {uploadedFiles && uploadedFiles.map((file, index) => (
 
-                    <TaskFileTypeDisplay file={file} key={index}/>
+                    <TaskFileTypeDisplay file={file} key={index} removeCb={() => {
+                        setShowConfirmPopup(true);
+                        setDeletedFile(file);
+                    }
+                    }/>
                 ))}
             </div>
+
+            {showConfirmPopup && (
+                <ConfirmPopup
+                    message="Are you sure you want to delete this item?"
+                    onConfirm={async () => {
+                        if (deletedFile) {
+                            await handleRemoveTaskFile(deletedFile);
+                        }
+                    }}
+                    onCancel={() => {
+                        setDeletedFile(null)
+                        setShowConfirmPopup(false);
+                    }}
+                />
+            )}
         </div>
     )
 }

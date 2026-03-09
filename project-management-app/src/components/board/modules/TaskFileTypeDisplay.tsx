@@ -1,7 +1,8 @@
 import {TaskFileType} from "@/types/TaskFileType";
 import {BsFiletypePdf,BsFileEarmarkExcel,BsFileEarmarkWord} from "react-icons/bs";
+import {Trash2, X} from "lucide-react";
 
-export const TaskFileTypeDisplay = ({file}: { file: TaskFileType }) => {
+export const TaskFileTypeDisplay = ({file,removeCb}: { file: TaskFileType,removeCb:(file:TaskFileType) => void }) => {
 
 
     const handleGetFileType = (file: TaskFileType) => {
@@ -31,6 +32,7 @@ export const TaskFileTypeDisplay = ({file}: { file: TaskFileType }) => {
 
     return (
         <div className={"task-uploaded-file"}>
+            <Trash2 className="remove-task-attachment" size={16} onClick={() => removeCb(file)}/>
             {handleGetFileType(file)}
         </div>
     )

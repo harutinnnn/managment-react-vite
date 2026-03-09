@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useCallback, useMemo, useRef} from "react";
+import React, {Dispatch, SetStateAction, useCallback, useMemo, useRef, useState} from "react";
 import ReactQuill from "react-quill";
 import Quill from "quill";
 import ImageResize from 'quill-image-resize-module-react';
@@ -14,6 +14,8 @@ const Editor = ({description, setDesc, task}: {
     task: Task
 }) => {
     const quillRef = useRef<ReactQuill | null>(null);
+
+    const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const imageHandler = useCallback(() => {
         const input = document.createElement("input");
@@ -46,11 +48,11 @@ const Editor = ({description, setDesc, task}: {
     const modules = useMemo(() => ({
         toolbar: {
             container: [
-                [{ header: [1, 2, false] }],
-                ["bold", "italic", "underline","strike"],
-                [{ align: [] }],
+                [{header: [1, 2, false]}],
+                ["bold", "italic", "underline", "strike"],
+                [{align: []}],
                 ["image", "link"],
-                [{ list: "ordered" }, { list: "bullet" }],
+                [{list: "ordered"}, {list: "bullet"}],
                 ["clean"]
             ],
             handlers: {
@@ -62,7 +64,27 @@ const Editor = ({description, setDesc, task}: {
         }
     }), [imageHandler]);
 
-    return <ReactQuill ref={quillRef} modules={modules} value={description} onChange={setDesc}/>;
+    return (
+        <div className="editor-container">
+            {isEditing ? (
+                <div className="my-editor">
+                    <ReactQuill
+                        ref={quillRef}
+                        modules={modules}
+                        value={description}
+                        onChange={setDesc}
+                        // style={{height: 'auto', maxHeight: '300px', overflowY: 'auto'}}
+                        onBlur={() => setIsEditing(false)}
+                    />
+                </div>
+            ) : (
+                <div
+                    className="content-display" onClick={() => setIsEditing(true)}
+                    dangerouslySetInnerHTML={{__html: description.trim().length ? description : 'Click do write description'}}
+                ></div>
+            )}
+        </div>
+    );
 };
 
 export default Editor;

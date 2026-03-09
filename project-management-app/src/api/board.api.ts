@@ -121,6 +121,11 @@ export async function addTaskFile(data: FormData): Promise<TaskFileType> {
     return response.data;
 }
 
+export async function removeTaskFile(taskId: number, fileId: number): Promise<TaskFileType> {
+    const response = await api.post("/board/remove-task-file", {taskId: taskId, fileId: fileId},);
+    return response.data;
+}
+
 export async function taskFileList(taskId: number): Promise<TaskFileType[] | []> {
     const response = await api.get("/board/task-files/" + taskId);
     return response.data;
