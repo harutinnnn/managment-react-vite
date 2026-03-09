@@ -1,16 +1,21 @@
-import React, {Dispatch, SetStateAction, useMemo, useRef} from "react";
+import React, {Dispatch, SetStateAction, useCallback, useMemo, useRef} from "react";
 import ReactQuill from "react-quill";
-import type Quill from "quill";
+import Quill from "quill";
+import ImageResize from 'quill-image-resize-module-react';
 import "react-quill/dist/quill.snow.css";
+import {addTaskFile} from "@/api/board.api";
+import {Task} from "@/types/Task";
 
+Quill.register("modules/imageResize", ImageResize);
 
-
-
-
-const Editor = ({description,setDesc}: { description: string, setDesc: Dispatch<SetStateAction<string>> }) => {
+const Editor = ({description, setDesc, task}: {
+    description: string,
+    setDesc: Dispatch<SetStateAction<string>>,
+    task: Task
+}) => {
     const quillRef = useRef<ReactQuill | null>(null);
 
-    const imageHandler = () => {
+    const imageHandler = useCallback(() => {
         const input = document.createElement("input");
         input.type = "file";
         input.accept = "image/*";
@@ -21,35 +26,41 @@ const Editor = ({description,setDesc}: { description: string, setDesc: Dispatch<
             if (!file) return;
 
             const formData = new FormData();
-            formData.append("image", file);
+            formData.append("file", file);
+            formData.append('taskId', task.id.toString())
 
-            const response = await fetch("/api/upload", {
-                method: "POST",
-                body: formData,
-            });
+            const response = await addTaskFile(formData)
 
-            const data: { url: string } = await response.json();
 
             const editor: Quill | undefined = quillRef.current?.getEditor();
             const range = editor?.getSelection();
 
             if (editor && range) {
-                editor.insertEmbed(range.index, "image", data.url);
+                editor.insertEmbed(range.index, "image", import.meta.env.VITE_API_URL + response.file);
+                editor.formatText(range.index, 1, 'width', '300px');
+                editor.formatText(range.index, 1, 'max-width', '100%');
             }
         };
-    };
+    }, []);
 
     const modules = useMemo(() => ({
         toolbar: {
             container: [
-                ["bold", "italic", "underline"],
-                ["link", "image"]
+                [{ header: [1, 2, false] }],
+                ["bold", "italic", "underline","strike"],
+                [{ align: [] }],
+                ["image", "link"],
+                [{ list: "ordered" }, { list: "bullet" }],
+                ["clean"]
             ],
             handlers: {
                 image: imageHandler
             }
+        },
+        imageResize: {
+            modules: ["Resize", "DisplaySize", "Toolbar"]
         }
-    }), []);
+    }), [imageHandler]);
 
     return <ReactQuill ref={quillRef} modules={modules} value={description} onChange={setDesc}/>;
 };

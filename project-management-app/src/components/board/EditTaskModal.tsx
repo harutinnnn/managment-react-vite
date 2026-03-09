@@ -7,7 +7,6 @@ import {capitalize} from "@/helpers/text.helper";
 import {MemberJoinSkillType} from "@/types/MemberType";
 import {ConfirmPopup} from "@/context/ConfirmPopup";
 import Select, {MultiValue} from "react-select";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {Attachemnts} from "@/components/board/modules/Attachemnts";
 import Editor from "@/components/board/modules/Editor";
@@ -50,14 +49,29 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
         task.dueDate ? formatDateOnly(task.dueDate) : ''
     );
 
+    // useEffect(() => {
+    //     setSelectedOptions(members.filter(member => task.assignee.includes(Number(member.user.id))).map(member => {
+    //         return {
+    //             value: member.user.id,
+    //             label: member.user.name
+    //         }
+    //     }))
+    // }, [setSelectedOptions]);
+
+
     useEffect(() => {
-        setSelectedOptions(members.filter(member => task.assignee.includes(Number(member.user.id))).map(member => {
-            return {
+        const newOptions = members
+            .filter(member => task.assignee.includes(Number(member.user.id)))
+            .map(member => ({
                 value: member.user.id,
                 label: member.user.name
-            }
-        }))
-    }, [setSelectedOptions]);
+            }));
+
+        setSelectedOptions(prev =>
+            JSON.stringify(prev) === JSON.stringify(newOptions) ? prev : newOptions
+        );
+    }, [members, task.assignee]);
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -108,7 +122,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             </div>
 
                             <div className="form-group">
-                                <Editor description={description} setDesc={setDescription}/>
+                                <Editor description={description} setDesc={setDescription} task={task}/>
 
                             </div>
 

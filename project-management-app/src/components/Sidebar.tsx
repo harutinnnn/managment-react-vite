@@ -1,7 +1,6 @@
 import logo from "../assets/checklist.png";
 import {NavLink} from "react-router-dom";
 import {
-    CalendarCheck,
     FolderOpenDot,
     Gauge,
     GraduationCap,

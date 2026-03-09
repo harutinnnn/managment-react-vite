@@ -26,16 +26,13 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
     useEffect(() => {
         (async () => {
             try {
-
-
-                const taskFiles: TaskFileType[] | [] = await taskFileList(taskId)
-                setUploadedFiles(taskFiles)
-
+                const taskFiles: TaskFileType[] = await taskFileList(taskId);
+                setUploadedFiles(taskFiles);
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
-        })()
-    },[setUploadedFiles])
+        })();
+    }, [taskId]);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 

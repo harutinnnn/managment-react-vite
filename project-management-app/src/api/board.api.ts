@@ -3,7 +3,6 @@ import {Priorities} from "@/enums/Priorities";
 import {KanbanData} from "@/types/KanbanData";
 import type {Column} from "@/types/Column";
 import {TaskAdd, TaskListItem} from "@/types/Task";
-import {User} from "@/types/User";
 import {TaskFileType} from "@/types/TaskFileType";
 
 export type BoardColumnPayload = {
