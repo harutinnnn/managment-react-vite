@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import './Modal.css';
-import {formatDateOnly} from "@/helpers/date.heper";
-import {Task} from "@/types/Task";
-import {Priorities} from "@/enums/Priorities";
-import {capitalize} from "@/helpers/text.helper";
-import {MemberJoinSkillType} from "@/types/MemberType";
-import {ConfirmPopup} from "@/context/ConfirmPopup";
-import Select, {MultiValue} from "react-select";
+import { formatDateOnly } from "@/helpers/date.heper";
+import { Task } from "@/types/Task";
+import { Priorities } from "@/enums/Priorities";
+import { capitalize } from "@/helpers/text.helper";
+import { MemberJoinSkillType } from "@/types/MemberType";
+import { ConfirmPopup } from "@/context/ConfirmPopup";
+import Select, { MultiValue } from "react-select";
 import "react-quill/dist/quill.snow.css";
-import {Attachemnts} from "@/components/board/modules/Attachemnts";
+import { Attachemnts } from "@/components/board/modules/Attachemnts";
 import Editor from "@/components/board/modules/Editor";
 
 interface EditTaskModalProps {
@@ -20,12 +20,12 @@ interface EditTaskModalProps {
 }
 
 export const EditTaskModal: React.FC<EditTaskModalProps> = ({
-                                                                task,
-                                                                onClose,
-                                                                onUpdate,
-                                                                members,
-                                                                onDeleteTask
-                                                            }) => {
+    task,
+    onClose,
+    onUpdate,
+    members,
+    onDeleteTask
+}) => {
     const [title, setTitle] = useState(task.title);
     const [description, setDescription] = useState(task.description);
     const [priority, setPriority] = useState<Task['priority']>(task.priority);
@@ -38,9 +38,16 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
         setDeleteTask(null)
     }
 
-    const [selectedOptions, setSelectedOptions] = useState<MultiValue<OptionType>>([]);
+    const [selectedOptions, setSelectedOptions] = useState<MultiValue<{ value: string, label: string }>>(() =>
+        members
+            .filter(member => (task.assignee || []).includes(Number(member.user.id)))
+            .map(member => ({
+                value: member.user.id,
+                label: member.user.name
+            }))
+    );
 
-    const handleChange = (selected: MultiValue<OptionType>) => {
+    const handleChange = (selected: MultiValue<{ value: string, label: string }>) => {
         setAssignee(selected.map((item) => Number(item.value)));
         setSelectedOptions(selected);
     };
@@ -48,29 +55,6 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
     const [dueDate, setDueDate] = useState(
         task.dueDate ? formatDateOnly(task.dueDate) : ''
     );
-
-    // useEffect(() => {
-    //     setSelectedOptions(members.filter(member => task.assignee.includes(Number(member.user.id))).map(member => {
-    //         return {
-    //             value: member.user.id,
-    //             label: member.user.name
-    //         }
-    //     }))
-    // }, [setSelectedOptions]);
-
-
-    useEffect(() => {
-        const newOptions = members
-            .filter(member => task.assignee.includes(Number(member.user.id)))
-            .map(member => ({
-                value: member.user.id,
-                label: member.user.name
-            }));
-
-        setSelectedOptions(prev =>
-            JSON.stringify(prev) === JSON.stringify(newOptions) ? prev : newOptions
-        );
-    }, [members, task.assignee]);
 
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -122,11 +106,11 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             </div>
 
                             <div className="form-group">
-                                <Editor description={description} setDesc={setDescription} task={task}/>
+                                <Editor description={description} setDesc={setDescription} task={task} />
 
                             </div>
 
-                         {/*   <div
+                            {/*   <div
                                 className="content-display"
                                 dangerouslySetInnerHTML={{__html: description}}
                             />
@@ -188,7 +172,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                         </form>
                     </div>
                     <div className="task-right-side">
-                        <Attachemnts taskId={task.id}/>
+                        <Attachemnts taskId={task.id} />
                     </div>
                 </div>
             </div>

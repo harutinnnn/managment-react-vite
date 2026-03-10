@@ -1,9 +1,9 @@
 import api from "./axios";
-import {Priorities} from "@/enums/Priorities";
-import {KanbanData} from "@/types/KanbanData";
-import type {Column} from "@/types/Column";
-import {TaskAdd, TaskListItem} from "@/types/Task";
-import {TaskFileType} from "@/types/TaskFileType";
+import { Priorities } from "@/enums/Priorities";
+import { KanbanData } from "@/types/KanbanData";
+import type { Column } from "@/types/Column";
+import { Task, TaskAdd, TaskListItem } from "@/types/Task";
+import { TaskFileType } from "@/types/TaskFileType";
 
 export type BoardColumnPayload = {
     id?: number;
@@ -51,7 +51,7 @@ export type ErrorResponse = {
 
 
 export async function getBoardData(projectId: number): Promise<KanbanData> {
-    const response = await api.post("/board/project", {projectId: projectId});
+    const response = await api.post("/board/project", { projectId: projectId });
     return response.data;
 }
 
@@ -70,9 +70,9 @@ export async function addBoardColumn(
 
 export async function addTask(
     data: TaskAdd,
-): Promise<AddBoardColumnResponse | ErrorResponse> {
+): Promise<Task | ErrorResponse> {
 
-    const response = await api.post<AddBoardColumnResponse>("/board/task", data);
+    const response = await api.post<Task>("/board/task", data);
     return response.data;
 }
 
@@ -103,26 +103,26 @@ export async function deleteColumn(
     columnId: number,
     projectId: number
 ): Promise<Column[] | ErrorResponse> {
-    const columns = await api.post("/board/delete-column", {columnId: columnId, projectId: projectId});
+    const columns = await api.post("/board/delete-column", { columnId: columnId, projectId: projectId });
     return columns.data;
 }
 
 export async function deleteTask(
     taskId: number, columnId: number,
 ): Promise<Column[] | ErrorResponse> {
-    const columns = await api.post("/board/delete-task", {taskId: taskId, columnId: columnId});
+    const columns = await api.post("/board/delete-task", { taskId: taskId, columnId: columnId });
     return columns.data;
 }
 
 export async function addTaskFile(data: FormData): Promise<TaskFileType> {
     const response = await api.post("/board/task-file", data, {
-        headers: {"Content-Type": "multipart/form-data"}
+        headers: { "Content-Type": "multipart/form-data" }
     });
     return response.data;
 }
 
 export async function removeTaskFile(taskId: number, fileId: number): Promise<TaskFileType> {
-    const response = await api.post("/board/remove-task-file", {taskId: taskId, fileId: fileId},);
+    const response = await api.post("/board/remove-task-file", { taskId: taskId, fileId: fileId },);
     return response.data;
 }
 

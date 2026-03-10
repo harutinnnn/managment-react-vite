@@ -1,14 +1,14 @@
-import React, {Dispatch, SetStateAction, useCallback, useMemo, useRef, useState} from "react";
+import React, { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import Quill from "quill";
 import ImageResize from 'quill-image-resize-module-react';
 import "react-quill/dist/quill.snow.css";
-import {addTaskFile} from "@/api/board.api";
-import {Task} from "@/types/Task";
+import { addTaskFile } from "@/api/board.api";
+import { Task } from "@/types/Task";
 
 Quill.register("modules/imageResize", ImageResize);
 
-const Editor = ({description, setDesc, task}: {
+const Editor = ({ description, setDesc, task }: {
     description: string,
     setDesc: Dispatch<SetStateAction<string>>,
     task: Task
@@ -43,16 +43,16 @@ const Editor = ({description, setDesc, task}: {
                 editor.formatText(range.index, 1, 'max-width', '100%');
             }
         };
-    }, []);
+    }, [task.id]);
 
     const modules = useMemo(() => ({
         toolbar: {
             container: [
-                [{header: [1, 2, false]}],
+                [{ header: [1, 2, false] }],
                 ["bold", "italic", "underline", "strike"],
-                [{align: []}],
+                [{ align: [] }],
                 ["image", "link"],
-                [{list: "ordered"}, {list: "bullet"}],
+                [{ list: "ordered" }, { list: "bullet" }],
                 ["clean"]
             ],
             handlers: {
@@ -80,7 +80,7 @@ const Editor = ({description, setDesc, task}: {
             ) : (
                 <div
                     className="content-display" onClick={() => setIsEditing(true)}
-                    dangerouslySetInnerHTML={{__html: description.trim().length ? description : 'Click do write description'}}
+                    dangerouslySetInnerHTML={{ __html: description.trim().length ? description : 'Click do write description' }}
                 ></div>
             )}
         </div>

@@ -1,10 +1,10 @@
-import {Paperclip} from "lucide-react";
-import {AxiosError} from "axios";
-import React, {useEffect, useState} from "react";
-import {addTaskFile, removeTaskFile, taskFileList} from "@/api/board.api";
-import {TaskFileType} from "@/types/TaskFileType";
-import {TaskFileTypeDisplay} from "@/components/board/modules/TaskFileTypeDisplay";
-import {ConfirmPopup} from "@/context/ConfirmPopup";
+import { Paperclip } from "lucide-react";
+import { AxiosError } from "axios";
+import React, { useEffect, useState } from "react";
+import { addTaskFile, removeTaskFile, taskFileList } from "@/api/board.api";
+import { TaskFileType } from "@/types/TaskFileType";
+import { TaskFileTypeDisplay } from "@/components/board/modules/TaskFileTypeDisplay";
+import { ConfirmPopup } from "@/context/ConfirmPopup";
 
 
 const allowMimes: string[] = [
@@ -18,7 +18,7 @@ const allowMimes: string[] = [
 ]
 
 
-export const Attachemnts = ({taskId}: { taskId: number }) => {
+export const Attachemnts = ({ taskId }: { taskId: number }) => {
 
     const [error, setError] = useState<string | null>();
     const [fileErrors, setFileErrors] = useState<string[]>([]);
@@ -26,6 +26,15 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
 
     const [showConfirmPopup, setShowConfirmPopup] = useState(false);
     const [deletedFile, setDeletedFile] = useState<TaskFileType | null>(null);
+
+    const getTaskAtachments = async (currentTaskId: number) => {
+        try {
+            const taskFiles: TaskFileType[] = await taskFileList(currentTaskId);
+            setUploadedFiles(taskFiles);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -36,16 +45,6 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
             }
         })();
     }, [taskId]);
-
-
-    const getTaskAtachments = async (taskId: number) => {
-        try {
-            const taskFiles: TaskFileType[] = await taskFileList(taskId);
-            setUploadedFiles(taskFiles);
-        } catch (err) {
-            console.log(err);
-        }
-    }
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -133,10 +132,10 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
             {error && (<div className="error-msg">{error}</div>)}
 
             <label htmlFor="task-files" className="attachment-input">
-                <Paperclip size={20}/>
+                <Paperclip size={20} />
                 <span>Attachments</span>
                 <input type="file" id="task-files" className="d-none" onChange={handleFileChange} multiple
-                       accept={allowMimes.join(',')}/>
+                    accept={allowMimes.join(',')} />
             </label>
 
             <div>
@@ -153,7 +152,7 @@ export const Attachemnts = ({taskId}: { taskId: number }) => {
                         setShowConfirmPopup(true);
                         setDeletedFile(file);
                     }
-                    }/>
+                    } />
                 ))}
             </div>
 

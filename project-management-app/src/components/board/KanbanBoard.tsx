@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {DragDropContext, Droppable, type DropResult} from '@hello-pangea/dnd';
-import {AddColumn} from './AddColumn';
-import {AddTaskModal} from './AddTaskModal';
+import React, { useEffect, useState } from 'react';
+import { DragDropContext, Droppable, type DropResult } from '@hello-pangea/dnd';
+import { AddColumn } from './AddColumn';
+import { AddTaskModal } from './AddTaskModal';
 import './KanbanBoard.css';
-import {KanbanData} from "@/types/KanbanData";
-import {Task, TaskAdd} from "@/types/Task";
-import {Column} from "@/types/Column";
-import {KanbanColumn} from "@/components/board/KanbanColumn";
-import {EditTaskModal} from "@/components/board/EditTaskModal";
+import { KanbanData } from "@/types/KanbanData";
+import { Task, TaskAdd } from "@/types/Task";
+import { Column } from "@/types/Column";
+import { KanbanColumn } from "@/components/board/KanbanColumn";
+import { EditTaskModal } from "@/components/board/EditTaskModal";
 import {
     addBoardColumn,
     addTask,
@@ -18,18 +18,18 @@ import {
     sortColumns, SortTablePayloadItem,
     sortTasks
 } from "@/api/board.api";
-import {PageInnerLoader} from "@/components/PageInnerLoder";
-import {AxiosError} from "axios";
-import {ConfirmPopup} from "@/context/ConfirmPopup";
-import {getMembers} from "@/api/members.api";
-import {MemberJoinSkillType} from "@/types/MemberType";
+import { PageInnerLoader } from "@/components/PageInnerLoder";
+import { AxiosError } from "axios";
+import { ConfirmPopup } from "@/context/ConfirmPopup";
+import { getMembers } from "@/api/members.api";
+import { MemberJoinSkillType } from "@/types/MemberType";
 
 
 interface KanbanBoardProps {
     projectId: number;
 }
 
-export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
+export const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
 
     const [members, setMembers] = useState<MemberJoinSkillType[]>([]);
 
@@ -77,13 +77,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
 
 
     if (loading) {
-        return <PageInnerLoader/>;
+        return <PageInnerLoader />;
     }
 
 
     const onDragEnd = async (result: DropResult) => {
 
-        const {destination, source, draggableId: draggableIdString, type} = result;
+        const { destination, source, draggableId: draggableIdString, type } = result;
 
         if (!destination) return;
 
@@ -130,7 +130,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
         const startColumn = data?.columns[startColumnIndex];
         const finishColumn = data?.columns[finishColumnIndex];
 
-        if (startColumn?.id === finishColumn?.id && startColumn?.taskIds) {
+        if (!startColumn || !finishColumn) return;
+
+        if (startColumn.id === finishColumn.id && startColumn.taskIds) {
 
             const newTaskIds = Array.from(startColumn.taskIds);
             newTaskIds.splice(source.index, 1);
@@ -191,7 +193,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
             })
             console.log('closTaskIds', closTaskIds)
 
-            const {draggableId} = result;
+            const { draggableId } = result;
 
             const taskId = draggableId.split('task-')[1];
 
@@ -272,9 +274,11 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
             if (typeof columnIndex === 'undefined' || columnIndex === -1) return;
 
             const column = data?.columns[columnIndex];
+            if (!column) return;
+
             const updatedColumn = {
                 ...column,
-                taskIds: [...column?.taskIds || [], newTaskId]
+                taskIds: [...column.taskIds || [], newTaskId]
             };
 
             const newColumns = Array.from(data?.columns || []);
@@ -298,7 +302,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
     const handleEditTask = (taskId: number, columnId: number) => {
         const task = data?.tasks.find(t => t.id === taskId);
         if (task) {
-            setEditingTask({task, columnId});
+            setEditingTask({ task, columnId });
             setShowEditTask(true);
         }
     };
@@ -344,7 +348,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({projectId}) => {
             if (typeof columnIndex === 'undefined' || columnIndex === -1) return;
 
             const column = data?.columns[columnIndex];
-            const updatedTaskIds = column?.taskIds.filter(id => id !== taskId);
+            if (!column) return;
+
+            const updatedTaskIds = column.taskIds.filter(id => id !== taskId);
 
             const updatedColumn = {
                 ...column,
