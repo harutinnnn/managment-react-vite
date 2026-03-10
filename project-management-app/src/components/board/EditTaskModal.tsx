@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './Modal.css';
-import { formatDateOnly } from "@/helpers/date.heper";
-import { Task } from "@/types/Task";
-import { Priorities } from "@/enums/Priorities";
-import { capitalize } from "@/helpers/text.helper";
-import { MemberJoinSkillType } from "@/types/MemberType";
-import { ConfirmPopup } from "@/context/ConfirmPopup";
-import Select, { MultiValue } from "react-select";
+import {formatDateOnly} from "@/helpers/date.heper";
+import {Task} from "@/types/Task";
+import {Priorities} from "@/enums/Priorities";
+import {capitalize} from "@/helpers/text.helper";
+import {MemberJoinSkillType} from "@/types/MemberType";
+import {ConfirmPopup} from "@/context/ConfirmPopup";
+import Select, {MultiValue} from "react-select";
 import "react-quill/dist/quill.snow.css";
-import { Attachemnts } from "@/components/board/modules/Attachemnts";
+import {Attachemnts} from "@/components/board/modules/Attachemnts";
 import Editor from "@/components/board/modules/Editor";
+import {TaskComments} from "@/components/board/TaskComments";
 
 interface EditTaskModalProps {
     task: Task;
@@ -20,12 +21,12 @@ interface EditTaskModalProps {
 }
 
 export const EditTaskModal: React.FC<EditTaskModalProps> = ({
-    task,
-    onClose,
-    onUpdate,
-    members,
-    onDeleteTask
-}) => {
+                                                                task,
+                                                                onClose,
+                                                                onUpdate,
+                                                                members,
+                                                                onDeleteTask
+                                                            }) => {
     const [title, setTitle] = useState(task.title);
     const [description, setDescription] = useState(task.description);
     const [priority, setPriority] = useState<Task['priority']>(task.priority);
@@ -90,10 +91,10 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <h2>Edit Task</h2>
 
+                <form onSubmit={handleSubmit}>
+                    <div className="modal-body">
+                        <div>
 
-                <div className="modal-body">
-                    <div>
-                        <form onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <label>Title *</label>
                                 <input
@@ -106,7 +107,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             </div>
 
                             <div className="form-group">
-                                <Editor description={description} setDesc={setDescription} task={task} />
+                                <Editor description={description} setDesc={setDescription} task={task}/>
 
                             </div>
 
@@ -114,7 +115,31 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                                 className="content-display"
                                 dangerouslySetInnerHTML={{__html: description}}
                             />
-*/}
+                            */}
+
+
+                            <TaskComments cb={() => {}}/>
+
+
+                            <div className="modal-actions">
+                                <button type="button" onClick={() => {
+                                    setDeleteTask(task);
+                                    setShowConfirmPopup(true);
+                                }
+                                } className="remove-btn">
+                                    Delete
+                                </button>
+
+                                <button type="button" onClick={onClose} className="cancel-btn">
+                                    Cancel
+                                </button>
+                                <button type="submit" className="submit-btn">
+                                    Update Task
+                                </button>
+                            </div>
+
+                        </div>
+                        <div className="task-right-side">
 
                             <div className="form-row">
                                 <div className="form-group">
@@ -142,7 +167,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             </div>
 
                             <div className="form-group">
-                                <label>Assignee</label>
+                                <label>Members</label>
 
                                 <Select<OptionType, true>
                                     options={options}
@@ -153,28 +178,12 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                                 />
                             </div>
 
-                            <div className="modal-actions">
-                                <button type="button" onClick={() => {
-                                    setDeleteTask(task);
-                                    setShowConfirmPopup(true);
-                                }
-                                } className="remove-btn">
-                                    Delete
-                                </button>
+                            <Attachemnts taskId={task.id}/>
 
-                                <button type="button" onClick={onClose} className="cancel-btn">
-                                    Cancel
-                                </button>
-                                <button type="submit" className="submit-btn">
-                                    Update Task
-                                </button>
-                            </div>
-                        </form>
+                        </div>
+
                     </div>
-                    <div className="task-right-side">
-                        <Attachemnts taskId={task.id} />
-                    </div>
-                </div>
+                </form>
             </div>
 
             {showConfirmPopup && (

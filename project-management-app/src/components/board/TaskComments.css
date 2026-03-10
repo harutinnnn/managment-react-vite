@@ -1,0 +1,17 @@
+.comments-container{
+    border: solid 1px var(--lightes-gray);
+    padding: 10px;
+}
+
+.comment-editor .ql-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+}
+
+.comment-editor .ql-editor {
+    min-height: 50px;
+    max-height: 150px;
+    overflow-y: auto;
+}

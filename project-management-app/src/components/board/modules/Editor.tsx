@@ -73,7 +73,6 @@ const Editor = ({ description, setDesc, task }: {
                         modules={modules}
                         value={description}
                         onChange={setDesc}
-                        // style={{height: 'auto', maxHeight: '300px', overflowY: 'auto'}}
                         onBlur={() => setIsEditing(false)}
                     />
                 </div>
