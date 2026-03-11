@@ -8,6 +8,7 @@ export const Forgot = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => vo
 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [sending, setSending] = useState(false);
 
 
     const loginSchema = Yup.object({
@@ -20,7 +21,7 @@ export const Forgot = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => vo
 
 
     const handleLoginSubmit = async (values: LoginFormValues) => {
-
+        setSending(true);
         setError("");
 
         const email = values.forgotEmail;
@@ -34,6 +35,8 @@ export const Forgot = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => vo
             } else {
                 setSuccess(data?.message)
             }
+
+            setSending(false);
 
         } catch (err) {
 
@@ -83,6 +86,9 @@ export const Forgot = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => vo
                     Login page
                 </div>
             </div>
+
+            {sending && (<div className="freez-loading"></div>)}
+
         </div>
     )
 

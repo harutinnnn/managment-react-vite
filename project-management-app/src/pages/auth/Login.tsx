@@ -8,6 +8,8 @@ import * as Yup from "yup"
 
 export const Login = ({cb}: { cb: (type:'login' | 'register' | 'forgot') => void }) => {
 
+    const [sending, setSending] = useState(false);
+
     const {login} = useAuth();
     const navigate = useNavigate();
 
@@ -26,6 +28,7 @@ export const Login = ({cb}: { cb: (type:'login' | 'register' | 'forgot') => void
 
 
     const handleLoginSubmit = async (values: LoginFormValues) => {
+        setSending(true);
 
         setError("");
 
@@ -66,6 +69,8 @@ export const Login = ({cb}: { cb: (type:'login' | 'register' | 'forgot') => void
 
                 setError(err.response?.data?.message || "Login failed");
             }
+
+            setSending(false);
         }
     };
 
@@ -121,6 +126,7 @@ export const Login = ({cb}: { cb: (type:'login' | 'register' | 'forgot') => void
                     Register new company
                 </div>
             </div>
+            {sending && (<div className="freez-loading"></div>)}
         </div>
 
     )

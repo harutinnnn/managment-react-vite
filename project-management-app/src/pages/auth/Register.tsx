@@ -10,6 +10,8 @@ import {AlertEnums} from "@/enums/AlertEnums";
 
 export const Register = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => void }) => {
 
+    const [sending, setSending] = useState(false);
+
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [disableBtn, setDisableBtn] = useState(false);
@@ -42,6 +44,8 @@ export const Register = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => 
 
 
     const handleSubmit = async (values: SignupFormValues) => {
+
+        setSending(true);
 
         setError(null);
         setDisableBtn(true);
@@ -76,7 +80,7 @@ export const Register = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => 
                 values.address = ''
             }
             setDisableBtn(false);
-
+            setSending(false);
         } catch (err) {
 
             setDisableBtn(false);
@@ -86,6 +90,8 @@ export const Register = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => 
                 setError(err.response?.data?.message || "Login failed");
 
             }
+
+            setSending(false);
         }
     };
 
@@ -225,6 +231,7 @@ export const Register = ({cb}: { cb: (type: 'login' | 'register' | 'forgot') => 
                 </div>
             </div>
 
+            {sending && (<div className="freez-loading"></div>)}
         </div>
 
     )
