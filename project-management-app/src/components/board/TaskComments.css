@@ -1,5 +1,5 @@
 .comments-container{
-    border: solid 1px var(--lightes-gray);
+    border: solid 1px var(--light-gray);
     padding: 10px;
 }
 
@@ -14,4 +14,20 @@
     min-height: 50px;
     max-height: 150px;
     overflow-y: auto;
+}
+
+.task-comment-list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.comment-item{
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--light-gray);
 }

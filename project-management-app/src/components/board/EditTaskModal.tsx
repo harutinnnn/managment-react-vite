@@ -118,7 +118,8 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                             */}
 
 
-                            <TaskComments cb={() => {}}/>
+                            <TaskComments cb={() => {
+                            }} taskId={task.id}/>
 
 
                             <div className="modal-actions">
