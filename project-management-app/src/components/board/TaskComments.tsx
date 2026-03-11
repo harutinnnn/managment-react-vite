@@ -1,16 +1,36 @@
 import React, {useEffect} from "react";
 import './TaskComments.css'
 import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "quill-mention/dist/quill.mention.css";
 import {Alerts} from "@/components/Alerts";
 import {addComment, getComments} from "@/api/comment.api";
 import {Comment} from "@/types/Comment";
+import {formatDate} from "@/helpers/date.heper";
+import Quill from "quill";
+import { Mention, MentionBlot } from "quill-mention";
+import { useRef } from "react";
+
+Quill.register("modules/mention", Mention);
+Quill.register(MentionBlot);
+
 
 type TaskCommentProps = {
     taskId: number,
     cb: () => void;
 }
 
+
 export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
+
+    const commentsRef = useRef<HTMLDivElement>(null);
+
+    const scrollTop = () => {
+        commentsRef.current?.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    };
 
     const [loading, setLoading] = React.useState(true);
 
@@ -31,11 +51,13 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
     }, [setCommentsList]);
 
 
-    const handleGetComments = async (taskId: number): Promise<Comment[] | Error> => {
+    const handleGetComments = async (taskId: number) => {
 
         const comments: Comment[] = await getComments(taskId)
         setCommentsList(comments)
+        scrollTop()
     }
+
 
     const modules = {
         toolbar: {
@@ -46,8 +68,7 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
                 ["link"],
                 [{list: "ordered"}, {list: "bullet"}],
                 ["clean"]
-            ],
-
+            ]
         }
     };
 
@@ -59,7 +80,6 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
         }
 
         try {
-
 
             const commentResponse = await addComment({
                 taskId: taskId,
@@ -77,21 +97,48 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
         }
     }
 
-
     if (loading) {
         return (<div>...</div>)
     }
+    const handleChange = (content: string, delta: any, source: any, editor: any) => {
+        const text = editor.getText();
+        const range = editor.getSelection();
+
+        if (!range) return;
+
+        const beforeCursor = text.substring(0, range.index);
+
+        if (beforeCursor.endsWith("@")) {
+            onMentionTrigger(range.index);
+        }
+    };
+
+    const onMentionTrigger = (position: number) => {
+        console.log("User typed @ at position:", position);
+        // open dropdown, fetch users, etc.
+    };
 
     return (
         <div className="comments-container">
             <h3>Comments</h3>
 
-            <div className="task-comment-list">
+            <div className="task-comment-list" ref={commentsRef}>
 
                 {commentsList && commentsList.map((comment: Comment) => (
-                    <div className={"comment-item"}
-                         dangerouslySetInnerHTML={{__html: comment.content}}
-                    ></div>
+                    <div className={"comment-item"} key={comment.id}>
+                        <div
+                            dangerouslySetInnerHTML={{__html: comment.content}}
+                        ></div>
+
+                        <div className="comment-info">
+                            <div className={"comment-author"}>
+
+                            </div>
+                            <div className={"comment-date"}>
+                                {formatDate(comment.createdAt)}
+                            </div>
+                        </div>
+                    </div>
                 ))}
 
             </div>
@@ -101,8 +148,9 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
                 <ReactQuill
                     modules={modules}
                     value={comment}
-                    onChange={(value) => {
 
+                    placeholder="Type @ to mention someone"
+                    onChange={(value) => {
                         setComment(value)
                         if (value.length) {
                             setError(null)

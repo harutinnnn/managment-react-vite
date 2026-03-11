@@ -1,4 +1,4 @@
-.comments-container{
+.comments-container {
     border: solid 1px var(--light-gray);
     padding: 10px;
 }
@@ -16,7 +16,7 @@
     overflow-y: auto;
 }
 
-.task-comment-list{
+.task-comment-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -25,9 +25,24 @@
     overflow-y: auto;
 }
 
-.comment-item{
+.comment-item {
     font-size: 14px;
-    padding: 5px 10px;
+    padding: 10px;
     border-radius: 5px;
     border: 1px solid var(--light-gray);
+}
+
+.comment-item .comment-info {
+    border-top: solid 1px var(--lightes-blue);
+    padding-top: 5px;
+    margin-top: 5px;
+    display: flex;
+
+}
+
+.comment-item .comment-info .comment-date {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--gray);
+    margin-left: auto;
 }
