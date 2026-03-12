@@ -127,7 +127,7 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
                     <div className={"comment-item"} key={comment.id}>
                         <div className="comment-info">
                             <div className={"comment-author"}>
-                                Harut
+                                {comment.name}
                             </div>
                             <div className={"comment-date"}>
                                 {formatDate(comment.createdAt)}
@@ -141,8 +141,10 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
                         <div className="comment-item-actions">
 
 
-                            <span className="edit-comment" onClick={() => {}}>Edit</span>
-                            <span className="delete-comment" onClick={() => {}}>Delete</span>
+                            <span className="edit-comment" onClick={() => {
+                            }}>Edit</span>
+                            <span className="delete-comment" onClick={() => {
+                            }}>Delete</span>
 
                         </div>
 
