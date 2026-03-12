@@ -3,6 +3,18 @@ import { getMeRequest, refreshRequest } from "@/api/auth.api";
 import { AxiosError } from "axios";
 import { User } from "@/types/User";
 import { AuthContext } from "./AuthContext";
+import {
+    clearAuthStorage,
+    getAccessToken,
+    getRefreshToken,
+    setAuthTokens,
+} from "@/helpers/authStorage";
+
+type RefreshResponse = {
+    accessToken?: string;
+    token?: string;
+    refreshToken?: string;
+};
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -11,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         async function restoreSession() {
             try {
-                const token = localStorage.getItem("accessToken");
+                const token = getAccessToken();
                 if (!token) return setLoading(false);
 
                 const userFromApi = await getMeRequest();
@@ -19,10 +31,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } catch (err) {
 
                 if (err instanceof AxiosError) {
-                    const refreshToken = localStorage.getItem("refreshToken");
+                    const refreshToken = getRefreshToken();
                     if (refreshToken) {
-                        const refresh = await refreshRequest(refreshToken);
-                        localStorage.setItem("accessToken", refresh.token);
+                        const refresh = await refreshRequest(refreshToken) as RefreshResponse;
+                        const nextAccessToken = refresh.accessToken ?? refresh.token;
+
+                        if (!nextAccessToken) {
+                            logout();
+                            return;
+                        }
+
+                        setAuthTokens({
+                            accessToken: nextAccessToken,
+                            refreshToken: refresh.refreshToken ?? refreshToken,
+                        });
+
                         const userFromApi = await getMeRequest();
                         setUser(userFromApi);
                     } else logout();
@@ -38,14 +61,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const login = (token: string, user: User) => {
-        localStorage.setItem("accessToken", token);
+        setAuthTokens({ accessToken: token });
         localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
     };
 
     const logout = () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("user");
+        clearAuthStorage();
         setUser(null);
     };
 

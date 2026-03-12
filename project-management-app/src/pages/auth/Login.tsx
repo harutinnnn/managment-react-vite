@@ -5,6 +5,7 @@ import {loginRequest, getMeRequest} from "@/api/auth.api";
 import {AxiosError} from "axios";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup"
+import { setAuthTokens } from "@/helpers/authStorage";
 
 export const Login = ({cb}: { cb: (type:'login' | 'register' | 'forgot') => void }) => {
 
@@ -41,8 +42,10 @@ export const Login = ({cb}: { cb: (type:'login' | 'register' | 'forgot') => void
             if ("error" in data) {
                 setError(data.error)
             } else {
-                localStorage.setItem("refreshToken", data.refreshToken);
-                localStorage.setItem("accessToken", data.token);
+                setAuthTokens({
+                    accessToken: data.token,
+                    refreshToken: data.refreshToken,
+                });
 
                 let userToSet = data.user;
                 try {

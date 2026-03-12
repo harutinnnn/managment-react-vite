@@ -1,9 +1,21 @@
 import axios from "axios";
 import {FailedQueueItem} from "@/types/FailedQueueItem";
+import {
+    clearAuthStorage,
+    getAccessToken,
+    getRefreshToken,
+    setAuthTokens,
+} from "@/helpers/authStorage";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
 });
+
+type RefreshResponse = {
+    accessToken?: string;
+    token?: string;
+    refreshToken?: string;
+};
 
 let isRefreshing = false;
 let failedQueue: FailedQueueItem[] = [];
@@ -20,7 +32,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
     failedQueue = [];
 };
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = getAccessToken();
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -33,8 +45,14 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+        const requestUrl = originalRequest?.url ?? "";
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (
+            error.response?.status === 401 &&
+            originalRequest &&
+            !originalRequest._retry &&
+            !requestUrl.includes("/auth/refresh")
+        ) {
             if (isRefreshing) {
                 return new Promise(function (resolve, reject) {
                     failedQueue.push({ resolve, reject });
@@ -50,24 +68,37 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const refreshToken = localStorage.getItem("refreshToken");
+                const refreshToken = getRefreshToken();
 
-                const { data } = await axios.post(
+                if (!refreshToken) {
+                    throw error;
+                }
+
+                const { data } = await axios.post<RefreshResponse>(
                     `${import.meta.env.VITE_API_URL}/auth/refresh`,
                     { refreshToken }
                 );
 
-                localStorage.setItem("accessToken", data.accessToken);
+                const nextAccessToken = data.accessToken ?? data.token;
 
-                processQueue(null, data.accessToken);
+                if (!nextAccessToken) {
+                    throw error;
+                }
+
+                setAuthTokens({
+                    accessToken: nextAccessToken,
+                    refreshToken: data.refreshToken ?? refreshToken,
+                });
+
+                processQueue(null, nextAccessToken);
 
                 originalRequest.headers.Authorization =
-                    "Bearer " + data.accessToken;
+                    "Bearer " + nextAccessToken;
 
                 return api(originalRequest);
             } catch (err) {
                 processQueue(err, null);
-                localStorage.clear();
+                clearAuthStorage();
                 if (window.location.pathname !== "/login") {
                     window.location.href = "/login";
                 }
