@@ -133,12 +133,12 @@
 }
 
 
-.task-right-side .task-attachments-block {
+.task-attachments-block {
     border: solid 1px var(--light-gray);
     padding: 10px;
 }
 
-.task-right-side .task-attachments-block .attachment-input {
+.task-attachments-block .attachment-input {
     border: solid 1px var(--light-gray);
     display: inline-flex;
     padding: 10px;

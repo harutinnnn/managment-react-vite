@@ -20,7 +20,7 @@ interface EditTaskModalProps {
     onDeleteTask: (taskId: number, columnId: number) => void;
 }
 
-export const EditTaskModal: React.FC<EditTaskModalProps> = ({
+const EditTaskModal: React.FC<EditTaskModalProps> = ({
                                                                 task,
                                                                 onClose,
                                                                 onUpdate,
@@ -106,42 +106,6 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                                 />
                             </div>
 
-                            <div className="form-group">
-                                <Editor description={description} setDesc={setDescription} task={task}/>
-
-                            </div>
-
-                            {/*   <div
-                                className="content-display"
-                                dangerouslySetInnerHTML={{__html: description}}
-                            />
-                            */}
-
-
-                            <TaskComments cb={() => {
-                            }} taskId={task.id}/>
-
-
-                            <div className="modal-actions">
-                                <button type="button" onClick={() => {
-                                    setDeleteTask(task);
-                                    setShowConfirmPopup(true);
-                                }
-                                } className="remove-btn">
-                                    Delete
-                                </button>
-
-                                <button type="button" onClick={onClose} className="cancel-btn">
-                                    Cancel
-                                </button>
-                                <button type="submit" className="submit-btn">
-                                    Update Task
-                                </button>
-                            </div>
-
-                        </div>
-                        <div className="task-right-side">
-
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Priority</label>
@@ -167,6 +131,44 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                                 </div>
                             </div>
 
+
+                            <div className="form-group">
+                                <label htmlFor="">Description</label>
+                                <Editor description={description} setDesc={setDescription} task={task}/>
+
+                            </div>
+
+                            {/*   <div
+                                className="content-display"
+                                dangerouslySetInnerHTML={{__html: description}}
+                            />
+                            */}
+
+
+                            <Attachemnts taskId={task.id}/>
+
+
+                            <div className="modal-actions">
+                                <button type="button" onClick={() => {
+                                    setDeleteTask(task);
+                                    setShowConfirmPopup(true);
+                                }
+                                } className="remove-btn">
+                                    Delete
+                                </button>
+
+                                <button type="button" onClick={onClose} className="cancel-btn">
+                                    Cancel
+                                </button>
+                                <button type="submit" className="submit-btn">
+                                    Update Task
+                                </button>
+                            </div>
+
+                        </div>
+                        <div className="task-right-side">
+
+
                             <div className="form-group">
                                 <label>Members</label>
 
@@ -179,9 +181,11 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
                                 />
                             </div>
 
-                            <Attachemnts taskId={task.id}/>
+                            <TaskComments cb={() => {
+                            }} taskId={task.id}/>
 
                         </div>
+
 
                     </div>
                 </form>
@@ -204,3 +208,4 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
         </div>
     );
 };
+export default EditTaskModal

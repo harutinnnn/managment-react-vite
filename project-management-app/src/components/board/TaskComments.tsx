@@ -8,8 +8,8 @@ import {addComment, getComments} from "@/api/comment.api";
 import {Comment} from "@/types/Comment";
 import {formatDate} from "@/helpers/date.heper";
 import Quill from "quill";
-import { Mention, MentionBlot } from "quill-mention";
-import { useRef } from "react";
+import {Mention, MentionBlot} from "quill-mention";
+import {useRef} from "react";
 
 Quill.register("modules/mention", Mention);
 Quill.register(MentionBlot);
@@ -120,31 +120,39 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
 
     return (
         <div className="comments-container">
-            <h3>Comments</h3>
-
+            <h3 className="mb-10">Comments</h3>
             <div className="task-comment-list" ref={commentsRef}>
 
                 {commentsList && commentsList.map((comment: Comment) => (
                     <div className={"comment-item"} key={comment.id}>
-                        <div
-                            dangerouslySetInnerHTML={{__html: comment.content}}
-                        ></div>
-
                         <div className="comment-info">
                             <div className={"comment-author"}>
-
+                                Harut
                             </div>
                             <div className={"comment-date"}>
                                 {formatDate(comment.createdAt)}
                             </div>
                         </div>
+
+                        <div className="comment-content"
+                             dangerouslySetInnerHTML={{__html: comment.content}}
+                        ></div>
+
+                        <div className="comment-item-actions">
+
+
+                            <span className="edit-comment" onClick={() => {}}>Edit</span>
+                            <span className="delete-comment" onClick={() => {}}>Delete</span>
+
+                        </div>
+
+
                     </div>
                 ))}
 
             </div>
 
             <div className="comment-editor">
-                <h3>Add new comment</h3>
                 <ReactQuill
                     modules={modules}
                     value={comment}

@@ -7,7 +7,7 @@ import { KanbanData } from "@/types/KanbanData";
 import { Task, TaskAdd } from "@/types/Task";
 import { Column } from "@/types/Column";
 import { KanbanColumn } from "@/components/board/KanbanColumn";
-import { EditTaskModal } from "@/components/board/EditTaskModal";
+import EditTaskModal from "@/components/board/EditTaskModal";
 import {
     addBoardColumn,
     addTask,
