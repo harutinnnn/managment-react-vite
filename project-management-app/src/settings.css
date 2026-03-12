@@ -97,6 +97,7 @@
 
 .btn.success:hover {
     background-color: var(--green);
+    color:var(--white);
     opacity: 0.8;
 }
 

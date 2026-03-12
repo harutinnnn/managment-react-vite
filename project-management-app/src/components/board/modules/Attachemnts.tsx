@@ -24,7 +24,7 @@ export const Attachemnts = ({ taskId }: { taskId: number }) => {
     const [fileErrors, setFileErrors] = useState<string[]>([]);
     const [uploadedFiles, setUploadedFiles] = useState<TaskFileType[] | []>([]);
 
-    const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+    const [showAttachmentConfirmPopup, setshowAttachmentConfirmPopup] = useState(false);
     const [deletedFile, setDeletedFile] = useState<TaskFileType | null>(null);
 
     const getTaskAtachments = async (currentTaskId: number) => {
@@ -117,7 +117,7 @@ export const Attachemnts = ({ taskId }: { taskId: number }) => {
 
             await removeTaskFile(taskId, file.id);
             await getTaskAtachments(taskId);
-            setShowConfirmPopup(false);
+            setshowAttachmentConfirmPopup(false);
         } catch (err) {
 
             console.log(err);
@@ -149,14 +149,14 @@ export const Attachemnts = ({ taskId }: { taskId: number }) => {
                 {uploadedFiles && uploadedFiles.map((file, index) => (
 
                     <TaskFileTypeDisplay file={file} key={index} removeCb={() => {
-                        setShowConfirmPopup(true);
+                        setshowAttachmentConfirmPopup(true);
                         setDeletedFile(file);
                     }
                     } />
                 ))}
             </div>
 
-            {showConfirmPopup && (
+            {showAttachmentConfirmPopup && (
                 <ConfirmPopup
                     message="Are you sure you want to delete this item?"
                     onConfirm={async () => {
@@ -166,7 +166,7 @@ export const Attachemnts = ({ taskId }: { taskId: number }) => {
                     }}
                     onCancel={() => {
                         setDeletedFile(null)
-                        setShowConfirmPopup(false);
+                        setshowAttachmentConfirmPopup(false);
                     }}
                 />
             )}
