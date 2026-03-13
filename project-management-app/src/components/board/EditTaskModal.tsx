@@ -87,7 +87,14 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
 
 
     return (
-        <div className="modal-overlay edit-task-modal" onClick={onClose}>
+        <div
+            className="modal-overlay edit-task-modal"
+            onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            }}
+        >
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <h2>Edit Task</h2>
 

@@ -32,10 +32,10 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
                 {message}
             </div>
             <div style={{display: "flex", justifyContent: "flex-end", gap: "8px"}}>
-                <button className={"btn sm rounded bordered"} onClick={onCancel}>
+                <button type="button" className={"btn sm rounded bordered"} onClick={onCancel}>
                     Cancel
                 </button>
-                <button className={"btn sm danger rounded bordered"} onClick={onConfirm}>
+                <button type="button" className={"btn sm danger rounded bordered"} onClick={onConfirm}>
                     Delete
                 </button>
             </div>

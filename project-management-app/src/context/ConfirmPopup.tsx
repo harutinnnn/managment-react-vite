@@ -11,6 +11,7 @@ export const ConfirmPopup: React.FC<ConfirmPopupProps> = ({message, onConfirm, o
         <div
             className={"popup-frez"}
             onClick={(e) => {
+                e.stopPropagation();
                 const target = e.target as HTMLElement;
                 if (target.classList.contains("popup-frez")) {
                     onCancel()
@@ -21,8 +22,8 @@ export const ConfirmPopup: React.FC<ConfirmPopupProps> = ({message, onConfirm, o
                  style={{backgroundColor: "white", padding: "20px", borderRadius: "8px", minWidth: "300px"}}>
                 <p className="popup-message">{message}</p>
                 <div style={{display: "flex", justifyContent: "flex-end", gap: "10px"}}>
-                    <button className="btn sm danger rounded bordered" onClick={onCancel}>Cancel</button>
-                    <button className="btn sm success rounded bordered"  onClick={onConfirm}>Confirm</button>
+                    <button type="button" className="btn sm danger rounded bordered" onClick={onCancel}>Cancel</button>
+                    <button type="button" className="btn sm success rounded bordered" onClick={onConfirm}>Confirm</button>
                 </div>
             </div>
         </div>
