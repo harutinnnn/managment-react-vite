@@ -4,12 +4,13 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "quill-mention/dist/quill.mention.css";
 import {Alerts} from "@/components/Alerts";
-import {addComment, getComments} from "@/api/comment.api";
+import {addComment, deleteComment, getComments} from "@/api/comment.api";
 import {Comment} from "@/types/Comment";
 import {formatDate} from "@/helpers/date.heper";
 import Quill from "quill";
 import {Mention, MentionBlot} from "quill-mention";
 import {useRef} from "react";
+import {DeleteConfirmation} from "@/components/DeleteConfirmation";
 
 Quill.register("modules/mention", Mention);
 Quill.register(MentionBlot);
@@ -36,6 +37,7 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
 
     const [comment, setComment] = React.useState<string>("");
     const [error, setError] = React.useState<string | null>(null);
+    const [confirmCommentId, setConfirmCommentId] = React.useState<number | null>(null);
 
 
     const [commentsList, setCommentsList] = React.useState<Comment[] | []>([]);
@@ -81,7 +83,7 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
 
         try {
 
-            const commentResponse = await addComment({
+            await addComment({
                 taskId: taskId,
                 content: comment
             })
@@ -96,6 +98,17 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
 
         }
     }
+
+    const handleConfirmDelete = async (commentId: number) => {
+        try {
+            await deleteComment(commentId);
+            setConfirmCommentId(null);
+            await handleGetComments(taskId);
+            cb();
+        } catch (err) {
+            setConfirmCommentId(null);
+        }
+    };
 
     if (loading) {
         return (<div>...</div>)
@@ -143,8 +156,21 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
 
                             <span className="edit-comment" onClick={() => {
                             }}>Edit</span>
-                            <span className="delete-comment" onClick={() => {
-                            }}>Delete</span>
+                            <span
+                                className="delete-comment"
+                                onClick={() => {
+                                    setConfirmCommentId(comment.id);
+                                }}
+                            >
+                                Delete
+                            </span>
+                            {confirmCommentId === comment.id && (
+                                <DeleteConfirmation
+                                    message={"Are you sure you want to delete this comment?"}
+                                    onCancel={() => setConfirmCommentId(null)}
+                                    onConfirm={() => handleConfirmDelete(comment.id)}
+                                />
+                            )}
 
                         </div>
 

@@ -3,6 +3,10 @@ export interface CommentAdd {
     taskId: number,
     content: string,
 }
+export interface CommentDelete {
+    taskId: number,
+    commentId: number,
+}
 
 export interface Comment {
     id: number;
