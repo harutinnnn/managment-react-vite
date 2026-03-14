@@ -1,0 +1,39 @@
+.messages-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 30px;
+}
+
+.messages-container .message-users {
+
+    border-radius: 5px;
+    padding: 15px;
+
+    box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
+    -webkit-box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
+    -moz-box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
+
+    background: var(--lightes-gray);
+}
+
+.messages-container .message-conversation {
+    border-radius: 5px;
+
+    box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
+    -webkit-box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
+    -moz-box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
+
+    background: var(--white);
+
+}
+
+.message-users-search-input input {
+    padding-left: 40px !important;
+}
+
+.message-users-search-input .search-icon {
+position: absolute;
+    top: 9px;
+    left: 8px;
+    color: var(--gray);
+}

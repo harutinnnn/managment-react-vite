@@ -231,3 +231,7 @@ select {
 .d-none{
     display: none !important;
 }
+
+.relative{
+    position: relative;
+}

@@ -7,7 +7,7 @@ import Auth from "@/pages/auth/Auth";
 import Home from "@/pages/Home";
 import Projects from "@/pages/projects/Projects";
 import Members from "@/pages/members/Members";
-import Messages from "@/pages/Messages";
+import Messages from "@/pages/messages/Messages";
 import Settings from "@/pages/Settings";
 import Profile from "@/pages/profile/Profile";
 import MembersEdit from "@/pages/members/MembersEdit";
