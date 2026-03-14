@@ -42,7 +42,12 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
 
     const [commentsList, setCommentsList] = React.useState<Comment[] | []>([]);
 
+    const handleGetComments = async (taskId: number) => {
 
+        const comments: Comment[] = await getComments(taskId)
+        setCommentsList(comments)
+        scrollTop()
+    }
     useEffect(() => {
 
         (async () => {
@@ -51,14 +56,6 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
         })()
 
     }, [setCommentsList]);
-
-
-    const handleGetComments = async (taskId: number) => {
-
-        const comments: Comment[] = await getComments(taskId)
-        setCommentsList(comments)
-        scrollTop()
-    }
 
 
     const modules = {
@@ -112,14 +109,21 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
 
 
     const [handleEditCommentId, setEditCommentId] = React.useState<number | null>(null);
-    const [tmpComment, setTmpComment] = React.useState<Comment | null>(null);
+    const [editCommentContent, setEditCommentContent] = React.useState<string>("");
 
-    const handleEditComment = async (id: number) => {
+    const handleEditComment = async (id: number, content: string) => {
+        setEditCommentContent(content)
         setEditCommentId(id)
     }
 
     const handleUpdateComment = async (comment: Comment) => {
-        await editComment(comment)
+        await editComment({
+            ...comment,
+            content: editCommentContent
+        })
+        await handleGetComments(taskId)
+        setEditCommentId(null)
+        setEditCommentContent("")
     }
 
 
@@ -133,13 +137,14 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
             <div className="task-comment-list" ref={commentsRef}>
 
                 {commentsList && commentsList.map((comment: Comment) => (
-                    <div className={"comment-item "+(handleEditCommentId === comment.id ? "edit-comment-active":"")} key={comment.id}>
+                    <div className={"comment-item " + (handleEditCommentId === comment.id ? "edit-comment-active" : "")}
+                         key={comment.id}>
                         <div className="comment-info">
                             <div className={"comment-author"}>
                                 {comment.name}
                             </div>
                             <div className={"comment-date"}>
-                                {formatDate(comment.createdAt)}
+                                {formatDate(comment.updatedAt)}
                             </div>
                         </div>
 
@@ -155,13 +160,12 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
 
 
                             <span className="edit-comment" onClick={() => {
-                                handleEditComment(comment.id)
+                                handleEditComment(comment.id, comment.content)
                             }}>Edit</span>
                                     <span
                                         className="delete-comment"
                                         onClick={() => {
                                             setConfirmCommentId(comment.id);
-                                            setTmpComment(comment)
                                         }}
                                     >
                                 Delete
@@ -181,20 +185,19 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
                             <div className={"comment-edit-container"}>
                                 <ReactQuill
                                     modules={modules}
-                                    value={comment.content}
+                                    value={editCommentContent}
 
                                     placeholder="Type @ to mention someone"
                                     onChange={(value) => {
-                                        comment.content = value;
-                                        comment.content = value
+                                        setEditCommentContent(value)
                                     }}
                                 />
                                 <div className={"cancel-comment-container"}>
-                                     <span className="cancel-comment" onClick={async () => {
+                                     <span className="save-comment" onClick={async () => {
                                          await handleUpdateComment(comment)
-                                         setEditCommentId(null)
                                      }}>Save</span>
                                     <span className="cancel-comment" onClick={() => {
+                                        setEditCommentContent("")
                                         setEditCommentId(null)
                                     }}>Cancel</span>
                                 </div>
