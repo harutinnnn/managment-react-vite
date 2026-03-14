@@ -88,6 +88,9 @@
     margin-left: auto;
 }
 
+.comment-item.edit-comment-active {
+    background-color: var(--green-light) !important;
+}
 .comment-item .comment-item-actions {
     display: flex;
     flex-direction: row;
@@ -99,8 +102,9 @@
     position: relative;
 }
 
-.comment-item .comment-item-actions .edit-comment,
-.comment-item .comment-item-actions .delete-comment {
+.comment-item .edit-comment,
+.comment-item .cancel-comment,
+.comment-item .delete-comment {
     color: var(--primary-color);
     text-decoration: none;
     font-weight: bold;
@@ -110,4 +114,20 @@
     &:hover {
         text-decoration: underline;
     }
+}
+.comment-item .delete-comment {
+    color: var(--error-color);
+}
+
+.cancel-comment-container{
+    display: flex;
+    flex-direction: row;
+    height: 20px;
+    align-items: center;
+    justify-content: end;
+    gap: 10px;
+}
+
+.comment-edit-container .quill{
+    background-color: var(--white);
 }

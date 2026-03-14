@@ -4,7 +4,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "quill-mention/dist/quill.mention.css";
 import {Alerts} from "@/components/Alerts";
-import {addComment, deleteComment, getComments} from "@/api/comment.api";
+import {addComment, deleteComment, editComment, getComments} from "@/api/comment.api";
 import {Comment} from "@/types/Comment";
 import {formatDate} from "@/helpers/date.heper";
 import Quill from "quill";
@@ -110,26 +110,22 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
         }
     };
 
+
+    const [handleEditCommentId, setEditCommentId] = React.useState<number | null>(null);
+    const [tmpComment, setTmpComment] = React.useState<Comment | null>(null);
+
+    const handleEditComment = async (id: number) => {
+        setEditCommentId(id)
+    }
+
+    const handleUpdateComment = async (comment: Comment) => {
+        await editComment(comment)
+    }
+
+
     if (loading) {
         return (<div>...</div>)
     }
-    const handleChange = (content: string, delta: any, source: any, editor: any) => {
-        const text = editor.getText();
-        const range = editor.getSelection();
-
-        if (!range) return;
-
-        const beforeCursor = text.substring(0, range.index);
-
-        if (beforeCursor.endsWith("@")) {
-            onMentionTrigger(range.index);
-        }
-    };
-
-    const onMentionTrigger = (position: number) => {
-        console.log("User typed @ at position:", position);
-        // open dropdown, fetch users, etc.
-    };
 
     return (
         <div className="comments-container">
@@ -137,7 +133,7 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
             <div className="task-comment-list" ref={commentsRef}>
 
                 {commentsList && commentsList.map((comment: Comment) => (
-                    <div className={"comment-item"} key={comment.id}>
+                    <div className={"comment-item "+(handleEditCommentId === comment.id ? "edit-comment-active":"")} key={comment.id}>
                         <div className="comment-info">
                             <div className={"comment-author"}>
                                 {comment.name}
@@ -147,34 +143,63 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
                             </div>
                         </div>
 
-                        <div className="comment-content"
-                             dangerouslySetInnerHTML={{__html: comment.content}}
-                        ></div>
+                        {
+                            // (confirmCommentId !== comment.id && confirmCommentId === null) && <>
+                            (handleEditCommentId !== comment.id) && <>
 
-                        <div className="comment-item-actions">
+                                <div className="comment-content"
+                                     dangerouslySetInnerHTML={{__html: comment.content}}
+                                ></div>
+
+                                <div className="comment-item-actions">
 
 
                             <span className="edit-comment" onClick={() => {
+                                handleEditComment(comment.id)
                             }}>Edit</span>
-                            <span
-                                className="delete-comment"
-                                onClick={() => {
-                                    setConfirmCommentId(comment.id);
-                                }}
-                            >
+                                    <span
+                                        className="delete-comment"
+                                        onClick={() => {
+                                            setConfirmCommentId(comment.id);
+                                            setTmpComment(comment)
+                                        }}
+                                    >
                                 Delete
                             </span>
-                            {confirmCommentId === comment.id && (
-                                <DeleteConfirmation
-                                    message={"Are you sure you want to delete this comment?"}
-                                    onCancel={() => setConfirmCommentId(null)}
-                                    onConfirm={() => handleConfirmDelete(comment.id)}
+                                    {confirmCommentId === comment.id && (
+                                        <DeleteConfirmation
+                                            message={"Are you sure you want to delete this comment?"}
+                                            onCancel={() => setConfirmCommentId(null)}
+                                            onConfirm={() => handleConfirmDelete(comment.id)}
+                                        />
+                                    )}
+                                </div>
+                            </>
+                        }
+
+                        {handleEditCommentId === comment.id &&
+                            <div className={"comment-edit-container"}>
+                                <ReactQuill
+                                    modules={modules}
+                                    value={comment.content}
+
+                                    placeholder="Type @ to mention someone"
+                                    onChange={(value) => {
+                                        comment.content = value;
+                                        comment.content = value
+                                    }}
                                 />
-                            )}
-
-                        </div>
-
-
+                                <div className={"cancel-comment-container"}>
+                                     <span className="cancel-comment" onClick={async () => {
+                                         await handleUpdateComment(comment)
+                                         setEditCommentId(null)
+                                     }}>Save</span>
+                                    <span className="cancel-comment" onClick={() => {
+                                        setEditCommentId(null)
+                                    }}>Cancel</span>
+                                </div>
+                            </div>
+                        }
                     </div>
                 ))}
 

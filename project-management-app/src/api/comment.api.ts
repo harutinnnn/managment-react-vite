@@ -1,7 +1,6 @@
 import api from "./axios";
 
-import {Task} from "@/types/Task";
-import {Comment, CommentAdd, CommentDelete} from "@/types/Comment";
+import {Comment, CommentAdd} from "@/types/Comment";
 
 
 export type ErrorResponse = {
@@ -20,6 +19,14 @@ export async function addComment(
 ): Promise<Comment> {
 
     const response = await api.post<Comment>("/comment/create", data);
+    return response.data;
+}
+
+export async function editComment(
+    data: Comment,
+): Promise<Comment> {
+
+    const response = await api.put<Comment>("/comment/edit", data);
     return response.data;
 }
 
