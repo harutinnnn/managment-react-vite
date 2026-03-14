@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 1fr 3fr;
     gap: 30px;
+    height: calc(100vh - 170px);
 }
 
 .messages-container .message-users {
@@ -14,6 +15,8 @@
     -moz-box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
 
     background: var(--lightes-gray);
+
+    overflow-y: auto;
 }
 
 .messages-container .message-conversation {
@@ -24,7 +27,7 @@
     -moz-box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
 
     background: var(--white);
-
+    overflow-y: auto;
 }
 
 .message-users-search-input input {
@@ -32,8 +35,79 @@
 }
 
 .message-users-search-input .search-icon {
-position: absolute;
+    position: absolute;
     top: 9px;
     left: 8px;
     color: var(--gray);
+}
+
+.chat-members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.chat-members-list .chat-member {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    background-color: var(--white);
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+        background-color: var(--lightes-blue);
+        box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
+        -webkit-box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
+        -moz-box-shadow: 0 0 1px 1px rgba(199, 199, 199, 0.75);
+    }
+}
+
+.chat-members-list .chat-member.active {
+    background-color: var(--green-light);
+}
+
+.chat-members-list .chat-member .message-member-avatar {
+    position: relative;
+    width: 48px;
+    height: 48px;
+}
+
+.chat-members-list .chat-member .message-member-avatar .avatar {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.chat-members-list .chat-member .message-member-avatar .badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: solid 1px var(--white);
+    background: var(--green);
+}
+
+.message-conversation {
+
+    display: flex;
+    flex-direction: column;
+}
+
+.message-conversation .send-message-container {
+    margin-top: auto;
+    padding: 10px;
+}
+
+.message-conversation .send-message-container .input-row {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+
 }
