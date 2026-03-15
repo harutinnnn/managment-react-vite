@@ -55,7 +55,7 @@ const Messages = () => {
         const memberMessagesResponse = await getMemberMessages(Number(member?.user.id))
         setActiveMemberMessages(memberMessagesResponse)
 
-        bottomRef.current?.scrollIntoView({behavior: "smooth"});
+        setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}))
     }
 
     const handleSetMessage = async () => {
@@ -138,11 +138,21 @@ const Messages = () => {
                     <div className={"messages-list"}>
 
                         {activeMemberMessages && activeMemberMessages.map((message: MessageType) => (
-                            <div className={"message-item " + (message.receiverId === user?.user.id ? "receiver" : "")}
+                            <div className={"message-item " + (message.receiverId === user?.user.id ? "" : "receiver")}
                                  key={message.id}>
-                                <div className={"message-user-name"}>{message.receiverName}</div>
-                                <div className={"message-text"}>{message.message}</div>
-                                <div className={"message-date"}>{formatDateTime((message.createdAt || "").toString())}</div>
+                                <div className={"message-item-inner"}>
+                                    {message.receiverId === user?.user.id && <img className="message-user-avatar"
+                                                                                  src={message.receiverAvatar ? apiUrl + message.receiverAvatar : (`/src/assets/avatars/${user?.user.gender}.png`)}
+                                                                                  alt={message.receiverName}/>}
+                                    <div>
+                                        <div className={"message-user-name"}>{message.receiverName}</div>
+                                        <div className="message-item-inner-info">
+                                            <div className={"message-text"}>{message.message}</div>
+                                            <div
+                                                className={"message-date"}>{formatDateTime((message.createdAt || "").toString())}</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         ))}
                         <div ref={bottomRef}/>

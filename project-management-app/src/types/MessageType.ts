@@ -8,4 +8,5 @@ export interface MessageType {
     isRead?: 1 | 0;
     createdAt?: Date | string;
     receiverName?: string;
+    receiverAvatar?: string;
 }

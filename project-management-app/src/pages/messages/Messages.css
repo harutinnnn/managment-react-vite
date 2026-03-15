@@ -99,13 +99,12 @@
 
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 .message-conversation .send-message-container {
     margin-top: auto;
     padding: 10px;
-    position: absolute;
-    bottom: 0;
     width: 100%;
 }
 
@@ -127,34 +126,53 @@
     border-radius: 5px;
 }
 
-.messages-list{
+.messages-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    height: calc(100vh - 230px);
+    overflow-y: scroll;
 }
 
 .message-item {
-
-
     padding: 10px;
     margin: 10px;
-    border: solid 1px var(--light-gray);
+    /*border: solid 1px var(--light-gray);*/
     border-radius: 5px;
     font-size: 14px;
     width: auto;
-    max-width: 50%;
     transition: background-color 0.3s ease-in-out;
-    cursor: pointer;
     display: inline-flex;
     flex-direction: column;
 
-    &:hover {
-        background-color: var(--lightes-gray);
-    }
+    /*&:hover {*/
+    /*    background-color: var(--lightes-gray);*/
+    /*}*/
+}
+
+.message-item .message-item-inner {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+
+}
+
+.message-item .message-item-inner .message-item-inner-info {
+    border: 1px solid var(--lightes-gray);
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 5px;
+    background-color: var(--lightes-blue);
+}
+
+.message-item.receiver .message-item-inner .message-item-inner-info {
+    background-color: var(--primary-color);
+    color: var(--white);
 }
 
 .message-item.receiver {
-    margin-left: auto;
+margin-left: auto;
 }
 
 .message-item .message-user-name {
@@ -163,13 +181,27 @@
 }
 
 .message-item .message-text {
-    font-size: 13px;
-    margin-top: 5px;
+    font-size: 16px;
+    margin-bottom: 5px;
 }
 
 .message-item .message-date {
     font-size: 12px;
     color: var(--gray);
     font-weight: bold;
-    text-align: right;
+}
+
+.message-item.receiver .message-item-inner .message-item-inner-info .message-date {
+    color: var(--white);
+}
+
+
+.message-item .message-item-inner .message-user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.message-item.receiver .message-item-inner .message-user-avatar {
+
 }
