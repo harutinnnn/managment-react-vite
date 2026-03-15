@@ -48,6 +48,7 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
         setCommentsList(comments)
         scrollTop()
     }
+
     useEffect(() => {
 
         (async () => {
@@ -93,6 +94,8 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
 
         } catch (err) {
 
+            console.log(err)
+
         }
     }
 
@@ -103,6 +106,7 @@ export const TaskComments: React.FC<TaskCommentProps> = ({cb, taskId}) => {
             await handleGetComments(taskId);
             cb();
         } catch (err) {
+            console.log(err)
             setConfirmCommentId(null);
         }
     };

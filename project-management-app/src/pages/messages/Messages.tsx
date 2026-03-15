@@ -1,11 +1,14 @@
 import {Search, Send} from "lucide-react";
 import './Messages.css'
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {MemberJoinSkillType} from "@/types/MemberType";
 import {getMembers} from "@/api/members.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {getMeRequest} from "@/api/auth.api";
 import {User} from "@/types/User";
+import {getMemberMessages, sendMessage} from "@/api/messages.api";
+import {MessageType} from "@/types/MessageType";
+import {formatDateTime} from "@/helpers/date.heper";
 
 const Messages = () => {
 
@@ -17,6 +20,13 @@ const Messages = () => {
     const [activeUser, setactiveUser] = useState<MemberJoinSkillType | null>(null);
 
     const [user, setUser] = useState<User | null>(null);
+
+
+    const [messageText, setMessageText] = useState("");
+
+    const [activeMemberMessages, setActiveMemberMessages] = useState<MessageType[]>([]);
+
+    const bottomRef = useRef<HTMLDivElement | null>(null);
 
 
     useEffect(() => {
@@ -32,11 +42,49 @@ const Messages = () => {
     }, [])
 
 
-    const handleGetMemberConverstaion = async (member: MemberJoinSkillType) => {
+    const handleGetMemberConversation = async (member: MemberJoinSkillType) => {
         setactiveUser(member)
 
-
+        await handleGetMemberMessages(member)
         //TODO get member conversation
+    }
+
+
+    const handleGetMemberMessages = async (member: MemberJoinSkillType) => {
+
+        const memberMessagesResponse = await getMemberMessages(Number(member?.user.id))
+        setActiveMemberMessages(memberMessagesResponse)
+
+        bottomRef.current?.scrollIntoView({behavior: "smooth"});
+    }
+
+    const handleSetMessage = async () => {
+
+        if (messageText.trim().length > 0 && activeUser) {
+
+            try {
+
+                const responseMessage = await sendMessage({
+                    senderId: Number(user?.user.id),
+                    receiverId: Number(activeUser.user.id),
+                    message: messageText
+
+                })
+
+                setMessageText("")
+
+                await handleGetMemberMessages(activeUser)
+
+                console.log(responseMessage)
+
+
+            } catch (e) {
+                console.error(e)
+            }
+
+        }
+
+
     }
 
     if (loading) {
@@ -66,7 +114,7 @@ const Messages = () => {
                         {members && members.filter(m => Number(m.user.id) !== Number(user?.user.id)).map((member: MemberJoinSkillType) => (
                             <div className={"chat-member " + (activeUser?.user.id === member.user.id ? 'active' : '')}
                                  key={member.user.id} onClick={async () => {
-                                await handleGetMemberConverstaion(member)
+                                await handleGetMemberConversation(member)
                             }}>
 
                                 <div className={"message-member-avatar"}>
@@ -89,13 +137,29 @@ const Messages = () => {
 
                     <div className={"messages-list"}>
 
+                        {activeMemberMessages && activeMemberMessages.map((message: MessageType) => (
+                            <div className={"message-item " + (message.receiverId === user?.user.id ? "receiver" : "")}
+                                 key={message.id}>
+                                <div className={"message-user-name"}>{message.receiverName}</div>
+                                <div className={"message-text"}>{message.message}</div>
+                                <div className={"message-date"}>{formatDateTime((message.createdAt || "").toString())}</div>
+                            </div>
+                        ))}
+                        <div ref={bottomRef}/>
                     </div>
 
                     <div className={"send-message-container"}>
                         <div className="input-row">
-                            <input type="text"/>
-                            <button type={'button'} className={'btn primary'}>
-                                <Send size={22}/>
+                            <input type="text" value={messageText} placeholder={"Put your message text"}
+                                   onKeyUp={async (e) => {
+                                       if (e.key === "Enter") {
+                                           await handleSetMessage()
+                                       }
+                                   }}
+                                   onChange={(e) => setMessageText(e.target.value)}/>
+
+                            <button type={'button'} className={'btn primary'} onClick={() => handleSetMessage()}>
+                                <Send size={16}/>
                             </button>
                         </div>
                     </div>
