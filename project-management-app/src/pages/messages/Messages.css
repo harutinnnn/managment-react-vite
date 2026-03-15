@@ -106,8 +106,17 @@
 }
 
 .message-conversation .send-message-container .input-row {
+
     margin-bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 35px;
+    gap: 10px;
+    align-items: center;
+}
+
+.message-conversation .send-message-container .input-row button {
+    padding: 0;
     display: flex;
     align-items: center;
-
+    justify-content: center;
 }

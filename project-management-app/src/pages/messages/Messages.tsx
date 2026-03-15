@@ -1,4 +1,4 @@
-import {Search} from "lucide-react";
+import {Search, Send} from "lucide-react";
 import './Messages.css'
 import {useEffect, useState} from "react";
 import {MemberJoinSkillType} from "@/types/MemberType";
@@ -87,7 +87,9 @@ const Messages = () => {
                     <div className={"send-message-container"}>
                         <div className="input-row">
                             <input type="text"/>
-                            <button type={'button'} className={'btn primary'}></button>
+                            <button type={'button'} className={'btn primary'}>
+                                <Send size={22}/>
+                            </button>
                         </div>
                     </div>
 
