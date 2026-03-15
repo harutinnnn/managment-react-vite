@@ -4,6 +4,8 @@ import {useEffect, useState} from "react";
 import {MemberJoinSkillType} from "@/types/MemberType";
 import {getMembers} from "@/api/members.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
+import {getMeRequest} from "@/api/auth.api";
+import {User} from "@/types/User";
 
 const Messages = () => {
 
@@ -14,12 +16,17 @@ const Messages = () => {
     const [members, setMembers] = useState<MemberJoinSkillType[]>([]);
     const [activeUser, setactiveUser] = useState<MemberJoinSkillType | null>(null);
 
+    const [user, setUser] = useState<User | null>(null);
+
 
     useEffect(() => {
         (async () => {
             const members: MemberJoinSkillType[] = await getMembers()
             setMembers(members)
-            setactiveUser(members[0])
+
+            const user = await getMeRequest()
+            setUser(user)
+
             setLoading(false)
         })()
     }, [])
@@ -56,7 +63,7 @@ const Messages = () => {
                     </div>
 
                     <div className="chat-members-list">
-                        {members && members.map((member: MemberJoinSkillType) => (
+                        {members && members.filter(m => Number(m.user.id) !== Number(user?.user.id)).map((member: MemberJoinSkillType) => (
                             <div className={"chat-member " + (activeUser?.user.id === member.user.id ? 'active' : '')}
                                  key={member.user.id} onClick={async () => {
                                 await handleGetMemberConverstaion(member)
