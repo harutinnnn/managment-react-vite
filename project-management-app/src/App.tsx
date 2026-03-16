@@ -17,11 +17,23 @@ import ActivationCode from "@/pages/ActivationCode";
 import './App.css'
 import {ProjectKanban} from "@/pages/projects/ProjectKanban";
 
+import { socket } from "./socket";
+import {useEffect} from "react";
+
+
 function App() {
+
+
+
+    useEffect(() => {
+        socket.connect();
+    }, []);
+
 
 
     return (
         <Routes>
+
             {/* Public layout */}
             <Route element={<AuthLayout/>}>
                 <Route path="/login" element={<Auth/>}/>
@@ -43,7 +55,7 @@ function App() {
                 <Route path="/project/:id" element={<ProjectKanban/>}/>
                 <Route path="/members" element={<Members/>}/>
                 <Route path="/members/:id" element={<MembersEdit/>}/>
-                <Route path="/messages" element={<Messages/>}/>
+                <Route path="/messages" element={<Messages socket={socket}/>}/>
                 <Route path="/settings" element={<Settings/>}/>
                 <Route path="/skills" element={<Skills/>}/>
                 <Route path="/professions" element={<Professions/>}/>

@@ -9,8 +9,10 @@ import {User} from "@/types/User";
 import {getMemberMessages, sendMessage} from "@/api/messages.api";
 import {MessageType} from "@/types/MessageType";
 import {formatDateTime} from "@/helpers/date.heper";
+import {ClientToServerEvents, ServerToClientEvents, socket} from "@/socket";
+import {Socket} from "socket.io-client";
 
-const Messages = () => {
+const Messages = ({socket}: { socket: Socket }) => {
 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -76,6 +78,8 @@ const Messages = () => {
                 await handleGetMemberMessages(activeUser)
 
                 console.log(responseMessage)
+
+                socket.emit("send_message", {message: messageText})
 
 
             } catch (e) {
