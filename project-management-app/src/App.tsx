@@ -23,10 +23,13 @@ import {useEffect} from "react";
 
 function App() {
 
-
-
     useEffect(() => {
         socket.connect();
+
+        socket.on("send_message",data => {
+            console.log('send_message',data)
+        })
+
     }, []);
 
 

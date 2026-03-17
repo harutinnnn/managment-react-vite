@@ -9,8 +9,9 @@ import {User} from "@/types/User";
 import {getMemberMessages, sendMessage} from "@/api/messages.api";
 import {MessageType} from "@/types/MessageType";
 import {formatDateTime} from "@/helpers/date.heper";
-import {ClientToServerEvents, ServerToClientEvents, socket} from "@/socket";
 import {Socket} from "socket.io-client";
+
+let typingTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const Messages = ({socket}: { socket: Socket }) => {
 
@@ -31,6 +32,12 @@ const Messages = ({socket}: { socket: Socket }) => {
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
 
+    // useEffect(() => {
+    //     socket.on("send_message", data => {
+    //         console.log('send_message', data)
+    //     })
+    // }, []);
+
     useEffect(() => {
         (async () => {
             const members: MemberJoinSkillType[] = await getMembers()
@@ -41,6 +48,9 @@ const Messages = ({socket}: { socket: Socket }) => {
 
             setLoading(false)
         })()
+
+
+
     }, [])
 
 
@@ -79,7 +89,11 @@ const Messages = ({socket}: { socket: Socket }) => {
 
                 console.log(responseMessage)
 
-                socket.emit("send_message", {message: messageText})
+                socket.emit("send_message", {
+                    message: messageText,
+                    userId: Number(activeUser.user.id),
+                    id: responseMessage.id
+                })
 
 
             } catch (e) {
@@ -170,7 +184,20 @@ const Messages = ({socket}: { socket: Socket }) => {
                                            await handleSetMessage()
                                        }
                                    }}
-                                   onChange={(e) => setMessageText(e.target.value)}/>
+                                   onChange={(e) => {
+                                       setMessageText(e.target.value)
+
+                                       if (typingTimeout) {
+                                           clearTimeout(typingTimeout)
+                                       }
+
+
+                                       socket.emit('typing')
+
+                                       typingTimeout = setTimeout(() => {
+                                           socket.emit('stop typing')
+                                       }, 2000)
+                                   }}/>
 
                             <button type={'button'} className={'btn primary'} onClick={() => handleSetMessage()}>
                                 <Send size={16}/>

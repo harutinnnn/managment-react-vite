@@ -1,4 +1,5 @@
 import { io, Socket } from "socket.io-client";
+import { getAccessToken } from "@/helpers/authStorage";
 
 export interface ServerToClientEvents {
     welcome: (data: { message: string }) => void;
@@ -10,9 +11,21 @@ export interface ClientToServerEvents {
 }
 
 const URL = import.meta.env.VITE_API_URL;
-console.log(URL)
 
 export const socket: Socket = io(URL, {
     autoConnect: false,
-    transports: ["websocket"]
+    transports: ["websocket"],
+    auth: (cb) => {
+        const token = getAccessToken();
+        cb({
+            token: token ? `Bearer ${token}` : "",
+        });
+    },
 });
+
+export const reconnectSocketWithFreshToken = () => {
+    if (socket.connected) {
+        socket.disconnect();
+    }
+    socket.connect();
+};
