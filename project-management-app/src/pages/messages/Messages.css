@@ -48,6 +48,10 @@
     gap: 10px;
 }
 
+.chat-members-list .user-typing {
+
+}
+
 
 .chat-members-list .chat-member {
     display: flex;
@@ -172,7 +176,7 @@
 }
 
 .message-item.receiver {
-margin-left: auto;
+    margin-left: auto;
 }
 
 .message-item .message-user-name {

@@ -19,18 +19,43 @@ import {ProjectKanban} from "@/pages/projects/ProjectKanban";
 
 import { socket } from "./socket";
 import {useEffect} from "react";
+import {useAuth} from "@/hooks/useAuth";
+import {reconnectSocketWithFreshToken} from "@/socket";
 
 
 function App() {
+    const {user} = useAuth();
 
     useEffect(() => {
-        socket.connect();
+        if (!user) {
+            socket.disconnect();
+            return;
+        }
 
-        socket.on("send_message",data => {
-            console.log('send_message',data)
-        })
+        reconnectSocketWithFreshToken();
 
-    }, []);
+        // const handleSendMessage = (data: unknown) => {
+        //     console.log("send_message", data);
+        // };
+        //
+        // const handleConnect = () => {
+        //     console.log("socket connected", socket.id);
+        // };
+        //
+        // const handleConnectError = (error: Error) => {
+        //     console.error("socket connect_error", error.message);
+        // };
+        //
+        // socket.on("send_message", handleSendMessage);
+        // socket.on("connect", handleConnect);
+        // socket.on("connect_error", handleConnectError);
+        //
+        // return () => {
+        //     socket.off("send_message", handleSendMessage);
+        //     socket.off("connect", handleConnect);
+        //     socket.off("connect_error", handleConnectError);
+        // };
+    }, [user]);
 
 
 

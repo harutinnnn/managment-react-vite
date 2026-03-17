@@ -14,7 +14,7 @@ const URL = import.meta.env.VITE_API_URL;
 
 export const socket: Socket = io(URL, {
     autoConnect: false,
-    transports: ["websocket"],
+    // transports: ["websocket"],
     auth: (cb) => {
         const token = getAccessToken();
         cb({

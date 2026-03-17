@@ -10,6 +10,8 @@ import {getMemberMessages, sendMessage} from "@/api/messages.api";
 import {MessageType} from "@/types/MessageType";
 import {formatDateTime} from "@/helpers/date.heper";
 import {Socket} from "socket.io-client";
+import {reconnectSocketWithFreshToken} from "@/socket";
+import typingIcon from "../../assets/icons/3-dots-bounce.svg";
 
 let typingTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -31,12 +33,30 @@ const Messages = ({socket}: { socket: Socket }) => {
 
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
+    const [usersTyping, setUsersTyping] = useState<number[]>([]);
 
-    // useEffect(() => {
-    //     socket.on("send_message", data => {
-    //         console.log('send_message', data)
-    //     })
-    // }, []);
+
+    useEffect(() => {
+        socket.on("send_message", data => {
+
+            setActiveMemberMessages(prevState => [...prevState, data])
+            setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}))
+
+        })
+
+
+        socket.on("typing", data => {
+
+            setUsersTyping(prev =>
+                prev.includes(data.typingUser) ? prev : [...prev, data.typingUser]
+            );
+        })
+
+        socket.on("stop typing", data => {
+            setUsersTyping(prev => prev.filter(id => id !== data.typingUser));
+        })
+
+    }, [setUsersTyping]);
 
     useEffect(() => {
         (async () => {
@@ -48,7 +68,6 @@ const Messages = ({socket}: { socket: Socket }) => {
 
             setLoading(false)
         })()
-
 
 
     }, [])
@@ -88,6 +107,10 @@ const Messages = ({socket}: { socket: Socket }) => {
                 await handleGetMemberMessages(activeUser)
 
                 console.log(responseMessage)
+
+                if (!socket.connected) {
+                    reconnectSocketWithFreshToken();
+                }
 
                 socket.emit("send_message", {
                     message: messageText,
@@ -144,7 +167,14 @@ const Messages = ({socket}: { socket: Socket }) => {
                                 </div>
                                 <div className={"message-member-name"}>
                                     {member.user.name}
+
+                                    {usersTyping.includes(Number(member.user.id)) &&
+                                        <div className={"user-typing"}>
+                                            <img src={typingIcon} alt=""/>
+                                        </div>
+                                    }
                                 </div>
+
                             </div>
                         ))}
                     </div>
@@ -159,9 +189,10 @@ const Messages = ({socket}: { socket: Socket }) => {
                             <div className={"message-item " + (message.receiverId === user?.user.id ? "" : "receiver")}
                                  key={message.id}>
                                 <div className={"message-item-inner"}>
-                                    {message.receiverId === user?.user.id && <img className="message-user-avatar"
-                                                                                  src={message.receiverAvatar ? apiUrl + message.receiverAvatar : (`/src/assets/avatars/${user?.user.gender}.png`)}
-                                                                                  alt={message.receiverName}/>}
+                                    {message.receiverId === user?.user.id &&
+                                        <img className="message-user-avatar"
+                                             src={message.receiverAvatar ? apiUrl + message.receiverAvatar : (`/src/assets/avatars/${user?.user.gender}.png`)}
+                                             alt={message.receiverName}/>}
                                     <div>
                                         <div className={"message-user-name"}>{message.receiverName}</div>
                                         <div className="message-item-inner-info">
@@ -192,10 +223,16 @@ const Messages = ({socket}: { socket: Socket }) => {
                                        }
 
 
-                                       socket.emit('typing')
+                                       socket.emit('typing', {
+                                           typingUser: user?.user.id,
+                                           userId: activeUser?.user.id,
+                                       })
 
                                        typingTimeout = setTimeout(() => {
-                                           socket.emit('stop typing')
+                                           socket.emit('stop typing', {
+                                               typingUser: user?.user.id,
+                                               userId: activeUser?.user.id,
+                                           })
                                        }, 2000)
                                    }}/>
 
