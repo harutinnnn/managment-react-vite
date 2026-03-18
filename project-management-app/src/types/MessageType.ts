@@ -1,3 +1,4 @@
+import {MemberType} from "@/types/MemberType";
 
 export interface MessageType {
     id?: string;
@@ -9,4 +10,11 @@ export interface MessageType {
     createdAt?: Date | string;
     receiverName?: string;
     receiverAvatar?: string;
+}
+
+
+export interface MessageFullType {
+    message: MessageType,
+    receiver:MemberType
+    sender:MemberType
 }

@@ -170,12 +170,12 @@
     background-color: var(--lightes-blue);
 }
 
-.message-item.receiver .message-item-inner .message-item-inner-info {
+.message-item.sender .message-item-inner .message-item-inner-info {
     background-color: var(--primary-color);
     color: var(--white);
 }
 
-.message-item.receiver {
+.message-item.sender {
     margin-left: auto;
 }
 
@@ -195,7 +195,7 @@
     font-weight: bold;
 }
 
-.message-item.receiver .message-item-inner .message-item-inner-info .message-date {
+.message-item.sender .message-item-inner .message-item-inner-info .message-date {
     color: var(--white);
 }
 
@@ -206,6 +206,6 @@
     border-radius: 50%;
 }
 
-.message-item.receiver .message-item-inner .message-user-avatar {
+.message-item.sender .message-item-inner .message-user-avatar {
 
 }

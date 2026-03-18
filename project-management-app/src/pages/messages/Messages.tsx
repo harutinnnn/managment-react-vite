@@ -1,17 +1,16 @@
 import {Search, Send} from "lucide-react";
 import './Messages.css'
 import {useEffect, useRef, useState} from "react";
-import {MemberJoinSkillType} from "@/types/MemberType";
+import {MemberJoinSkillType, MemberType} from "@/types/MemberType";
 import {getMembers} from "@/api/members.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {getMeRequest} from "@/api/auth.api";
-import {User} from "@/types/User";
 import {getMemberMessages, sendMessage} from "@/api/messages.api";
-import {MessageType} from "@/types/MessageType";
-import {formatDateTime} from "@/helpers/date.heper";
+import {MessageFullType, MessageType} from "@/types/MessageType";
 import {Socket} from "socket.io-client";
 import {reconnectSocketWithFreshToken} from "@/socket";
 import typingIcon from "../../assets/icons/3-dots-bounce.svg";
+import OneMessage from "@/pages/messages/OneMessage";
 
 let typingTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -24,12 +23,12 @@ const Messages = ({socket}: { socket: Socket }) => {
     const [members, setMembers] = useState<MemberJoinSkillType[]>([]);
     const [activeUser, setactiveUser] = useState<MemberJoinSkillType | null>(null);
 
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<MemberJoinSkillType | null>(null);
 
 
     const [messageText, setMessageText] = useState("");
 
-    const [activeMemberMessages, setActiveMemberMessages] = useState<MessageType[]>([]);
+    const [activeMemberMessages, setActiveMemberMessages] = useState<MessageFullType[]>([]);
 
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -105,8 +104,6 @@ const Messages = ({socket}: { socket: Socket }) => {
                 setMessageText("")
 
                 await handleGetMemberMessages(activeUser)
-
-                console.log(responseMessage)
 
                 if (!socket.connected) {
                     reconnectSocketWithFreshToken();
@@ -185,25 +182,11 @@ const Messages = ({socket}: { socket: Socket }) => {
 
                     <div className={"messages-list"}>
 
-                        {activeMemberMessages && activeMemberMessages.map((message: MessageType) => (
-                            <div className={"message-item " + (message.receiverId === user?.user.id ? "" : "receiver")}
-                                 key={message.id}>
-                                <div className={"message-item-inner"}>
-                                    {message.receiverId === user?.user.id &&
-                                        <img className="message-user-avatar"
-                                             src={message.receiverAvatar ? apiUrl + message.receiverAvatar : (`/src/assets/avatars/${user?.user.gender}.png`)}
-                                             alt={message.receiverName}/>}
-                                    <div>
-                                        <div className={"message-user-name"}>{message.receiverName}</div>
-                                        <div className="message-item-inner-info">
-                                            <div className={"message-text"}>{message.message}</div>
-                                            <div
-                                                className={"message-date"}>{formatDateTime((message.createdAt || "").toString())}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                        {activeMemberMessages && activeMemberMessages.map((message: MessageFullType) =>
+
+                                <OneMessage message={message} user={user} key={message.message.id}/>
+
+                        )}
                         <div ref={bottomRef}/>
                     </div>
 

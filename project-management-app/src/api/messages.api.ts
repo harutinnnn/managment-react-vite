@@ -1,6 +1,6 @@
 import api from "./axios";
 
-import {MessageType} from "@/types/MessageType";
+import {MessageFullType, MessageType} from "@/types/MessageType";
 
 
 export type SendMessagePayload = {
@@ -23,8 +23,8 @@ export async function sendMessage(
 
 export async function getMemberMessages(
     memberId: number,
-): Promise<MessageType[]> {
+): Promise<MessageFullType[]> {
 
-    const response = await api.post<MessageType[]>("/message", {memberId: memberId});
+    const response = await api.post<MessageFullType[]>("/message", {memberId: memberId});
     return response.data;
 }
