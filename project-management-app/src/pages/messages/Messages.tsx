@@ -1,20 +1,24 @@
 import {Search, Send} from "lucide-react";
 import './Messages.css'
 import {useEffect, useRef, useState} from "react";
-import {MemberJoinSkillType, MemberType} from "@/types/MemberType";
+import {MemberJoinSkillType} from "@/types/MemberType";
 import {getMembers} from "@/api/members.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {getMeRequest} from "@/api/auth.api";
 import {getMemberMessages, sendMessage} from "@/api/messages.api";
-import {MessageFullType, MessageType} from "@/types/MessageType";
-import {Socket} from "socket.io-client";
+import {MessageFullType} from "@/types/MessageType";
 import {reconnectSocketWithFreshToken} from "@/socket";
 import typingIcon from "../../assets/icons/3-dots-bounce.svg";
 import OneMessage from "@/pages/messages/OneMessage";
+import {useOutletContext} from "react-router-dom";
+import type {ProtectedLayoutContext} from "@/layouts/ProtectedLayout";
+import clickSound from "../../assets/sounds/message-sound.wav";
 
 let typingTimeout: ReturnType<typeof setTimeout> | null = null;
 
-const Messages = ({socket}: { socket: Socket }) => {
+
+const Messages = () => {
+    const {socket} = useOutletContext<ProtectedLayoutContext>();
 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -35,27 +39,46 @@ const Messages = ({socket}: { socket: Socket }) => {
     const [usersTyping, setUsersTyping] = useState<number[]>([]);
 
 
+    const playSound = () => {
+        const audio = new Audio(clickSound);
+        audio.play().catch((err) => {
+            console.error("Audio play failed:", err);
+        });
+    };
+
+
     useEffect(() => {
-        socket.on("send_message", data => {
+        const handleSendMessage = (data: MessageFullType) => {
 
             setActiveMemberMessages(prevState => [...prevState, data])
             setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}))
 
-        })
+            playSound()
+
+        };
 
 
-        socket.on("typing", data => {
+        const handleTyping = (data: { typingUser: number }) => {
 
             setUsersTyping(prev =>
                 prev.includes(data.typingUser) ? prev : [...prev, data.typingUser]
             );
-        })
+        };
 
-        socket.on("stop typing", data => {
+        const handleStopTyping = (data: { typingUser: number }) => {
             setUsersTyping(prev => prev.filter(id => id !== data.typingUser));
-        })
+        };
 
-    }, [setUsersTyping]);
+        socket.on("send_message", handleSendMessage)
+        socket.on("typing", handleTyping)
+        socket.on("stop typing", handleStopTyping)
+
+        return () => {
+            socket.off("send_message", handleSendMessage);
+            socket.off("typing", handleTyping);
+            socket.off("stop typing", handleStopTyping);
+        };
+    }, [socket]);
 
     useEffect(() => {
         (async () => {

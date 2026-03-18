@@ -1,12 +1,14 @@
 import {Bell, BellDot} from "lucide-react";
 import {NotificationsResponse, setUpdateNotification} from "@/api/notifications.api";
 import {useEffect, useState} from "react";
+import {socket as appSocket} from "@/socket";
 
 export const MainHeader = (
-    {minMaxSidebar, notifications, updateNotificationList}: {
+    {minMaxSidebar, notifications, updateNotificationList, socket}: {
         minMaxSidebar: () => void,
         notifications: NotificationsResponse[],
-        updateNotificationList: () => void
+        updateNotificationList: () => Promise<void> | void,
+        socket: typeof appSocket
     }
 ) => {
 
@@ -49,6 +51,18 @@ export const MainHeader = (
         };
     }, []);
 
+    useEffect(() => {
+        const handleNotification = async () => {
+            await updateNotificationList();
+        };
+
+        socket.on("send_notification", handleNotification);
+
+        return () => {
+            socket.off("send_notification", handleNotification);
+        };
+    }, [socket, updateNotificationList]);
+
 
     const handleSetViewedNotification = async (id: number) => {
         await setUpdateNotification({id: id})
@@ -80,18 +94,20 @@ export const MainHeader = (
                 }
             </div>
 
-            <div className="notification-popup" style={{display: (showNotifications && notifications.length ? 'flex' : 'none')}}>
+            <div className="notification-popup"
+                 style={{display: (showNotifications && notifications.length ? 'flex' : 'none')}}>
 
-                {notifications && notifications.map((notification, index) => (
+                <div className={"notification-popup-inner"}>
+                    {notifications && notifications.map((notification, index) => (
 
-                    <div className={"notify-item"} key={notification.id} onClick={() => {
-                        handleSetViewedNotification(notification.id);
-                    }}>
-                        {index + 1}. {notification.message}
-                    </div>
+                        <div className={"notify-item"} key={notification.id} onClick={() => {
+                            handleSetViewedNotification(notification.id);
+                        }}>
+                            {index + 1}. {notification.message}
+                        </div>
 
-                ))}
-
+                    ))}
+                </div>
             </div>
 
         </div>

@@ -59,9 +59,8 @@
 
 
 .notification-popup {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+
+
     position: absolute;
     top: 55px;
     padding: 15px 15px 15px 10px;
@@ -82,9 +81,14 @@
     background-color: var(--lightes-blue);
 }
 
+.notification-popup .notification-popup-inner {
+    display: block;
+}
+
 .notify-item {
     font-size: 12px;
     padding: 5px 10px;
+    margin-bottom: 5px;
     border-bottom: solid 1px var(--light-gray);
     background-color: var(--white);
     border-radius: 10px;
@@ -98,9 +102,9 @@
 
     transition: all .2s ease-in-out;
 
-    &:hover{
+    &:hover {
         background-color: var(--light-gray);
-        display:block;
+        display: block;
         overflow: unset;
     }
 }

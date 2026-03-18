@@ -23,9 +23,9 @@ const OneMessage = ({message, user}: MessagePayload) => {
                          alt={message.sender.name}/>}
                 <div>
 
-                    <div className={"message-user-name"}>
+                    {!senderOrReceiver && <div className={"message-user-name"}>
                         {message.sender.name}
-                    </div>
+                    </div>}
 
                     <div className="message-item-inner-info">
                         <div className={"message-text"}>{message.message.message}</div>
