@@ -77,6 +77,7 @@
 
 .chat-members-list .chat-member .message-member-avatar {
     position: relative;
+    border-radius: 50%;
     width: 48px;
     height: 48px;
 }
@@ -207,5 +208,84 @@
 }
 
 .message-item.sender .message-item-inner .message-user-avatar {
+
+}
+
+.pulse-glow {
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); /* Initial transparent shadow */
+    animation: glow-pulse 1s infinite; /* Apply the animation */
+}
+@keyframes glow-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); /* Starts with no visible shadow */
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(52, 152, 219, 0); /* Expands and fades out */
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); /* Resets for next loop */
+    }
+}
+
+@media (max-width: 1200px) {
+    .messages-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        height: calc(100vh - 170px);
+    }
+
+    .chat-members-list {
+        flex-direction: row;
+    }
+
+    .chat-members-list .chat-member {
+        background: unset;
+        padding: 0;
+        background: none;
+    }
+
+    .chat-members-list .chat-member {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+    }
+    .chat-members-list .chat-member:hover {
+        background-color: unset;
+        box-shadow: unset;
+        -webkit-box-shadow: unset;
+        -moz-box-shadow: unset;
+    }
+
+    .chat-members-list .chat-member .message-member-avatar{
+        border-radius: 50%;
+        width: 54px;
+        height: 54px;
+        border: solid 3px transparent;
+        overflow: hidden;
+    }
+    .chat-members-list .chat-member.active .message-member-avatar{
+        border: solid 3px var(--primary-color);
+    }
+
+    .chat-members-list .chat-member .message-member-name {
+        display: none;
+    }
+
+    .chat-members-list .chat-member.active{
+        background: none;
+    }
+
+    .message-users-search-input{
+        display: none;
+    }
+
 
 }

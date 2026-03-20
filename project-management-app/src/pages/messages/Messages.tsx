@@ -50,10 +50,13 @@ const Messages = () => {
     useEffect(() => {
         const handleSendMessage = (data: MessageFullType) => {
 
-            setActiveMemberMessages(prevState => [...prevState, data])
-            setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}))
+            if (activeUser) {
 
-            playSound()
+                setActiveMemberMessages(prevState => [...prevState, data])
+                setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}))
+
+                playSound()
+            }
 
         };
 
@@ -78,7 +81,7 @@ const Messages = () => {
             socket.off("typing", handleTyping);
             socket.off("stop typing", handleStopTyping);
         };
-    }, [socket]);
+    }, [socket, activeUser]);
 
     useEffect(() => {
         (async () => {
@@ -161,7 +164,7 @@ const Messages = () => {
             <div className={"messages-container"}>
 
                 <div className={"message-users"}>
-                    <h4>Conversations</h4>
+                    <h4>Member Conversations</h4>
 
                     <div className={"message-users-search-input input-row relative"}>
                         <Search className="search-icon" size={22}/>
@@ -178,7 +181,8 @@ const Messages = () => {
                                 await handleGetMemberConversation(member)
                             }}>
 
-                                <div className={"message-member-avatar"}>
+                                <div
+                                    className={"message-member-avatar " + (usersTyping.includes(Number(member.user.id)) ? "pulse-glow" : "")}>
                                     <img className={'avatar'}
                                          src={member.user.avatar ? apiUrl + member.user.avatar : (`/src/assets/avatars/${member.user.gender}.png`)}
                                          alt="Avatar"/>
@@ -187,12 +191,6 @@ const Messages = () => {
                                 </div>
                                 <div className={"message-member-name"}>
                                     {member.user.name}
-
-                                    {usersTyping.includes(Number(member.user.id)) &&
-                                        <div className={"user-typing"}>
-                                            <img src={typingIcon} alt=""/>
-                                        </div>
-                                    }
                                 </div>
 
                             </div>
@@ -207,8 +205,7 @@ const Messages = () => {
 
                         {activeMemberMessages && activeMemberMessages.map((message: MessageFullType) =>
 
-                                <OneMessage message={message} user={user} key={message.message.id}/>
-
+                            <OneMessage message={message} user={user} key={message.message.id}/>
                         )}
                         <div ref={bottomRef}/>
                     </div>
