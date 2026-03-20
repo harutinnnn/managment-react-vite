@@ -8,9 +8,8 @@ import {getMeRequest} from "@/api/auth.api";
 import {getMemberMessages, sendMessage} from "@/api/messages.api";
 import {MessageFullType} from "@/types/MessageType";
 import {reconnectSocketWithFreshToken} from "@/socket";
-import typingIcon from "../../assets/icons/3-dots-bounce.svg";
 import OneMessage from "@/pages/messages/OneMessage";
-import {useOutletContext} from "react-router-dom";
+import {useOutletContext, useParams} from "react-router-dom";
 import type {ProtectedLayoutContext} from "@/layouts/ProtectedLayout";
 import clickSound from "../../assets/sounds/message-sound.wav";
 
@@ -18,6 +17,8 @@ let typingTimeout: ReturnType<typeof setTimeout> | null = null;
 
 
 const Messages = () => {
+
+    const {id} = useParams()
     const {socket} = useOutletContext<ProtectedLayoutContext>();
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -25,7 +26,7 @@ const Messages = () => {
     const apiUrl: string = import.meta.env.VITE_API_URL || ""
 
     const [members, setMembers] = useState<MemberJoinSkillType[]>([]);
-    const [activeUser, setactiveUser] = useState<MemberJoinSkillType | null>(null);
+    const [activeUser, setActiveUser] = useState<MemberJoinSkillType | null>(null);
 
     const [user, setUser] = useState<MemberJoinSkillType | null>(null);
 
@@ -38,6 +39,12 @@ const Messages = () => {
 
     const [usersTyping, setUsersTyping] = useState<number[]>([]);
 
+    const routeActiveUser = id
+        ? members.find(member => Number(member.user.id) === Number(id)) ?? null
+        : null;
+
+    const selectedUser = activeUser ?? routeActiveUser;
+
 
     const playSound = () => {
         const audio = new Audio(clickSound);
@@ -46,11 +53,48 @@ const Messages = () => {
         });
     };
 
+    const handleGetMemberMessages = async (member: MemberJoinSkillType) => {
+
+        const memberMessagesResponse = await getMemberMessages(Number(member?.user.id))
+        setActiveMemberMessages(memberMessagesResponse)
+
+        setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}))
+    }
+
+    const handleGetMemberConversation = (member: MemberJoinSkillType) => {
+        setActiveUser(member)
+        //TODO get member conversation
+    }
+
+    useEffect(() => {
+        if (!selectedUser) {
+            return;
+        }
+
+        let cancelled = false;
+
+        const loadMessages = async () => {
+            const memberMessagesResponse = await getMemberMessages(Number(selectedUser.user.id));
+
+            if (cancelled) {
+                return;
+            }
+
+            setActiveMemberMessages(memberMessagesResponse);
+            setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}));
+        };
+
+        void loadMessages();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [selectedUser?.user.id]);
 
     useEffect(() => {
         const handleSendMessage = (data: MessageFullType) => {
 
-            if (activeUser) {
+            if (selectedUser) {
 
                 setActiveMemberMessages(prevState => [...prevState, data])
                 setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}))
@@ -81,7 +125,7 @@ const Messages = () => {
             socket.off("typing", handleTyping);
             socket.off("stop typing", handleStopTyping);
         };
-    }, [socket, activeUser]);
+    }, [socket, selectedUser]);
 
     useEffect(() => {
         (async () => {
@@ -98,38 +142,22 @@ const Messages = () => {
     }, [])
 
 
-    const handleGetMemberConversation = async (member: MemberJoinSkillType) => {
-        setactiveUser(member)
-
-        await handleGetMemberMessages(member)
-        //TODO get member conversation
-    }
-
-
-    const handleGetMemberMessages = async (member: MemberJoinSkillType) => {
-
-        const memberMessagesResponse = await getMemberMessages(Number(member?.user.id))
-        setActiveMemberMessages(memberMessagesResponse)
-
-        setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}))
-    }
-
     const handleSetMessage = async () => {
 
-        if (messageText.trim().length > 0 && activeUser) {
+        if (messageText.trim().length > 0 && selectedUser) {
 
             try {
 
-                const responseMessage = await sendMessage({
-                    senderId: Number(user?.user.id),
-                    receiverId: Number(activeUser.user.id),
-                    message: messageText
+                    const responseMessage = await sendMessage({
+                        senderId: Number(user?.user.id),
+                        receiverId: Number(selectedUser.user.id),
+                        message: messageText
 
                 })
 
                 setMessageText("")
 
-                await handleGetMemberMessages(activeUser)
+                await handleGetMemberMessages(selectedUser)
 
                 if (!socket.connected) {
                     reconnectSocketWithFreshToken();
@@ -137,7 +165,7 @@ const Messages = () => {
 
                 socket.emit("send_message", {
                     message: messageText,
-                    userId: Number(activeUser.user.id),
+                    userId: Number(selectedUser.user.id),
                     id: responseMessage.id
                 })
 
@@ -173,7 +201,7 @@ const Messages = () => {
 
                     <div className="chat-members-list">
                         {members && members.filter(m => Number(m.user.id) !== Number(user?.user.id)).map((member: MemberJoinSkillType) => (
-                            <div className={"chat-member " + (activeUser?.user.id === member.user.id ? 'active' : '')}
+                            <div className={"chat-member " + (selectedUser?.user.id === member.user.id ? 'active' : '')}
                                  key={member.user.id} onClick={async () => {
                                 await handleGetMemberConversation(member)
                             }}>
@@ -223,15 +251,15 @@ const Messages = () => {
                                        }
 
 
-                                       socket.emit('typing', {
-                                           typingUser: user?.user.id,
-                                           userId: activeUser?.user.id,
-                                       })
+                                           socket.emit('typing', {
+                                               typingUser: user?.user.id,
+                                               userId: selectedUser?.user.id,
+                                           })
 
                                        typingTimeout = setTimeout(() => {
                                            socket.emit('stop typing', {
                                                typingUser: user?.user.id,
-                                               userId: activeUser?.user.id,
+                                               userId: selectedUser?.user.id,
                                            })
                                        }, 2000)
                                    }}/>

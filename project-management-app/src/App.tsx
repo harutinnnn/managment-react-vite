@@ -42,7 +42,7 @@ function App() {
                 <Route path="/project/:id" element={<ProjectKanban/>}/>
                 <Route path="/members" element={<Members/>}/>
                 <Route path="/members/:id" element={<MembersEdit/>}/>
-                <Route path="/messages" element={<Messages/>}/>
+                <Route path="/messages/:id?" element={<Messages/>}/>
                 <Route path="/settings" element={<Settings/>}/>
                 <Route path="/skills" element={<Skills/>}/>
                 <Route path="/professions" element={<Professions/>}/>

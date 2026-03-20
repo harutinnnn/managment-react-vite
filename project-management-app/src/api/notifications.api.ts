@@ -11,8 +11,8 @@ export type NotificationsResponse = {
     message: string;
     objectId: number | null;
     isRead: 1 | 0
+    json: string
     createdAt: string
-
 };
 
 export type UpdateNotification = {

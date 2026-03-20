@@ -2,6 +2,8 @@ import {Bell, BellDot} from "lucide-react";
 import {NotificationsResponse, setUpdateNotification} from "@/api/notifications.api";
 import {useEffect, useState} from "react";
 import {socket as appSocket} from "@/socket";
+import {NotificationTypesEnum} from "@/enums/NotificationTypesEnum";
+import {useNavigate} from "react-router-dom";
 
 export const MainHeader = (
     {minMaxSidebar, notifications, updateNotificationList, socket}: {
@@ -12,6 +14,7 @@ export const MainHeader = (
     }
 ) => {
 
+    const navigate = useNavigate();
 
     const [showNotifications, setShowNotifications] = useState<boolean>(false);
     const handleClick = () => {
@@ -64,8 +67,24 @@ export const MainHeader = (
     }, [socket, updateNotificationList]);
 
 
-    const handleSetViewedNotification = async (id: number) => {
-        await setUpdateNotification({id: id})
+    const checkNotificationType = (notification: NotificationsResponse) => {
+
+        if (notification.types == NotificationTypesEnum.MESSAGE) {
+
+            const additionalNodificationData = JSON.parse(notification.json);
+            if ("senderId" in additionalNodificationData) {
+                navigate('/messages/' + additionalNodificationData.senderId)
+            }
+
+        }
+
+    }
+
+    const handleSetViewedNotification = async (notification: NotificationsResponse) => {
+
+        checkNotificationType(notification);
+
+        await setUpdateNotification({id: notification.id})
         updateNotificationList();
     }
 
@@ -101,7 +120,7 @@ export const MainHeader = (
                     {notifications && notifications.map((notification, index) => (
 
                         <div className={"notify-item"} key={notification.id} onClick={() => {
-                            handleSetViewedNotification(notification.id);
+                            handleSetViewedNotification(notification);
                         }}>
                             {index + 1}. {notification.message}
                         </div>
