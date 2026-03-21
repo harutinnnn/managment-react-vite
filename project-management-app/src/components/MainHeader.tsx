@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {socket as appSocket} from "@/socket";
 import {NotificationTypesEnum} from "@/enums/NotificationTypesEnum";
 import {useNavigate} from "react-router-dom";
-
+import clickSound from "../assets/sounds/notification-sound.mp3";
 export const MainHeader = (
     {minMaxSidebar, notifications, updateNotificationList, socket}: {
         minMaxSidebar: () => void,
@@ -54,9 +54,19 @@ export const MainHeader = (
         };
     }, []);
 
+    const playNotificationSound = () => {
+        const audio = new Audio(clickSound);
+        audio.play().catch((err) => {
+            console.error("Audio play failed:", err);
+        });
+    }
+
     useEffect(() => {
         const handleNotification = async () => {
+            playNotificationSound()
             await updateNotificationList();
+
+
         };
 
         socket.on("send_notification", handleNotification);
@@ -75,6 +85,7 @@ export const MainHeader = (
             if ("senderId" in additionalNodificationData) {
                 navigate('/messages/' + additionalNodificationData.senderId)
             }
+
 
         }
 

@@ -1,5 +1,5 @@
 import api from "./axios";
-import {MemberJoinSkillType, MemberType} from "@/types/MemberType";
+import {MemberJoinSkillType, MemberType, UserUnreadMessagesType} from "@/types/MemberType";
 import {Gender} from "@/enums/Gender";
 
 export type MemberPayload = {
@@ -42,6 +42,10 @@ export async function updateProfileRequest(
 
 export async function getMembers(): Promise<MemberJoinSkillType[]> {
     const response = await api.get<MemberJoinSkillType[]>("/member");
+    return response.data;
+}
+export async function getMembersChat(): Promise<UserUnreadMessagesType[]> {
+    const response = await api.get<UserUnreadMessagesType[]>("/member/chat");
     return response.data;
 }
 

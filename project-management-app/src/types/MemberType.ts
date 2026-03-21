@@ -16,3 +16,20 @@ export type MemberJoinSkillType = {
     user: MemberType;
     skills: SkillType[]
 }
+
+export type UserUnreadMessagesType = {
+
+    id: number,
+    companyId: number
+    professionId: number
+    name: string
+    email: string
+    phone: string
+    password: string
+    refreshToken: string
+    avatar: string
+    gender: string
+    status: number
+    role: string
+    unreadMessages: number
+}

@@ -1,8 +1,8 @@
 import {Search, Send} from "lucide-react";
 import './Messages.css'
 import {useEffect, useRef, useState} from "react";
-import {MemberJoinSkillType} from "@/types/MemberType";
-import {getMembers} from "@/api/members.api";
+import {MemberJoinSkillType, UserUnreadMessagesType} from "@/types/MemberType";
+import {getMembersChat} from "@/api/members.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {getMeRequest} from "@/api/auth.api";
 import {getMemberMessages, sendMessage} from "@/api/messages.api";
@@ -25,8 +25,8 @@ const Messages = () => {
 
     const apiUrl: string = import.meta.env.VITE_API_URL || ""
 
-    const [members, setMembers] = useState<MemberJoinSkillType[]>([]);
-    const [activeUser, setActiveUser] = useState<MemberJoinSkillType | null>(null);
+    const [members, setMembers] = useState<UserUnreadMessagesType[]>([]);
+    const [activeUser, setActiveUser] = useState<UserUnreadMessagesType | null>(null);
 
     const [user, setUser] = useState<MemberJoinSkillType | null>(null);
 
@@ -40,7 +40,7 @@ const Messages = () => {
     const [usersTyping, setUsersTyping] = useState<number[]>([]);
 
     const routeActiveUser = id
-        ? members.find(member => Number(member.user.id) === Number(id)) ?? null
+        ? members.find(member => Number(member.id) === Number(id)) ?? null
         : null;
 
     const selectedUser = activeUser ?? routeActiveUser;
@@ -53,15 +53,15 @@ const Messages = () => {
         });
     };
 
-    const handleGetMemberMessages = async (member: MemberJoinSkillType) => {
+    const handleGetMemberMessages = async (member: UserUnreadMessagesType) => {
 
-        const memberMessagesResponse = await getMemberMessages(Number(member?.user.id))
+        const memberMessagesResponse = await getMemberMessages(Number(member?.id))
         setActiveMemberMessages(memberMessagesResponse)
 
         setTimeout(() => bottomRef.current?.scrollIntoView({behavior: "smooth"}))
     }
 
-    const handleGetMemberConversation = (member: MemberJoinSkillType) => {
+    const handleGetMemberConversation = (member: UserUnreadMessagesType) => {
         setActiveUser(member)
         //TODO get member conversation
     }
@@ -74,7 +74,7 @@ const Messages = () => {
         let cancelled = false;
 
         const loadMessages = async () => {
-            const memberMessagesResponse = await getMemberMessages(Number(selectedUser.user.id));
+            const memberMessagesResponse = await getMemberMessages(Number(selectedUser.id));
 
             if (cancelled) {
                 return;
@@ -89,7 +89,7 @@ const Messages = () => {
         return () => {
             cancelled = true;
         };
-    }, [selectedUser?.user.id]);
+    }, [selectedUser?.id]);
 
     useEffect(() => {
         const handleSendMessage = (data: MessageFullType) => {
@@ -129,7 +129,7 @@ const Messages = () => {
 
     useEffect(() => {
         (async () => {
-            const members: MemberJoinSkillType[] = await getMembers()
+            const members: UserUnreadMessagesType[] = await getMembersChat()
             setMembers(members)
 
             const user = await getMeRequest()
@@ -137,7 +137,6 @@ const Messages = () => {
 
             setLoading(false)
         })()
-
 
     }, [])
 
@@ -150,7 +149,7 @@ const Messages = () => {
 
                     const responseMessage = await sendMessage({
                         senderId: Number(user?.user.id),
-                        receiverId: Number(selectedUser.user.id),
+                        receiverId: Number(selectedUser.id),
                         message: messageText
 
                 })
@@ -165,7 +164,7 @@ const Messages = () => {
 
                 socket.emit("send_message", {
                     message: messageText,
-                    userId: Number(selectedUser.user.id),
+                    userId: Number(selectedUser.id),
                     id: responseMessage.id
                 })
 
@@ -195,27 +194,29 @@ const Messages = () => {
                         <Search className="search-icon" size={22}/>
                         <input type="text" placeholder="Search users..." onChange={(e) => {
 
-                            setMembers(prevState => prevState.filter(m => m.user.name.toLowerCase().includes(e.target.value.toLowerCase())))
+                            setMembers(prevState => prevState.filter(m => m.name.toLowerCase().includes(e.target.value.toLowerCase())))
                         }}/>
                     </div>
 
                     <div className="chat-members-list">
-                        {members && members.filter(m => Number(m.user.id) !== Number(user?.user.id)).map((member: MemberJoinSkillType) => (
-                            <div className={"chat-member " + (selectedUser?.user.id === member.user.id ? 'active' : '')}
-                                 key={member.user.id} onClick={async () => {
+                        {members && members.filter(m => Number(m.id) !== Number(user?.user.id)).map((member: UserUnreadMessagesType) => (
+                            <div className={"chat-member " + (selectedUser?.id === member.id ? 'active' : '')}
+                                 key={member.id} onClick={async () => {
                                 await handleGetMemberConversation(member)
                             }}>
 
                                 <div
-                                    className={"message-member-avatar " + (usersTyping.includes(Number(member.user.id)) ? "pulse-glow" : "")}>
+                                    className={"message-member-avatar " + (usersTyping.includes(Number(member.id)) ? "pulse-glow" : "")}>
                                     <img className={'avatar'}
-                                         src={member.user.avatar ? apiUrl + member.user.avatar : (`/src/assets/avatars/${member.user.gender}.png`)}
+                                         src={member.avatar ? apiUrl + member.avatar : (`/src/assets/avatars/${member.gender}.png`)}
                                          alt="Avatar"/>
+
+                                    {member.unreadMessages > 0 && <div className="member-unread-messages">{member.unreadMessages}</div>}
 
                                     <div className={"badge"}></div>
                                 </div>
                                 <div className={"message-member-name"}>
-                                    {member.user.name}
+                                    {member.name}
                                 </div>
 
                             </div>
@@ -253,13 +254,13 @@ const Messages = () => {
 
                                            socket.emit('typing', {
                                                typingUser: user?.user.id,
-                                               userId: selectedUser?.user.id,
+                                               userId: selectedUser?.id,
                                            })
 
                                        typingTimeout = setTimeout(() => {
                                            socket.emit('stop typing', {
                                                typingUser: user?.user.id,
-                                               userId: selectedUser?.user.id,
+                                               userId: selectedUser?.id,
                                            })
                                        }, 2000)
                                    }}/>
