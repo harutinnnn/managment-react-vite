@@ -85,6 +85,10 @@ const Members = () => {
         navigate(`/members/${id}`);
     }
 
+    const handleSendMessage = (member:MemberJoinSkillType) => {
+        navigate('/messages/' + member.user.id)
+    }
+
     return (<>
 
             <div className={"page-header mb-20"}>
@@ -147,7 +151,7 @@ const Members = () => {
                                 <UserRoundPen size={18}/>
                                 <span>Profile</span>
                             </button>
-                            <button className={"btn primary"}>
+                            <button className={"btn primary"} onClick={() => handleSendMessage(member)}>
                                 <MessageCircle size={18}/>
                                 <span>Message</span>
                             </button>
