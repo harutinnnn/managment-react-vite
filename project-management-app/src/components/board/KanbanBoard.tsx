@@ -427,7 +427,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
                     className="add-column-btn"
                     onClick={() => setShowAddColumn(true)}
                 >
-                    + Add Column
+                    + Add
                 </button>
             </header>
 

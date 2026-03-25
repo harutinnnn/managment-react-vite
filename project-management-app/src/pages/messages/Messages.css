@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: 1fr 3fr;
     gap: 30px;
-    height: calc(100vh - 170px);
+    height: calc(100dvh - 170px);
 }
 
 .messages-container .message-users {
@@ -135,7 +135,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    height: calc(100vh - 230px);
+    height: calc(100dvh - 230px);
     overflow-y: scroll;
 }
 
@@ -252,7 +252,7 @@
     .messages-container {
         display: grid;
         grid-template-columns: 1fr;
-        height: calc(100vh - 170px);
+        height: calc(100dvh - 170px);
     }
 
     .chat-members-list {
@@ -303,5 +303,11 @@
         display: none;
     }
 
+
+}
+@media (max-width: 1200px) {
+    .messages-container {
+        height: calc(100dvh - 80px);
+    }
 
 }

@@ -1,6 +1,6 @@
 /* styles/KanbanBoard.css */
 .kanban-board {
-    height: calc(100vh - 110px);
+    height: calc(100dvh - 110px);
     display: flex;
     flex-direction: column;
     background-color: #f4f5f7;
@@ -57,7 +57,14 @@
 
 @media (max-width: 800px) {
     .kanban-container {
-        width: calc(100vw - 100px);
+        width: calc(100vw - 80px);
     }
 
+    .kanban-column{
+        /*min-width: auto;*/
+    }
+
+    .kanban-board {
+        height: calc(100dvh - 80px);
+    }
 }
