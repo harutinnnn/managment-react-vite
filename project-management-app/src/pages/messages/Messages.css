@@ -221,7 +221,7 @@
     animation: glow-pulse 1s infinite; /* Apply the animation */
 }
 
-.member-unread-messages{
+.member-unread-messages {
     position: absolute;
     top: 0;
     right: 0;
@@ -273,6 +273,7 @@
         cursor: pointer;
         transition: background-color 0.3s ease-in-out;
     }
+
     .chat-members-list .chat-member:hover {
         background-color: unset;
         box-shadow: unset;
@@ -280,14 +281,15 @@
         -moz-box-shadow: unset;
     }
 
-    .chat-members-list .chat-member .message-member-avatar{
+    .chat-members-list .chat-member .message-member-avatar {
         border-radius: 50%;
         width: 54px;
         height: 54px;
         border: solid 3px transparent;
         /*overflow: hidden;*/
     }
-    .chat-members-list .chat-member.active .message-member-avatar{
+
+    .chat-members-list .chat-member.active .message-member-avatar {
         border: solid 3px var(--primary-color);
     }
 
@@ -295,16 +297,17 @@
         display: none;
     }
 
-    .chat-members-list .chat-member.active{
+    .chat-members-list .chat-member.active {
         background: none;
     }
 
-    .message-users-search-input{
+    .message-users-search-input {
         display: none;
     }
 
 
 }
+
 @media (max-width: 1200px) {
     .messages-container {
         height: calc(100dvh - 80px);
