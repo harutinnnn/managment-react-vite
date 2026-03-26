@@ -1,9 +1,17 @@
-import { TaskFileType } from "@/types/TaskFileType";
-import { BsFiletypePdf, BsFileEarmarkExcel, BsFileEarmarkWord } from "react-icons/bs";
-import { Trash2 } from "lucide-react";
+import {TaskFileType} from "@/types/TaskFileType";
+import {BsFiletypePdf, BsFileEarmarkExcel, BsFileEarmarkWord} from "react-icons/bs";
+import {Trash2} from "lucide-react";
 
-export const TaskFileTypeDisplay = ({ file, removeCb }: { file: TaskFileType, removeCb: (file: TaskFileType) => void }) => {
+export const TaskFileTypeDisplay = ({file, removeCb, showImage}: {
+    file: TaskFileType,
+    removeCb: (file: TaskFileType) => void,
+    showImage: (imgUrl:string) => void,
+}) => {
 
+
+    const showLightbox = (imgUrl:string) => {
+        showImage(imgUrl)
+    }
 
     const handleGetFileType = (file: TaskFileType) => {
 
@@ -11,20 +19,23 @@ export const TaskFileTypeDisplay = ({ file, removeCb }: { file: TaskFileType, re
 
             case 'image/png':
             case 'image/jpeg':
-            case 'image/svg+xml':
-
-                return <img src={import.meta.env.VITE_API_URL + file.file} />;
+            case 'image/svg+xml': {
+                const imgUrl = import.meta.env.VITE_API_URL + file.file
+                return <img src={imgUrl} onClick={() => {
+                    showLightbox(imgUrl)
+                }}/>;
 
                 break;
+            }
 
             case 'application/pdf':
-                return <BsFiletypePdf size={24} />
+                return <BsFiletypePdf size={24}/>
                 break;
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                return <BsFileEarmarkExcel size={24} />
+                return <BsFileEarmarkExcel size={24}/>
                 break;
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                return <BsFileEarmarkWord size={24} />
+                return <BsFileEarmarkWord size={24}/>
                 break;
         }
 
@@ -32,7 +43,7 @@ export const TaskFileTypeDisplay = ({ file, removeCb }: { file: TaskFileType, re
 
     return (
         <div className={"task-uploaded-file"}>
-            <Trash2 className="remove-task-attachment" size={16} onClick={() => removeCb(file)} />
+            <Trash2 className="remove-task-attachment" size={16} onClick={() => removeCb(file)}/>
             {handleGetFileType(file)}
         </div>
     )
