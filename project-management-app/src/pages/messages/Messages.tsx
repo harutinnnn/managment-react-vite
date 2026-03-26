@@ -1,7 +1,7 @@
 import {Search, Send} from "lucide-react";
 import './Messages.css'
 import {useEffect, useRef, useState} from "react";
-import {MemberJoinSkillType, UserUnreadMessagesType} from "@/types/MemberType";
+import {MemberJoinSkillType, UserUnreadMessagesResponseType, UserUnreadMessagesType} from "@/types/MemberType";
 import {getMembersChat} from "@/api/members.api";
 import {PageInnerLoader} from "@/components/PageInnerLoder";
 import {getMeRequest} from "@/api/auth.api";
@@ -26,6 +26,7 @@ const Messages = () => {
     const apiUrl: string = import.meta.env.VITE_API_URL || ""
 
     const [members, setMembers] = useState<UserUnreadMessagesType[]>([]);
+    const [onlineUsers, setOnlineUsers] = useState<number[]>([]);
     const [activeUser, setActiveUser] = useState<UserUnreadMessagesType | null>(null);
 
     const [user, setUser] = useState<MemberJoinSkillType | null>(null);
@@ -129,8 +130,9 @@ const Messages = () => {
 
     useEffect(() => {
         (async () => {
-            const members: UserUnreadMessagesType[] = await getMembersChat()
-            setMembers(members)
+            const userUnreadMessagesResponse: UserUnreadMessagesResponseType = await getMembersChat()
+            setMembers(userUnreadMessagesResponse.members)
+            setOnlineUsers(userUnreadMessagesResponse.onlineUsers)
 
             const user = await getMeRequest()
             setUser(user)
@@ -147,10 +149,10 @@ const Messages = () => {
 
             try {
 
-                    const responseMessage = await sendMessage({
-                        senderId: Number(user?.user.id),
-                        receiverId: Number(selectedUser.id),
-                        message: messageText
+                const responseMessage = await sendMessage({
+                    senderId: Number(user?.user.id),
+                    receiverId: Number(selectedUser.id),
+                    message: messageText
 
                 })
 
@@ -211,9 +213,11 @@ const Messages = () => {
                                          src={member.avatar ? apiUrl + member.avatar : (`/src/assets/avatars/${member.gender}.png`)}
                                          alt="Avatar"/>
 
-                                    {member.unreadMessages > 0 && <div className="member-unread-messages">{member.unreadMessages}</div>}
+                                    {member.unreadMessages > 0 &&
+                                        <div className="member-unread-messages">{member.unreadMessages}</div>}
 
-                                    <div className={"badge"}></div>
+                                    {onlineUsers.includes(member.id) &&
+                                        <div className={"badge"}></div>}
                                 </div>
                                 <div className={"message-member-name"}>
                                     {member.name}
@@ -252,10 +256,10 @@ const Messages = () => {
                                        }
 
 
-                                           socket.emit('typing', {
-                                               typingUser: user?.user.id,
-                                               userId: selectedUser?.id,
-                                           })
+                                       socket.emit('typing', {
+                                           typingUser: user?.user.id,
+                                           userId: selectedUser?.id,
+                                       })
 
                                        typingTimeout = setTimeout(() => {
                                            socket.emit('stop typing', {

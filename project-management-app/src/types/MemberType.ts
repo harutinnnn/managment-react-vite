@@ -18,7 +18,6 @@ export type MemberJoinSkillType = {
 }
 
 export type UserUnreadMessagesType = {
-
     id: number,
     companyId: number
     professionId: number
@@ -32,4 +31,8 @@ export type UserUnreadMessagesType = {
     status: number
     role: string
     unreadMessages: number
+}
+export type UserUnreadMessagesResponseType = {
+    members: UserUnreadMessagesType[],
+    onlineUsers: number[]
 }

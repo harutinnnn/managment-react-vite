@@ -285,7 +285,7 @@
         width: 54px;
         height: 54px;
         border: solid 3px transparent;
-        overflow: hidden;
+        /*overflow: hidden;*/
     }
     .chat-members-list .chat-member.active .message-member-avatar{
         border: solid 3px var(--primary-color);

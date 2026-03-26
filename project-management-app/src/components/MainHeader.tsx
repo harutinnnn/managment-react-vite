@@ -82,10 +82,10 @@ export const MainHeader = (
         if (notification.types == NotificationTypesEnum.MESSAGE) {
 
             const additionalNodificationData = JSON.parse(notification.json);
-            if ("senderId" in additionalNodificationData) {
+
+            if (additionalNodificationData && "senderId" in additionalNodificationData) {
                 navigate('/messages/' + additionalNodificationData.senderId)
             }
-
 
         }
 
